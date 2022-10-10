@@ -1,11 +1,9 @@
 from pony.orm import *
 
-
 db = Database()
 
-
 class User(db.Entity):
-    username = Required(str)
+    username = Required(str, unique=True)
     email = PrimaryKey(str)
     avatar = Optional(buffer)
     password = Required(str)
