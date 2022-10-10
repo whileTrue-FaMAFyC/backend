@@ -23,7 +23,7 @@ def sign_up_post(user: UserSignUpData):
     ### SEND VERIFICATION EMAIL
 
     user_to_db = NewUserToDb(username=user.username, email=user.email, avatar=user.avatar,
-                             password=encrypted_password, verification_code=verification_code,
+                             hashed_password=encrypted_password, verification_code=verification_code,
                              verified=False)
     
     # Calls crud function to insert the user into the db

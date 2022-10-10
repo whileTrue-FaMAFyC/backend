@@ -19,7 +19,8 @@ def create_user(user: NewUserToDb):
     try:
         # Inserts parameter user in to the 'User' table
         User(username=user.username, email=user.email, avatar=user.avatar,
-         hashed_password=user.password, verification_code=user.verification_code, verified=user.verified)
+             hashed_password=user.hashed_password, verification_code=user.verification_code,
+             verified=user.verified)
         return True
     except:
         return False
@@ -32,7 +33,8 @@ def get_user_by_username(username: str):
 def get_user_by_email(email: str):
     return User.get(email=email)
 
-@db_session
-def get_users_db():
-    users = User.select()
-    return [UserFromDb.from_orm(u) for u in users]
+# For testing
+# @db_session
+# def get_users_db():
+#     users = User.select()
+#     return [UserFromDb.from_orm(u) for u in users]

@@ -8,7 +8,7 @@ class User(db.Entity):
     username = Required(str, unique=True)
     email = PrimaryKey(str)
     avatar = Optional(buffer)
-    password = Required(str)
+    hashed_password = Required(str)
     verification_code = Required(int)
     verified = Required(bool)
     robots = Set('Robot')
@@ -33,7 +33,7 @@ class Match(db.Entity):
     num_games = Required(int)
     num_rounds = Required(int)
     started = Required(bool)
-    password = Optional(str)
+    hashed_password = Optional(str)
     PrimaryKey(name, creator_user)
 
 db.bind(provider='sqlite', filename='database.sqlite', create_db=True)
