@@ -13,11 +13,13 @@ async def create_match(new_match: NewMatchSchema):
     if not(users_robot):
         raise HTTPException(
             status_code=400,
-            detail=f"Robot {new_match.creator_robot} isn't in {new_match.creator_user}'s library")
+            detail=f"Robot {new_match.creator_robot} isn't in"
+                   f"{new_match.creator_user}'s library")
     if name_in_use:
         raise HTTPException(
             status_code=400,
-            detail=f"{new_match.creator_user} already has a match named {new_match.name}")
+            detail=f"{new_match.creator_user} already has a match"
+                   f"named {new_match.name}")
 
-    new_db_match = match.add_new_match(new_match)
-    return new_db_match
+    new_match_name = match.add_new_match(new_match)
+    return new_match_name

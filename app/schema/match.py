@@ -35,7 +35,8 @@ class NewMatchSchema(BaseModel):
         if(values.get('min_players') > values.get('max_players')):
             raise HTTPException(
                 status_code=400,
-                detail=f"Minimum amount of players can't be greater than maximum amount of players"
+                detail=f"Minimum amount of players can't be greater than"
+                        "maximum amount of players"
             )
         return values
 
@@ -56,8 +57,6 @@ class NewMatchSchema(BaseModel):
                 detail=f"Amount of rounds can't be {num_rounds}"
             )
         return num_rounds
-
-# Falta validator para password
 
     class Config:
         orm_mode = True
