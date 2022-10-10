@@ -25,7 +25,7 @@ def add_new_match(new_match: match.NewMatchSchema):
         started = False,
         hashed_password = match_password
     )
-    return new_match.name
+    return
 
 @db_session
 # Returns True if the user with username `creator_username` hasn't created

@@ -1,10 +1,10 @@
-from fastapi import HTTPException, APIRouter
+from fastapi import HTTPException, APIRouter, status
 from schema.match import NewMatchSchema
 from database.crud import match, robot
 
 router = APIRouter(prefix="/matches")
 
-@router.post("/new-match")
+@router.post("/new-match", status_code = status.HTTP_201_CREATED)
 async def create_match(new_match: NewMatchSchema):
     users_robot = robot.belongs_to_user(new_match.creator_robot, 
                                          new_match.creator_user)
@@ -21,5 +21,5 @@ async def create_match(new_match: NewMatchSchema):
             detail=f"{new_match.creator_user} already has a match"
                    f"named {new_match.name}")
 
-    new_match_name = match.add_new_match(new_match)
-    return new_match_name
+    match.add_new_match(new_match)
+    return
