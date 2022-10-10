@@ -4,12 +4,15 @@ from typing import Union
 from email_validator import validate_email, EmailNotValidError
 from utils.user import *
 
+### To parse request body always use a pydantic schema
+
+
 class UserBase(BaseModel):
     username: str
     email: str
     avatar: Union[bytes, None] = None
 
-# To parse the parameters of the post request
+# To parse the parameters of the signup request body
 class UserSignUpData(UserBase):
     password: str
 
@@ -46,3 +49,6 @@ class UserFromDb(UserBase):
     class Config:
         orm_mode = True
 
+# To parse the request body of the verify user endpoint
+class UserVerificationCode(BaseModel):
+    verification_code: int

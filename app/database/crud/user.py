@@ -33,6 +33,15 @@ def get_user_by_username(username: str):
 def get_user_by_email(email: str):
     return User.get(email=email)
 
+@db_session
+def update_user_verification(username: str):
+    try:
+        user_db = User.get(username=username)
+        user_db.set(verified=True)
+        return True
+    except:
+        return False
+
 # For testing
 # @db_session
 # def get_users_db():
