@@ -35,7 +35,7 @@ class NewMatchSchema(BaseModel):
         if(values.get('min_players') > values.get('max_players')):
             raise HTTPException(
                 status_code=400,
-                detail=f"Minimum amount of players can't be greater than"
+                detail=f"Minimum amount of players can't be greater than "
                         "maximum amount of players"
             )
         return values
