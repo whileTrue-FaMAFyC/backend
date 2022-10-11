@@ -1,10 +1,10 @@
 from fastapi import FastAPI
-from routers import *
+from routers import match
 
 def include_routers(app):
 	# app.include_router(user.user_router)
     # app.include_router(robot.robot_router)
-    # app.include_router(match.match_router)
+    app.include_router(match.match_router)
     pass
 
 def start_application():
