@@ -7,7 +7,10 @@ class UserBase(BaseModel):
     avatar: Union[bytes, None] = None
     hashed_password: str
 
-    
+class UserLogIn(BaseModel):
+    username_or_email: str
+    password: str
+
 # To get a user from the database. Missing attributes: robots and matches_created
 class UserFromDb(UserBase):
     verification_code: int
