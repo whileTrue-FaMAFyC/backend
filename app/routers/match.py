@@ -7,3 +7,8 @@ match_router = APIRouter(prefix="/matches")
 async def get_matches():
    matches = match.list_matches()
    return matches
+
+@match_router.get("/list-matches")
+async def list_matches():
+    matches = match.get_matches()
+    return matches
