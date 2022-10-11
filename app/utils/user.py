@@ -16,7 +16,7 @@ def is_valid_password(password):
     return (l>=1 and u>=1 and d>=1 and l+u+d==len(password))
 
 SYSTEM_MAIL = "pyrobots.noreply@gmail.com"
-SYSTEM_MAIL_PASSWORD = "irncobogjovylbnz"
+SYSTEM_MAIL_PASSWORD = "kltrgevemdlcywkq"
 
 def send_verification_email(recipient, verification_code):
     import smtplib
