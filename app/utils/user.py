@@ -1,5 +1,4 @@
 
-
 def is_valid_password(password):
     l, u, d = 0, 0, 0
     if (len(password) >= 8):
@@ -15,3 +14,28 @@ def is_valid_password(password):
                 d+=1
     
     return (l>=1 and u>=1 and d>=1 and l+u+d==len(password))
+
+SYSTEM_MAIL = "pyrobots.noreply@gmail.com"
+SYSTEM_MAIL_PASSWORD = "irncobogjovylbnz"
+
+def send_verification_email(recipient, verification_code):
+    import smtplib
+
+    FROM = SYSTEM_MAIL
+    TO = recipient if isinstance(recipient, list) else [recipient]
+    SUBJECT = "Here is your verification code"
+    TEXT = f"Your verification code is: {verification_code}.\nDo not reply this email."
+
+    # Prepare actual message
+    message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.ehlo()
+        server.starttls()
+        server.login(SYSTEM_MAIL, SYSTEM_MAIL_PASSWORD)
+        server.sendmail(FROM, TO, message)
+        server.close()
+        return True
+    except:
+        return False

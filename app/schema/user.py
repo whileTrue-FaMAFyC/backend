@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status
+from fastapi import HTTPException, UploadFile, status
 from pydantic import BaseModel, validator
 from typing import Union
 from email_validator import validate_email, EmailNotValidError
@@ -7,7 +7,7 @@ from utils.user import *
 class UserBase(BaseModel):
     username: str
     email: str
-    avatar: Union[bytes, None] = None
+    avatar: Union[UploadFile, None] = None
 
 # To parse the parameters of the post request
 class UserSignUpData(UserBase):
