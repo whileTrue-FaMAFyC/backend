@@ -30,14 +30,20 @@ def get_user_by_username(username: str):
     return User.get(username=username) # Select from table User where column username=username.
 
 @db_session
-def get_user_by_email(email: str):
-    return User.get(email=email)
-
-@db_session
 def update_user_verification(username: str):
     try:
         user_db = User.get(username=username)
         user_db.set(verified=True)
+        return True
+    except:
+        return False
+
+@db_session
+def delete_user_by_username(username: str):
+    try:
+        user_in_db = User.get(username=username)
+        if user_in_db != None:
+            user_in_db.delete()
         return True
     except:
         return False
