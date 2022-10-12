@@ -1,14 +1,15 @@
-from pony.orm import db_session
-from database.models import Match, User, Robot
-from schema import match
+from database.models.models import Match, Robot, User 
 from passlib.context import CryptContext
+from pony.orm import db_session
+from view_entities import match_view_entity
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 @db_session
-def add_new_match(new_match: match.NewMatchSchema):
+def add_new_match(new_match: match_view_entity.NewMatchView):
     creator = User.get(username=new_match.creator_user)
     robot_creator = Robot.get(name=new_match.creator_robot, owner=creator)
+    
     if(new_match.password):
         match_password = pwd_context.hash(new_match.password)
     else:
@@ -25,7 +26,8 @@ def add_new_match(new_match: match.NewMatchSchema):
         started = False,
         hashed_password = match_password
     )
-    return
+
+    return db_match
 
 @db_session
 # Returns True if the user with username `creator_username` hasn't created

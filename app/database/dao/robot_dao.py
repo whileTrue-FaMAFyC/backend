@@ -1,5 +1,5 @@
+from database.models.models import Robot, User
 from pony.orm import db_session
-from database.models import User, Robot
 
 @db_session
 # Returns True if the user with username `creator_username` has a robot
