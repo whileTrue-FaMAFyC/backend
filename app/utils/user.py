@@ -1,3 +1,5 @@
+import smtplib
+from validate_email import validate_email
 
 def is_valid_password(password):
     l, u, d = 0, 0, 0
@@ -19,10 +21,8 @@ SYSTEM_MAIL = "pyrobots.noreply@gmail.com"
 SYSTEM_MAIL_PASSWORD = "kltrgevemdlcywkq"
 
 def send_verification_email(recipient, verification_code):
-    import smtplib
-
     FROM = SYSTEM_MAIL
-    TO = recipient if isinstance(recipient, list) else [recipient]
+    TO = recipient
     SUBJECT = "Here is your verification code"
     TEXT = f"Your verification code is: {verification_code}.\nDo not reply this email."
 
@@ -30,6 +30,10 @@ def send_verification_email(recipient, verification_code):
     message = """From: %s\nTo: %s\nSubject: %s\n\n%s
     """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
     try:
+        is_valid = validate_email(TO) # Checks if the email address exists.
+        if not is_valid:
+            return False
+        print("hola")
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.ehlo()
         server.starttls()

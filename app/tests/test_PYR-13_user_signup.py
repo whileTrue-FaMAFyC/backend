@@ -1,4 +1,3 @@
-from ast import Pass
 from fastapi.testclient import TestClient
 from app.main import app
 from database.crud.user import *
@@ -68,7 +67,7 @@ def test_email_already_in_use():
 def test_email_not_valid():
     response = client.post(
         "/signup",
-        json={"username": "tonimondejar1", "email": "antoniomondejar2asdhjash",
+        json={"username": "tonimondejar1", "email": "antoniomondejzxckzck",
         "password": "Test1234"}
     )
     # Must fail because email is not valid.
@@ -92,12 +91,20 @@ def test_password_format_not_valid():
     assert get_user_by_username("tonimondejar1") == None
 
 
-## TO DO
-def test_wrong_avatar_file_extension():
-    pass
+## TO DO, HOW TO PARSE A FILE (?)
+# def test_wrong_avatar_file_extension():
+#     response = client.post(
+#         "/signup",
+#         json={"username": "tonimondejar1", "email": "antoniomondejar2001@gmail.com",
+#         "password": "Test1234"}
+#     )
+#     # Must fail because avatar format is not valid.
+#     assert response.status_code == 400
+#     assert response.json()["detail"] == "avatar format not valid"
+    
+#     # Checks that the user was not added to the database
+#     assert get_user_by_username("tonimondejar1") == None
 
-# BROKEN, if the email does not exists the system puts the user info into the database anyway.
-# the library being used does not tell you if the email was received.
 def test_non_existent_email(): 
     response = client.post(
         "/signup",
@@ -106,7 +113,7 @@ def test_non_existent_email():
     )
     # Must fail because email does not exists.
     assert response.status_code == 500
-    # assert response.json()["detail"] == "internal error sending the email with the verification code"
+    assert response.json()["detail"] == "internal error sending the email with the verification code"
     
     # Checks that the user was not added to the database
     assert get_user_by_username("tonimondejar1") == None

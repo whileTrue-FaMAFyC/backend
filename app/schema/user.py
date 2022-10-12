@@ -1,7 +1,7 @@
 from fastapi import HTTPException, UploadFile, status
 from pydantic import BaseModel, validator
 from typing import Union
-from email_validator import validate_email, EmailNotValidError
+import email_validator
 from utils.user import *
 
 class UserBase(BaseModel):
@@ -16,8 +16,10 @@ class UserSignUpData(UserBase):
     @validator('email')
     def validate_email_format(cls, email):
         try:
-            v = validate_email(email)
-        except EmailNotValidError as e:
+            # Checks the syntax of the email. Needs the email_validator module prefix for issues
+            #  with another function of utils/user.py.
+            v = email_validator.validate_email(email)
+        except email_validator.EmailNotValidError as e:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="email not valid")
         return email
     
@@ -29,7 +31,10 @@ class UserSignUpData(UserBase):
     
     @validator('avatar')
     def validate_avatar(cls, avatar):
-        pass # Some check of the content-type of the file
+        if avatar is not None:
+            if avatar.content_type != "image/png":
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="avatar format not valid")
+        return avatar
 
 # To insert a user to the database
 class NewUserToDb(UserBase):

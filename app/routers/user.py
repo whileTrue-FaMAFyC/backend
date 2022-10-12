@@ -9,6 +9,7 @@ user_router = APIRouter()
 
 @user_router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def sign_up_post(user: UserSignUpData):
+
     if get_user_by_username(user.username) is not None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="username already in use")
     
