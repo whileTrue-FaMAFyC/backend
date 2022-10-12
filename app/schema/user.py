@@ -29,7 +29,7 @@ class UserSignUpData(UserBase):
     
     @validator('avatar')
     def validate_avatar(cls, avatar):
-        pass
+        pass # Some check of the content-type of the file
 
 # To insert a user to the database
 class NewUserToDb(UserBase):
