@@ -37,5 +37,4 @@ class Match(db.Entity):
     robots_joined = Set(Robot)
     composite_key(name, creator_user)
 
-
-db.generate_mapping()
+db.generate_mapping(create_tables=True)
