@@ -1,41 +1,41 @@
 from pony.orm import *
 
-
 db = Database()
 
-
 class User(db.Entity):
-    username = PrimaryKey(str, auto=True)
-    email = Required(str, unique=True)
+    user_id = PrimaryKey(int, auto=True, unsigned=True)
+    username = Required(str, 20, unique=True)
+    email = Required(str, 50, unique=True)
     avatar = Optional(buffer)
-    password = Required(str)
-    verificationCode = Required(int)
+    hashed_password = Required(str)
+    verification_code = Required(int, unsigned=True)
     verified = Required(bool)
     robots = Set('Robot')
-    matchsCreated = Set('Match', reverse='creatorUser')
-    matchsJoined = Set('Match', reverse='usersJoined')
+    matches_created = Set('Match')
 
 
 class Robot(db.Entity):
+    robot_id = PrimaryKey(int, auto=True, unsigned=True)
     name = Required(str)
+    source_code = Required(str)
     owner = Required(User)
     avatar = Optional(buffer)
-    matchsJoined = Set('Match')
-    PrimaryKey(name, owner)
+    matches_joined = Set('Match')
+    composite_key(name, owner)
 
 
 class Match(db.Entity):
-    name = Required(str)
-    creatorUser = Required(User, reverse='matchsCreated')
-    usersJoined = Set(User, reverse='matchsJoined')
-    robotsJoined = Set(Robot)
-    minPlayers = Required(int)
-    maxPlayers = Required(int)
-    numGames = Required(int)
-    numRounds = Required(int)
+    match_id = PrimaryKey(int, auto=True, unsigned=True)
+    name = Required(str, 30)
+    creator_user = Required(User)
+    min_players = Required(int)
+    max_players = Required(int)
+    num_games = Required(int)
+    num_rounds = Required(int)
     started = Required(bool)
-    PrimaryKey(name, creatorUser)
-
+    hashed_password = Optional(str)
+    robots_joined = Set(Robot)
+    composite_key(name, creator_user)
 
 
 db.generate_mapping()
