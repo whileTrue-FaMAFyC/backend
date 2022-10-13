@@ -33,7 +33,6 @@ def send_verification_email(recipient, verification_code):
         is_valid = validate_email(TO) # Checks if the email address exists.
         if not is_valid:
             return False
-        print("hola")
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.ehlo()
         server.starttls()

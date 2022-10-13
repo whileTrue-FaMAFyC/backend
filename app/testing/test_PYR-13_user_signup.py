@@ -1,119 +1,173 @@
 from fastapi.testclient import TestClient
+from app.database.dao.match_dao import delete_table_match
+from app.database.dao.robot_dao import delete_table_robot
 from app.main import app
-from database.crud.user import *
-
+from database.dao.user_dao import *
 client = TestClient(app)
 
 def test_successful_sign_up():
+    # Deletes the database
+    assert delete_table_user()
+    assert delete_table_robot()
+    assert delete_table_match()
+
     response = client.post(
         "/signup",
         json={"username": "tonimondejar", "email": "antoniomondejar2001@gmail.com",
         "password": "Test1234"}
     )
+
     assert response.status_code == 201
     # Must be a hashed password
     assert response.json()["hashed_password"] != "Test1234" 
 
     assert response.json()["verified"] == False
 
-    user_in_db = get_user_by_username("tonimondejar")
-    # Check if the user was added to the database
-    assert user_in_db != None
+    # Check if the user was correctly added to the database
+    assert get_user_by_username("tonimondejar") != None
 
     assert delete_user_by_username("tonimondejar")
 
 def test_username_already_in_use():
+    # Deletes the database
+    assert delete_table_user()
+    assert delete_table_robot()
+    assert delete_table_match()
+
     response = client.post(
         "/signup",
         json={"username": "tonimondejar", "email": "antoniomondejar2001@gmail.com",
         "password": "Test1234"}
     )
+
     # User registered correctly
     assert response.status_code == 201
+    # Check if user was added to the database
+    assert get_user_by_username("tonimondejar") != None
 
     response = client.post(
         "/signup",
         json={"username": "tonimondejar", "email": "antonio.mondejar@mi.unc.edu.ar",
         "password": "Test1234"}
     )
+
     # Must fail because username is already in use.
     assert response.status_code == 400
     assert response.json()["detail"] == "username already in use"
+    
+    #Checks that the user was not added to the database
+    assert get_user_by_email("antonio.mondejar@mi.unc.edu.ar") == None
 
+    # Deletes the first user added
     assert delete_user_by_username("tonimondejar")
 
 def test_email_already_in_use():
+    # Deletes the database
+    assert delete_table_user()
+    assert delete_table_robot()
+    assert delete_table_match()
+
     response = client.post(
         "/signup",
         json={"username": "tonimondejar", "email": "antoniomondejar2001@gmail.com",
         "password": "Test1234"}
     )
+    
     # User registered correctly
     assert response.status_code == 201
-
+    # Check if user was added to the database
+    assert get_user_by_username("tonimondejar") != None
+    
     response = client.post(
         "/signup",
         json={"username": "tonimondejar1", "email": "antoniomondejar2001@gmail.com",
         "password": "Test1234"}
     )
+
     # Must fail because email is already in use.
     assert response.status_code == 400
     assert response.json()["detail"] == "email already associated with another user"
 
-    assert delete_user_by_username("tonimondejar")
     # Checks that the user was not added to the database
     assert get_user_by_username("tonimondejar1") == None
+    
+    # Deletes the first user added
+    assert delete_user_by_username("tonimondejar")
 
 def test_email_not_valid():
+    # Deletes the database
+    assert delete_table_user()
+    assert delete_table_robot()
+    assert delete_table_match()
+
     response = client.post(
         "/signup",
-        json={"username": "tonimondejar1", "email": "antoniomondejzxckzck",
+        json={"username": "tonimondejar", "email": "antoniomondejzxckzck",
         "password": "Test1234"}
     )
+
     # Must fail because email is not valid.
     assert response.status_code == 400
     assert response.json()["detail"] == "email not valid"
 
     # Checks that the user was not added to the database
-    assert get_user_by_username("tonimondejar1") == None
+    assert get_user_by_username("tonimondejar") == None
 
 def test_password_format_not_valid():
+    # Deletes the database
+    assert delete_table_user()
+    assert delete_table_robot()
+    assert delete_table_match()
+
     response = client.post(
         "/signup",
-        json={"username": "tonimondejar1", "email": "antoniomondejar2001@gmail.com",
+        json={"username": "tonimondejar", "email": "antoniomondejar2001@gmail.com",
         "password": "test"} #Missing numbers and capital letters, also its length is less than 8
     )
+
     # Must fail because password format is not valid.
     assert response.status_code == 400
     assert response.json()["detail"] == "password format not valid"
     
     # Checks that the user was not added to the database
-    assert get_user_by_username("tonimondejar1") == None
+    assert get_user_by_username("tonimondejar") == None
 
 
 ## TO DO, HOW TO PARSE A FILE (?)
 # def test_wrong_avatar_file_extension():
-#     response = client.post(
-#         "/signup",
-#         json={"username": "tonimondejar1", "email": "antoniomondejar2001@gmail.com",
-#         "password": "Test1234"}
-#     )
-#     # Must fail because avatar format is not valid.
-#     assert response.status_code == 400
-#     assert response.json()["detail"] == "avatar format not valid"
-    
-#     # Checks that the user was not added to the database
-#     assert get_user_by_username("tonimondejar1") == None
+    # # Deletes the database
+    # assert delete_table_user()
+    # assert delete_table_robot()
+    # assert delete_table_match()
 
-def test_non_existent_email(): 
+    # response = client.post(
+    #     "/signup",
+    #     json={"username": "tonimondejar", "email": "antoniomondejar2001@gmail.com",
+    #     "password": "Test1234"}
+    # )
+    
+    # # Must fail because avatar format is not valid.
+    # assert response.status_code == 400
+    # assert response.json()["detail"] == "avatar format not valid"
+    
+    # # Checks that the user was not added to the database
+    # assert get_user_by_username("tonimondejar") == None
+
+def test_non_existent_email():
+    # Deletes the database
+    assert delete_table_user()
+    assert delete_table_robot()
+    assert delete_table_match()
+
     response = client.post(
         "/signup",
-        json={"username": "tonimondejar1", "email": "antomondejarnoexisteniahi@gmail.com",
+        json={"username": "tonimondejar", "email": "antoniomondejarnoexisteniahi@gmail.com",
         "password": "Test1234"}
     )
+
     # Must fail because email does not exists.
     assert response.status_code == 500
     assert response.json()["detail"] == "internal error sending the email with the verification code"
     
     # Checks that the user was not added to the database
-    assert get_user_by_username("tonimondejar1") == None
+    assert get_user_by_username("tonimondejar") == None

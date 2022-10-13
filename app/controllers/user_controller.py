@@ -1,19 +1,25 @@
-from fastapi import APIRouter, status
-from schema.user import *
-from database.crud.user import *
+from fastapi import APIRouter, status, HTTPException
+from app.validators.user_validator import *
+from view_entities.user_view_entities import *
+from database.dao.user_dao import *
 from passlib.context import CryptContext
 from random import randint
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-user_router = APIRouter()
+user_controller = APIRouter()
 
-@user_router.post("/signup", status_code=status.HTTP_201_CREATED)
+@user_controller.post("/signup", status_code=status.HTTP_201_CREATED)
 async def sign_up_post(user: UserSignUpData):
+    if not validate_email_format(user.email):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="email not valid")
 
-    if get_user_by_username(user.username) is not None:
+    if not validate_password(user.password):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="password format not valid")
+    
+    if not validate_username_not_in_use(user.username):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="username already in use")
     
-    if get_user_by_email(user.email) is not None: # If the user is not in the database returns None
+    if not validate_email_not_in_use(user.email):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="email already associated with another user")
 
@@ -30,7 +36,7 @@ async def sign_up_post(user: UserSignUpData):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="internal error sending the email with the verification code")
 
-    # Calls crud function to insert the user into the db
+    # Calls dao function to insert the user into the db
     if not create_user(user_to_db):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="internal error when inserting the user into the database")
@@ -38,6 +44,6 @@ async def sign_up_post(user: UserSignUpData):
         return user_to_db
 
 # # For testing
-# @user_router.get("/users")
+# @user_controller.get("/users")
 # def get_users():
 #     return get_users_db()

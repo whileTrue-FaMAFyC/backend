@@ -1,8 +1,7 @@
 from pony.orm import *
-
+from os import getenv
 
 db = Database()
-
 
 class User(db.Entity):
     username = Required(str, unique=True)
@@ -36,6 +35,14 @@ class Match(db.Entity):
     hashed_password = Optional(str)
     PrimaryKey(name, creator_user)
 
-db.bind(provider='sqlite', filename='database.sqlite', create_db=True)
 
-db.generate_mapping(create_tables=True)
+def bind_database(filename):
+    db.bind('sqlite', filename, create_db=True)
+    db.generate_mapping(create_tables=True)
+
+
+RUNNING_ENVIRONMENT = getenv("DB_ENV", "APP_DB")
+if RUNNING_ENVIRONMENT == "TESTING":
+    bind_database(':sharedmemory:')
+else:
+    bind_database('database_pyrobots.sqlite')

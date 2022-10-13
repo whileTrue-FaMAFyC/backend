@@ -1,7 +1,6 @@
-from pony.orm import db_session
-from database.models import User
-from schema.user import NewUserToDb, UserFromDb
-
+from pony.orm import db_session, delete
+from database.models.models import User
+from view_entities.user_view_entities import NewUserToDb, UserFromDb
 #
 # The db_session() decorator performs the following actions on exiting function:
 #
@@ -39,6 +38,24 @@ def delete_user_by_username(username: str):
         user_in_db = User.get(username=username)
         if user_in_db != None:
             user_in_db.delete()
+        return True
+    except:
+        return False
+
+@db_session
+def delete_user_by_email(email: str):
+    try:
+        user_in_db = User.get(email=email)
+        if user_in_db != None:
+            user_in_db.delete()
+        return True
+    except:
+        return False
+
+@db_session
+def delete_table_user():
+    try:
+        delete(p for p in User)
         return True
     except:
         return False
