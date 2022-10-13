@@ -5,6 +5,7 @@ db = Database()
 
 
 class User(db.Entity):
+    id = PrimaryKey(int, auto=True)
     username = Required(str, unique=True)
     email = PrimaryKey(str)
     avatar = Optional(buffer)
@@ -16,6 +17,7 @@ class User(db.Entity):
 
 
 class Robot(db.Entity):
+    id = PrimaryKey(int, auto=True)
     name = Required(str)
     owner = Required(User)
     avatar = Optional(buffer)
@@ -25,6 +27,7 @@ class Robot(db.Entity):
 
 
 class Match(db.Entity):
+    id = PrimaryKey(int, auto=True)
     name = Required(str)
     creator_user = Required(User)
     robots_joined = Set(Robot)
