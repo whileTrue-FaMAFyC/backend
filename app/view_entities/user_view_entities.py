@@ -1,8 +1,6 @@
-from fastapi import HTTPException, UploadFile, status
-from pydantic import BaseModel, validator
+from fastapi import UploadFile
+from pydantic import BaseModel
 from typing import Union
-from email_validator import validate_email, EmailNotValidError
-from utils.user import *
 
 ### To parse request body always use a pydantic schema
 
