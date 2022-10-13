@@ -1,5 +1,5 @@
 from pony.orm import db_session
-from database.models import *
+from database.models.models import User
 
 @db_session
 def get_user_by_username(username: str):

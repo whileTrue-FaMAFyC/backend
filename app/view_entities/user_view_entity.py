@@ -7,7 +7,7 @@ class UserBase(BaseModel):
     avatar: Union[bytes, None] = None
     hashed_password: str
 
-class UserLogIn(BaseModel):
+class UserLogin(BaseModel):
     username_or_email: str
     password: str
 
