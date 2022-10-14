@@ -1,12 +1,12 @@
 from database.models.models import Match, Robot, User 
 from passlib.context import CryptContext
-from pony.orm import db_session
-from view_entities import match_view_entity
+from pony.orm import db_session, select
+from view_entities import match_view_entities
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 @db_session
-def add_new_match(new_match: match_view_entity.NewMatchView):
+def add_new_match(new_match: match_view_entities.NewMatchView):
     creator = User.get(username=new_match.creator_user)
     robot_creator = Robot.get(name=new_match.creator_robot, owner=creator)
     
@@ -35,4 +35,14 @@ def add_new_match(new_match: match_view_entity.NewMatchView):
 def is_name_available(match_name: str, creator_username: str):
     matches = Match.get(creator_user = User.get(username=creator_username), 
                         name = match_name)
+    return matches
+
+@db_session
+def get_matches_from(user: str):
+    matches = select(m.name for m in Match if m.creator_user.username == user)
+    return matches
+
+@db_session
+def get_all_matches():
+    matches = Match.select()
     return matches
