@@ -1,15 +1,15 @@
 from fastapi import FastAPI
-from controllers import match_controller, robot_controller, user_controller
+from controllers import *
 
-def include_routers(app):
-	# app.include_router(user.user_router)
-    # app.include_router(robot.robot_router)
-    app.include_router(match_controller.controller)
+def include_controllers(app):
+	# app.include_router(user.user_controller)
+    # app.include_router(robot.robot_controller)
+    # app.include_router(match.match_controller)
     pass
 
 def start_application():
 	app = FastAPI()
-	include_routers(app)
+	include_controllers(app)
 	return app 
 
 app = start_application()
