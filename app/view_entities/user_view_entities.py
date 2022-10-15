@@ -8,7 +8,7 @@ from typing import Union
 class UserBase(BaseModel):
     username: str
     email: str
-    avatar: Union[UploadFile, None] = None
+    avatar: str = ""
 
 # To insert a user to the database
 class NewUserToDb(UserBase):

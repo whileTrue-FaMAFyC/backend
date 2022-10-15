@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, status
 from validators.user_validator import *
 from view_entities.user_view_entities import *
 from database.dao.user_dao import *
@@ -13,5 +13,4 @@ def verify_user(username: str, code: UserVerificationCode):
         return UserFromDb.from_orm(get_user_by_username(username)) # Returns user_info.
 
     else:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            detail="internal error when updating the user info in the database")
+        raise ERROR_UPDATING_USER_DATA
