@@ -41,7 +41,7 @@ def test_inexistent_user():
     print('\n')
     assert response.status_code == 401
     assert response.json() == {
-        'detail': 'Invalid credentials'
+        'detail': 'Inexistent user'
     }
 
 # Try logging in with wrong password
@@ -94,9 +94,7 @@ def test_login_username():
     
     print(response.json())
     print('\n')
-    print(response.headers['Authorization'])
-    print('\n')
-    assert response.headers['Authorization'] is not None
+    assert response.json()['Authorization'] is not None
     assert response.status_code == 200
 
 # Logging in with email and correct password
@@ -112,8 +110,6 @@ def test_login_email():
     )
     
     print(response.json())
-    print('\n')
-    print(response.headers['Authorization'])
     print('\n') 
-    assert response.headers['Authorization'] is not None
+    assert response.json()['Authorization'] is not None
     assert response.status_code == 200
