@@ -1,12 +1,14 @@
 from database.dao import match_dao, robot_dao
 from fastapi import HTTPException
-from view_entities.match_view_entities import NewMatchView
+from view_entities.match_view_entities import NewMatch
 
-def new_match_val(new_match : NewMatchView):
-    users_robot = robot_dao.belongs_to_user(new_match.creator_robot, 
-                                         new_match.creator_user)
-    name_in_use = match_dao.is_name_available(new_match.name, 
-                                         new_match.creator_user)
+def new_match_validator(new_match : NewMatch):
+    # To check if the user has a robot with the provided name
+    users_robot = robot_dao.get_robot_by_name_and_user(new_match.creator_robot, 
+                                                        new_match.creator_user)
+    # To check if the user already created a match with the provided name
+    name_in_use = match_dao.get_match_by_name_and_user(new_match.name, 
+                                                       new_match.creator_user)
     valid_match = True
     detail = ""
 
@@ -37,9 +39,9 @@ def new_match_val(new_match : NewMatchView):
         valid_match = False
         detail += "Number of games has to be between 1 and 200. "
 
-    if(new_match.num_rounds < 1 or new_match.num_rounds > 100000):
+    if(new_match.num_rounds < 1 or new_match.num_rounds > 10000):
         valid_match = False
-        detail += "Number of rounds has to be between 1 and 100000. "
+        detail += "Number of rounds has to be between 1 and 10000. "
 
     if(not valid_match):
         raise HTTPException(

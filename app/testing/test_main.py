@@ -1,10 +1,9 @@
 from fastapi.testclient import TestClient
-from fastapi import UploadFile
 from pony.orm import db_session
 from main import app
 from database.dao import user_dao, robot_dao
 from view_entities.user_view_entities import NewUserToDb
-from view_entities.robot_view_entities import NewRobotView
+from view_entities.robot_view_entities import NewRobotTest
 import random
 import string
 
@@ -12,6 +11,15 @@ import string
 users = ['basbenja', 'jolcese', 'tonimond']
 robots = [['robot1', 'robot2'], ['robot1', 'robot2'], ['robot1', 'robot2', 'robot3']]
 matches = []
+# tokens = {'basbenja': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI"\
+#                        "6ImJhc2JlbmphIiwidmVyaWZpZWQiOiJUcnVlIn0.0sWJnPiEB-0"\
+#                        "0Bsp_QFQtyM3poSO7V_PlG_NSLtTsuM0",
+#           'jolcese': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6"\
+#                       "ImpvbGNlc2UiLCJ2ZXJpZmllZCI6IlRydWUifQ.1qdZkDoeOFjpJr"\
+#                       "oR8dCvSdKV6b2ccNhFRPvTf2vCu_A",
+#           'tonimond': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI"\
+#                        "6InRvbmltb25kIiwidmVyaWZpZWQiOiJUcnVlIn0.t8XBrDh12dv"\
+#                        "0Rvc75PpFlEu3f1CKRsqx1MJjDMdInns"}
 client = TestClient(app)
 
 @db_session
@@ -19,26 +27,32 @@ def initial_users():
     users = [
         ('basbenja', 'basbenja@gmail.com', None, 'compu2317', '12345', True),
         ('jolcese', 'juliolcese@gmail.com', None, 'Whil3True', '56542', True),
-        ('tonimond', 'tonimondejar@gmail.com', None, '122e31', '58924', False)
+        ('tonimond', 'tonimondejar@gmail.com', None, '122e31', '58924', True)
     ]
     for username, email, avatar, password, verif_code, verified in users:
-        user_dao.create_user(NewUserToDb(username=username, email=email, avatar=avatar, 
-                                         hashed_password=password, verification_code=verif_code, verified=verified))
+        user_dao.create_user(NewUserToDb(username = username, email = email, 
+                                         avatar = avatar, hashed_password = password, 
+                                         verification_code = verif_code, 
+                                         verified = verified))
     return
 
 @db_session
 def initial_robots():
+    src_code = "data:text/x-python;base64,aW1wb3J0IHV2aWNvcm4KCgppZiBfX25hb"\
+               "WVfXyA9PSAiX19tYWluX18iOgogICAgdXZpY29ybi5ydW4oImFwcC5hcGk6"\
+               "YXBwIiwgaG9zdD0iMC4wLjAuMCIsIHBvcnQ9ODAwMCwgcmVsb2FkPVRydWUp"
     robots = [
-        ('robot1',"basbenja@gmail.com", None, UploadFile(filename="A file read as UploadFile")),
-        ('robot2',"basbenja@gmail.com", None, UploadFile(filename="Source code")),
-        ('robot1',"juliolcese@gmail.com", None, UploadFile(filename="A file revfwrvrw {3428")),
-        ('robot2',"juliolcese@gmail.com", None, UploadFile(filename="ciwd")),
-        ('robot1',"tonimondejar@gmail.com", None, UploadFile(filename="cddddddddile")),
-        ('robot2',"tonimondejar@gmail.com", None, UploadFile(filename="move")),
-        ('robot3',"tonimondejar@gmail.com", None, UploadFile(filename="crgwe"))        
+        ('robot1',"basbenja@gmail.com", None, src_code),
+        ('robot2',"basbenja@gmail.com", None, src_code),
+        ('robot1',"juliolcese@gmail.com", None, src_code),
+        ('robot2',"juliolcese@gmail.com", None, src_code),
+        ('robot1',"tonimondejar@gmail.com", None, src_code),
+        ('robot2',"tonimondejar@gmail.com", None, src_code),
+        ('robot3',"tonimondejar@gmail.com", None, src_code)        
     ]
     for name, owner, avatar, source_code in robots:
-        robot_dao.create_robot(NewRobotView(name=name, email=owner, avatar=avatar, source_code=source_code))
+        robot_dao.create_robot(NewRobotTest(name = name, email = owner, 
+                                            avatar = avatar, source_code = source_code))
     return
 
 
@@ -82,8 +96,9 @@ def client_put(match_name: str, creator_user: str, creator_robot: str,
         "max_players": max_players,
         "num_games": num_games,
         "num_rounds": num_rounds,
-        "password": password
+        "password": password,
         }
+#       ,headers = tokens[creator_user]
     ) 
     return response
 
@@ -300,7 +315,7 @@ def test_invalid_games():
     num_games = random.choice([random.randint(-100, 0), 
                                random.randint(200, 300)])
 
-    num_rounds = random.randint(1, 100000)
+    num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
 
@@ -333,7 +348,7 @@ def test_invalid_rounds():
     num_games = random.randint(1, 200)
 
     num_rounds = random.choice([random.randint(-100, 0), 
-                                random.randint(100001, 100101)])
+                                random.randint(10001, 10100)])
 
     password = random.choice(["", get_random_password()])
 
@@ -342,6 +357,6 @@ def test_invalid_rounds():
 
     assert response.status_code == 400
     assert response.json()["detail"] == "Number of rounds has to be between "\
-                                        "1 and 100000. "
+                                        "1 and 10000. "
 
     return

@@ -1,7 +1,7 @@
-from typing import Union
 from pydantic import BaseModel
+from typing import Union
 
-class NewMatchView(BaseModel):
+class NewMatch(BaseModel):
     name: str
     creator_user: str
     creator_robot: str

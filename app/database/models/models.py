@@ -1,5 +1,5 @@
-from pony.orm import *
 from os import getenv
+from pony.orm import *
 
 db = Database()
 
@@ -43,6 +43,9 @@ def bind_database(filename: str):
     db.generate_mapping(create_tables=True)
 
 RUNNING_ENVIRONMENT = getenv("DB_ENV", "APP_DB")
+
+# When testing (pytest), it gets set to TESTING and creates a database in
+# RAM memory
 
 if RUNNING_ENVIRONMENT == "TESTING":
     bind_database(':sharedmemory:')
