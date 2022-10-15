@@ -6,7 +6,7 @@ from utils.user_utils import *
 class UserBase(BaseModel):
     username: str
     email: str
-    avatar: Union[UploadFile, None] = None
+    avatar: Union[bytes, None] = None
 
 # To parse the parameters of the post request
 class UserSignUpData(UserBase):

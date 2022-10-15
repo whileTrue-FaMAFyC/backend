@@ -1,5 +1,5 @@
 from fastapi import APIRouter, status, HTTPException
-from app.validators.user_validator import *
+from validators.user_validator import *
 from view_entities.user_view_entities import *
 from database.dao.user_dao import *
 from passlib.context import CryptContext
