@@ -6,7 +6,7 @@ db = Database()
 class User(db.Entity):
     username = Required(str, unique=True)
     email = PrimaryKey(str)
-    avatar = Optional(buffer)
+    avatar = Optional(str)
     hashed_password = Required(str)
     verification_code = Required(int)
     verified = Required(bool)
@@ -17,9 +17,9 @@ class User(db.Entity):
 class Robot(db.Entity):
     name = Required(str)
     owner = Required(User)
-    avatar = Optional(buffer)
+    avatar = Optional(str)
     matches_joined = Set('Match')
-    source_code = Required(buffer)
+    source_code = Required(str)
     PrimaryKey(name, owner)
 
 

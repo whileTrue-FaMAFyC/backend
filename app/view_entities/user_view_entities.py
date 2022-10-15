@@ -1,16 +1,15 @@
-from fastapi import UploadFile
 from pydantic import BaseModel
-from typing import Union
 from utils.user_utils import *
 
 class UserBase(BaseModel):
     username: str
     email: str
-    avatar: Union[bytes, None] = None
+    avatar: str
 
 # To parse the parameters of the post request
 class UserSignUpData(UserBase):
     password: str
+    avatarFilename: str
 
 # To insert a user to the database
 class NewUserToDb(UserBase):

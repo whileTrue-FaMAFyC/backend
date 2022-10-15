@@ -1,24 +1,30 @@
-import email_validator
-from utils.user_utils import *
 from database.dao.user_dao import *
+from utils.user_utils import *
+from view_entities.user_view_entities import UserSignUpData
+from validate_email_address import validate_email
 
-# Returns True if the email format is valid
-def validate_email_format(email):
-    try:
-        # Checks the syntax of the email. Needs the email_validator module prefix for issues
-        #  with another function of utils/user.py.
-        v = email_validator.validate_email(email)
-        return True
-    except email_validator.EmailNotValidError as e:
-        return False
+def sign_up_validator(user: UserSignUpData):
+    # Email format validator
+    if not validate_email(user.email):
+        raise EMAIL_NOT_VALID
+    
+    # Email exists validator
+    is_valid = validate_email(user.email, verify=True)
+    if not is_valid or is_valid == None:
+        raise EMAIL_NOT_EXISTS
 
-def validate_password(password):
-    return is_valid_password(password)
+    # Avatar format validator
+    if not user.avatar.startswith("data:image/png"):
+        raise AVATAR_FORMAT_NOT_VALID
 
-# Returns True if the username is not in use
-def validate_username_not_in_use(username):
-    return get_user_by_username(username) is None
+    # Password format validator
+    if not is_valid_password(user.password):
+        raise PASSWORD_FORMAT_NOT_VALID
+    
+    # Username not in use validator
+    if get_user_by_username(user.username) is not None:
+        raise USERNAME_ALREADY_IN_USE
 
-# Returns True if the email is not in use
-def validate_email_not_in_use(email):
-    return get_user_by_email(email) is None
+    # Email not in use validator
+    if get_user_by_email(user.email) is not None:
+        raise EMAIL_ALREADY_IN_USE

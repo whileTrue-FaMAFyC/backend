@@ -65,3 +65,4 @@ def delete_table_user():
 # def get_users_db():
 #     users = User.select()
 #     return [UserFromDb.from_orm(u) for u in users]
+
