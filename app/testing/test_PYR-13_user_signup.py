@@ -169,7 +169,7 @@ def test_non_existent_email():
 
     # Must fail because email does not exists.
     assert response.status_code == 400
-    assert response.json()["detail"] == "email not exists"
+    assert response.json()["detail"] == "email does not exist"
     
     # Checks that the user was not added to the database
     assert get_user_by_username("tonimondejar") == None

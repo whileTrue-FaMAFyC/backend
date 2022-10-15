@@ -9,7 +9,7 @@ EMAIL_NOT_VALID = HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                 detail="email not valid")
 
 EMAIL_NOT_EXISTS = HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail="email not exists")
+                                detail="email does not exist")
 
 AVATAR_FORMAT_NOT_VALID = HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                 detail="avatar extension file not supported")
