@@ -13,7 +13,7 @@ def test_successful_verification():
     assert delete_table_user()
     assert delete_table_robot()
     assert delete_table_match()
-    
+
     code = randint(100000,999999)
 
     user_to_db = NewUserToDb(username="tonimondejar", email="antoniomondejar2001@gmail.com",
