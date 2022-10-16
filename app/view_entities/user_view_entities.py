@@ -1,6 +1,4 @@
-from fastapi import UploadFile
 from pydantic import BaseModel
-from typing import Union
 
 ### To parse request body always use a pydantic schema
 
