@@ -1,5 +1,5 @@
 from fastapi import APIRouter, status
-from validators.user_validator import *
+from app.validators.user_validators import *
 from view_entities.user_view_entities import *
 from database.dao.user_dao import *
 
