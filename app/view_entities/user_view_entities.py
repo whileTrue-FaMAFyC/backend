@@ -27,3 +27,6 @@ class UserFromDb(UserBase):
     class Config:
         orm_mode = True
 
+# To parse the request body of the verify user endpoint
+class UserVerificationCode(BaseModel):
+    verification_code: int

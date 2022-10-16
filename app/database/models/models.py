@@ -3,46 +3,51 @@ from pony.orm import *
 
 db = Database()
 
+
 class User(db.Entity):
+    user_id = PrimaryKey(int, auto=True, unsigned=True)
     username = Required(str, unique=True)
-    email = PrimaryKey(str)
+    email = Required(str, unique=True)
     avatar = Optional(str)
     hashed_password = Required(str)
-    verification_code = Required(int)
+    verification_code = Required(int, unsigned=True)
     verified = Required(bool)
     robots = Set('Robot')
     matches_created = Set('Match')
 
 
 class Robot(db.Entity):
+    robot_id = PrimaryKey(int, auto=True, unsigned=True)
     name = Required(str)
+    source_code = Required(str)
     owner = Required(User)
     avatar = Optional(str)
     matches_joined = Set('Match')
-    source_code = Required(str)
-    PrimaryKey(name, owner)
+    composite_key(name, owner)
 
 
 class Match(db.Entity):
+    match_id = PrimaryKey(int, auto=True, unsigned=True)
     name = Required(str)
     creator_user = Required(User)
-    robots_joined = Set(Robot)
     min_players = Required(int)
     max_players = Required(int)
     num_games = Required(int)
     num_rounds = Required(int)
     started = Required(bool)
     hashed_password = Optional(str)
-    PrimaryKey(name, creator_user)
+    robots_joined = Set(Robot)
+    composite_key(name, creator_user)
 
 
-def bind_database(filename):
+def open_database(filename):
     db.bind('sqlite', filename, create_db=True)
     db.generate_mapping(create_tables=True)
 
-
-RUNNING_ENVIRONMENT = getenv("DB_ENV", "APP_DB")
+# When testing (pytest), it gets set to TESTING and creates a database in
+# RAM memory
+RUNNING_ENVIRONMENT = getenv("DB_ENV", "DEPLOYMENT")
 if RUNNING_ENVIRONMENT == "TESTING":
-    bind_database(':sharedmemory:')
+    open_database(':sharedmemory:')
 else:
-    bind_database('database_pyrobots.sqlite')
+    open_database('database.sqlite')

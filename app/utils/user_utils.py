@@ -3,6 +3,7 @@ from validate_email_address import validate_email
 import smtplib
 
 SYSTEM_MAIL = "pyrobots.noreply@gmail.com"
+
 SYSTEM_MAIL_PASSWORD = "kltrgevemdlcywkq"
 
 EMAIL_NOT_VALID = HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
@@ -28,6 +29,18 @@ ERROR_INSERTING_DATA = HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER
     
 ERROR_SENDING_VERIFICATION_EMAIL = HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="internal error sending the email with the verification code")
+
+USER_NOT_REGISTERED = HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="user not registered")
+
+USER_ALREADY_VERIFIED = HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="user already verified")
+
+WRONG_VERIFICATION_CODE = HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="wrong verification code")
+
+ERROR_UPDATING_USER_DATA = HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail="internal error when updating the user info in the database")
 
 def is_valid_password(password):
     l, u, d = 0, 0, 0
