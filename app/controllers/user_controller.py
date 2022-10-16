@@ -16,10 +16,11 @@ async def sign_up_post(user: UserSignUpData):
 
     verification_code = randint(100000,999999)
 
+    avatar_file = insert_filename_to_file(user.avatar, user.avatarFilename)
+
     user_to_db = NewUserToDb(username=user.username, email=user.email,
-                            avatar=insert_filename_to_file(user.avatar, user.avatarFilename),
-                            hashed_password=encrypted_password, verification_code=verification_code,
-                            verified=False)
+                            avatar=avatar_file, hashed_password=encrypted_password,
+                            verification_code=verification_code, verified=False)
 
     # Sends the email with the verification code.
     if not send_verification_email(user.email, verification_code):

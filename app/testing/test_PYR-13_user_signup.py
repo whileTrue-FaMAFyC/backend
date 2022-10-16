@@ -29,6 +29,27 @@ def test_successful_sign_up():
 
     assert delete_user_by_username("tonimondejar")
 
+def test_successful_sign_up_without_avatar():
+    # Deletes the database
+    assert delete_table_user()
+    assert delete_table_robot()
+    assert delete_table_match()
+
+    response = client.post(
+        "/signup",
+        json={"username": "tonimondejar", "email": "antoniomondejar2001@gmail.com",
+        "password": "Test1234"}
+    )
+
+    assert response.status_code == 201
+    # Must be an empty avatar
+    assert response.json()["avatar"] == "" 
+
+    # Check if the user was correctly added to the database
+    assert get_user_by_username("tonimondejar") != None
+
+    assert delete_user_by_username("tonimondejar")
+
 def test_username_already_in_use():
     # Deletes the database
     assert delete_table_user()

@@ -14,7 +14,7 @@ def sign_up_validator(user: UserSignUpData):
         raise EMAIL_NOT_EXISTS
 
     # Avatar format validator
-    if not user.avatar.startswith("data:image/png"):
+    if not user.avatar.startswith("data:image/png") and user.avatar != "":
         raise AVATAR_FORMAT_NOT_VALID
 
     # Password format validator

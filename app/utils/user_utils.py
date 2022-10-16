@@ -71,4 +71,6 @@ def send_verification_email(recipient, verification_code):
         return False
 
 def insert_filename_to_file(file: str, filename: str):
+    if file == "":
+        return ""
     return "name:" + filename + ";" + file
