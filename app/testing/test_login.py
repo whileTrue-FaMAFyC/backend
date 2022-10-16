@@ -7,15 +7,15 @@ from database.models.models import User
 
 client = TestClient(app)
 
-# Add some users to the database
+# # Add some users to the database
 users = [
-    ('bas_benja', 'basbenja3@gmail.com', 'compuamigos2', 555888, True),
+    ('bas_benja', 'basbenja3@gmail.com', 'Compuamigos2', 555888, True),
     ('juliolcese', 'juliolcese@mi.unc.edu.ar', '1whileTrue1', 889654, False),
-    ('tonimondejar', 'mondejarantonio@hotmail.com', 'famafyc2022', 123456, True),
-    ('valennegrelli', 'valen57negrelli@yahoo.com.ar', 'pixies18', 852436, False),
-    ('sebagiraudo', 'sebagir4udo@unc.edu.ar', 'b_ikerfuliate', 785364, True),
-    ('lucasca22ina', 'cassinalucas@gmail.com', 'chicos1456', 152347, True),
-    ('israangulo4', 'isra1234@hotmail.com', 'argentina222', 853314, False)
+    ('tonimondejar', 'mondejarantonio@hotmail.com', 'FAMAFyC2022', 123456, True),
+    ('valennegrelli', 'valen57negrelli@yahoo.com.ar', 'piXies18', 852436, False),
+    ('sebagiraudo', 'sebagir4udo@unc.edu.ar', 'B_1kerfuliate', 785364, True),
+    ('lucasca22ina', 'cassinalucas@gmail.com', 'chicosSSS1456', 152347, True),
+    ('israangulo4', 'isra1234@hotmail.com', 'Argentiña222', 853314, False)
 ]
 with db_session:
     for username, email, password, verification_code, verified in users:
@@ -70,7 +70,7 @@ def test_not_verified_user():
         '/login',
         json = {
             'username_or_email': 'israangulo4',
-            'password': 'argentina222' 
+            'password': 'Argentiña222' 
         }
     )
     
@@ -89,7 +89,7 @@ def test_login_username():
         '/login',
         json = {
             'username_or_email': 'bas_benja',
-            'password': 'compuamigos2' 
+            'password': 'Compuamigos2' 
         }
     )
     
@@ -106,7 +106,7 @@ def test_login_email():
         '/login',
         json = {
             'username_or_email': 'mondejarantonio@hotmail.com',
-            'password': 'famafyc2022'
+            'password': 'FAMAFyC2022'
         }
     )
     

@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 from database.dao.user_dao import get_user_by_username_or_email
 from utils.user_utils import generate_token, TokenData
-from validators.user_validator import authenticate_user
+from validators.user_validators import authenticate_user
 from view_entities.user_view_entity import UserLogin
 
 user_controller = APIRouter()
