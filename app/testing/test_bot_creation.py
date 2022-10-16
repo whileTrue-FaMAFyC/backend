@@ -32,6 +32,7 @@ MOCK_SOURCE_CODE = """aW1wb3J0IHV2aWNvcm4KCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOg
                       IHBvcnQ9ODAwMCwgcmVsb2FkPVRydWUp"""
 MOCK_AVATAR = """iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQ
                  DwAEhQGAhKmMIQAAAABJRU5ErkJggg=="""
+                 
 # Add some robots to the database
 robots = [
     ('robot_cool', MOCK_SOURCE_CODE, 'isra1234@hotmail.com', MOCK_AVATAR),
@@ -57,8 +58,9 @@ with db_session:
 def test_create_existent_bot():
     print('***** CREATE EXISTENT BOT *****')
     response = client.post(
-        '/create-bot?owner_username=valennegrelli',
+        '/create-bot',
         json = {
+            'owner_username': 'valennegrelli',
             'name': 'jarvis22',
             'source_code': MOCK_SOURCE_CODE,
             'avatar': MOCK_AVATAR
@@ -72,12 +74,33 @@ def test_create_existent_bot():
         'detail': "User already has a bot with this name."
     }
 
+# Try creating bot with non existent user
+def test_create_bot_not_existent_user():
+    print('***** CREATE BOT WITH NOT EXISTENT USER *****')
+    response = client.post(
+        '/create-bot',
+        json = {
+            'owner_username': 'ASDFASDF',
+            'name': 'jarvis22',
+            'source_code': MOCK_SOURCE_CODE,
+            'avatar': MOCK_AVATAR
+        }
+    )
+    
+    print(response.json())
+    print('\n')
+    assert response.status_code == 401
+    assert response.json() == {
+        'detail': "Inexistent user"
+    }
+
 # Create new bot succesfully
 def test_create_bot():
     print('***** CREATE NEW BOT *****')
     response = client.post(
-        '/create-bot?owner_username=juliolcese',
+        '/create-bot',
         json = {
+            'owner_username': 'juliolcese',
             'name': 'R2D2',
             'source_code': MOCK_SOURCE_CODE,
             'avatar': MOCK_AVATAR
@@ -88,6 +111,7 @@ def test_create_bot():
     print('\n')
     assert response.status_code == 200
     assert response.json() == {
+        'owner_username': 'juliolcese',
         'name': 'R2D2',
         'source_code': MOCK_SOURCE_CODE,
         'avatar': MOCK_AVATAR
