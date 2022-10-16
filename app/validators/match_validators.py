@@ -2,24 +2,24 @@ from database.dao import match_dao, robot_dao
 from fastapi import HTTPException
 from view_entities.match_view_entities import NewMatch
 
-def new_match_validator(new_match : NewMatch):
+def new_match_validator(creator_username: str, new_match : NewMatch):
     # To check if the user has a robot with the provided name
     users_robot = robot_dao.get_robot_by_name_and_user(new_match.creator_robot, 
-                                                        new_match.creator_user)
+                                                        creator_username)
     # To check if the user already created a match with the provided name
     name_in_use = match_dao.get_match_by_name_and_user(new_match.name, 
-                                                       new_match.creator_user)
+                                                       creator_username)
     valid_match = True
     detail = ""
 
     if not(users_robot):
         valid_match = False
         detail += f"Robot {new_match.creator_robot} isn't "\
-                  f"in {new_match.creator_user}'s library. "
+                  f"in {creator_username}'s library. "
 
     if name_in_use:
         valid_match = False
-        detail += f"{new_match.creator_user} already has a match " \
+        detail += f"{creator_username} already has a match " \
                   f"named {new_match.name}. "
     
     if(new_match.min_players < 2 or new_match.min_players > 4):
@@ -45,7 +45,7 @@ def new_match_validator(new_match : NewMatch):
 
     if(not valid_match):
         raise HTTPException(
-            status_code = 400,
+            status_code = 409,
             detail = detail
         )
     

@@ -7,7 +7,7 @@ class User(db.Entity):
     user_id = PrimaryKey(int, auto=True, unsigned=True)
     username = Required(str, 20, unique=True)
     email = Required(str, 50, unique=True)
-    avatar = Optional(buffer)
+    avatar = Optional(str)
     hashed_password = Required(str)
     verification_code = Required(int, unsigned=True)
     verified = Required(bool)
@@ -20,7 +20,7 @@ class Robot(db.Entity):
     name = Required(str)
     source_code = Required(str)
     owner = Required(User)
-    avatar = Optional(buffer)
+    avatar = Optional(str)
     matches_joined = Set('Match')
     composite_key(name, owner)
 

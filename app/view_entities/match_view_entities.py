@@ -3,7 +3,7 @@ from typing import Union
 
 class NewMatch(BaseModel):
     name: str
-    creator_user: str
+#    creator_user: str
     creator_robot: str
     min_players: int
     max_players: int

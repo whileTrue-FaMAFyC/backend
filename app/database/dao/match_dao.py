@@ -7,14 +7,14 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Creation
 @db_session
-def create_new_match(new_match: match_view_entities.NewMatch):
-    creator = User.get(username=new_match.creator_user)
+def create_new_match(creator_username, new_match: match_view_entities.NewMatch):
+    creator = User.get(username=creator_username)
     robot_creator = Robot.get(name=new_match.creator_robot, owner=creator)
     
     if(new_match.password):
         match_password = pwd_context.hash(new_match.password)
     else: # The match doesn't have a password
-        match_password = None
+        match_password = ""
     try:
         Match(
             name = new_match.name,
