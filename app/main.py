@@ -2,10 +2,10 @@ from fastapi import FastAPI
 from controllers.robot_controller import robot_controller
 from fastapi.middleware.cors import CORSMiddleware
 # Just for integration testing:
-# from pony.orm import db_session
-# from database.models.models import User, Robot, db
-# from passlib.hash import bcrypt
-# from database.dao.user_dao import get_user_by_email
+from pony.orm import db_session
+from database.models.models import User, Robot, db
+from passlib.hash import bcrypt
+from database.dao.user_dao import get_user_by_email
 
 def include_controllers(app):
 	# app.include_router(user.user_controller)

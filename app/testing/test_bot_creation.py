@@ -64,6 +64,7 @@ def test_create_existent_bot():
         json = {
             'name': 'jarvis22',
             'source_code': MOCK_SOURCE_CODE,
+            'bot_filename': 'mybot.py',
             'avatar': MOCK_AVATAR
         }
     )
@@ -84,6 +85,7 @@ def test_create_bot():
         json = {            
             'name': 'R2D2',
             'source_code': MOCK_SOURCE_CODE,
+            'bot_filename': 'mybot.py',
             'avatar': MOCK_AVATAR
         }
     )
@@ -94,6 +96,7 @@ def test_create_bot():
     assert response.json() == {
         'name': 'R2D2',
         'source_code': MOCK_SOURCE_CODE,
+        'bot_filename': 'mybot.py',
         'avatar': MOCK_AVATAR
     }
 
