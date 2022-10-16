@@ -1,8 +1,9 @@
 from fastapi.testclient import TestClient
-from app.main import app
 from pony.orm import db_session
-from database.models.models import User
 from passlib.hash import bcrypt
+
+from app.main import app
+from database.models.models import User
 
 client = TestClient(app)
 
@@ -41,7 +42,7 @@ def test_inexistent_user():
     print('\n')
     assert response.status_code == 401
     assert response.json() == {
-        'detail': 'Inexistent user'
+        'detail': 'Inexistent user.'
     }
 
 # Try logging in with wrong password
@@ -59,7 +60,7 @@ def test_invalid_credentials():
     print('\n')
     assert response.status_code == 401
     assert response.json() == {
-        'detail': 'Invalid credentials'
+        'detail': 'Invalid credentials.'
     }
 
 # Not verified user tries to log in
@@ -77,7 +78,7 @@ def test_not_verified_user():
     print('\n')
     assert response.status_code == 401
     assert response.json() == {
-        'detail': 'Not verified user'
+        'detail': 'Not verified user.'
     }
 
 # Logging in with username and correct password

@@ -1,5 +1,5 @@
-from fastapi import HTTPException
 from datetime import datetime, timedelta
+from fastapi import HTTPException, status
 from jose import jwt
 from passlib.hash import bcrypt
 from pydantic import BaseModel
@@ -8,20 +8,19 @@ SECRET_KEY = "2c329a8eca7d0c2ff68d261ad0b2e3efa66cc2603183fe6d0b4b219a11138c84"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 1440 # One day
 
-# Status code 401 = Unauthorized
 CREDENTIALS_EXCEPTION = HTTPException(
-    status_code=401,
-    detail="Invalid credentials"
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Invalid credentials."
 )
 
 NOT_VERIFIED_EXCEPTION = HTTPException(
-    status_code=401,
-    detail="Not verified user"
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Not verified user."
 )
 
 INEXISTENT_USER_EXCEPTION = HTTPException(
-    status_code=401,
-    detail="Inexistent user"
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Inexistent user."
 )
 
 def verify_password(plain_password: str, hashed_password: str):

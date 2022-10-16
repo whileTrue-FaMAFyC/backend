@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-from utils.user_utils import *
+from database.dao.user_dao import get_user_by_username_or_email
+from utils.user_utils import generate_token, TokenData
 from validators.user_validator import authenticate_user
 from view_entities.user_view_entity import UserLogin
 
@@ -13,9 +14,8 @@ user_controller = APIRouter()
 @user_controller.post("/login")
 async def login_for_access_token(login_data: UserLogin):
      # Check credentials
-    user = authenticate_user(login_data.username_or_email, login_data.password) 
-    if not user.verified:
-        raise NOT_VERIFIED_EXCEPTION
+    authenticate_user(login_data.username_or_email, login_data.password) 
+    user = get_user_by_username_or_email(login_data.username_or_email)     
     # Credentials are OK, generate token and return it
     access_token = generate_token(
         TokenData(username=user.username, email=user.email)

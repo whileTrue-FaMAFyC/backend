@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class UserBase(BaseModel):
     username: str
     email: str
-    avatar: Union[bytes, None] = None
+    avatar: str = ""
     hashed_password: str
 
 class UserLogin(BaseModel):

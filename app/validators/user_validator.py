@@ -1,4 +1,4 @@
-from database.dao.user_dao import *
+from database.dao.user_dao import get_user_by_username_or_email
 from utils.user_utils import *
 
 def authenticate_user(username_or_email: str, password: str):
@@ -9,4 +9,6 @@ def authenticate_user(username_or_email: str, password: str):
     # User exists but inserted incorrect password
     if not verify_password(password, user.hashed_password):
         raise CREDENTIALS_EXCEPTION
-    return user
+    # User exists, inserted correct password but user is not yet verified
+    if not user.verified:
+        raise NOT_VERIFIED_EXCEPTION
