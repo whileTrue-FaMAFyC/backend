@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+from generate_token import MOCK_TOKEN_VALEN, MOCK_TOKEN_JULI
 from main import app
 from pony.orm import db_session
 from database.models.models import User, Robot
@@ -9,10 +10,10 @@ client = TestClient(app)
 
 # Add some users to the database
 users = [
-    ('bas_benja', 'basbenja3@gmail.com', 'Compuamigos2', 555888, True),
-    ('juliolcese', 'juliolcese@mi.unc.edu.ar', '1whileTrue1', 889654, False),
+    ('bas_benja', 'basbenja3@gmail.com', 'Compuamigos2', 555888, False),
+    ('juliolcese', 'juliolcese@mi.unc.edu.ar', '1whileTrue1', 889654, True),
     ('tonimondejar', 'mondejarantonio@hotmail.com', 'FAMAFyC2022', 123456, True),
-    ('valennegrelli', 'valen57negrelli@yahoo.com.ar', 'piXies18', 852436, False),
+    ('valennegrelli', 'valen57negrelli@yahoo.com.ar', 'piXies18', 852436, True),
     ('sebagiraudo', 'sebagir4udo@unc.edu.ar', '15B_ikerfuliate', 785364, True),
     ('lucasca22ina', 'cassinalucas@gmail.com', 'Loschicos1456', 152347, True),
     ('israangulo4', 'isra1234@hotmail.com', 'Argentina222', 853314, False)
@@ -60,7 +61,7 @@ def test_create_existent_bot():
     response = client.post(
         '/create-bot',
         json = {
-            'owner_username': 'valennegrelli',
+            'access_token': MOCK_TOKEN_VALEN,
             'name': 'jarvis22',
             'source_code': MOCK_SOURCE_CODE,
             'avatar': MOCK_AVATAR
@@ -74,33 +75,13 @@ def test_create_existent_bot():
         'detail': "User already has a bot with this name."
     }
 
-# Try creating bot with non existent user
-def test_create_bot_not_existent_user():
-    print('***** CREATE BOT WITH NOT EXISTENT USER *****')
-    response = client.post(
-        '/create-bot',
-        json = {
-            'owner_username': 'ASDFASDF',
-            'name': 'jarvis22',
-            'source_code': MOCK_SOURCE_CODE,
-            'avatar': MOCK_AVATAR
-        }
-    )
-    
-    print(response.json())
-    print('\n')
-    assert response.status_code == 401
-    assert response.json() == {
-        'detail': "Inexistent user"
-    }
-
 # Create new bot succesfully
 def test_create_bot():
     print('***** CREATE NEW BOT *****')
     response = client.post(
         '/create-bot',
         json = {
-            'owner_username': 'juliolcese',
+            'access_token': MOCK_TOKEN_JULI,
             'name': 'R2D2',
             'source_code': MOCK_SOURCE_CODE,
             'avatar': MOCK_AVATAR
@@ -111,7 +92,7 @@ def test_create_bot():
     print('\n')
     assert response.status_code == 200
     assert response.json() == {
-        'owner_username': 'juliolcese',
+        'access_token': MOCK_TOKEN_JULI,
         'name': 'R2D2',
         'source_code': MOCK_SOURCE_CODE,
         'avatar': MOCK_AVATAR
