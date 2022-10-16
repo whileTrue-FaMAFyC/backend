@@ -1,8 +1,10 @@
 from fastapi.testclient import TestClient
-from app.database.dao.match_dao import delete_table_match
-from app.database.dao.robot_dao import delete_table_robot
-from app.main import app
+
+from database.dao.match_dao import delete_table_match
+from database.dao.robot_dao import delete_table_robot
 from database.dao.user_dao import *
+from main import app
+
 client = TestClient(app)
 
 def test_successful_sign_up():

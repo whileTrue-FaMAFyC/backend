@@ -1,7 +1,8 @@
+from validate_email_address import validate_email
+
 from database.dao.user_dao import *
 from utils.user_utils import *
 from view_entities.user_view_entities import UserSignUpData
-from validate_email_address import validate_email
 
 def sign_up_validator(user: UserSignUpData):
     # Email format validator

@@ -1,18 +1,18 @@
 from fastapi import APIRouter, status
-from validators.user_validators import *
-from view_entities.user_view_entities import *
-from database.dao.user_dao import *
-from passlib.context import CryptContext
+from passlib.hash import bcrypt
 from random import randint
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from database.dao.user_dao import *
+from validators.user_validators import *
+from view_entities.user_view_entities import *
+
 user_controller = APIRouter()
 
 @user_controller.post("/signup", status_code=status.HTTP_201_CREATED)
 async def sign_up_post(user: UserSignUpData):
     sign_up_validator(user)
 
-    encrypted_password = pwd_context.hash(user.password)
+    encrypted_password = bcrypt.hash(user.password)
 
     verification_code = randint(100000,999999)
 

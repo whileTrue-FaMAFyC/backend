@@ -1,5 +1,5 @@
-from pony.orm import *
 from os import getenv
+from pony.orm import *
 
 db = Database()
 

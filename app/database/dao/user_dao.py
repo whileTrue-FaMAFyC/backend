@@ -1,4 +1,5 @@
 from pony.orm import db_session, delete
+
 from database.models.models import User
 from view_entities.user_view_entities import NewUserToDb, UserFromDb
 #
