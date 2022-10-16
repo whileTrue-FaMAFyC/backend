@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from controllers.robot_controller import robot_controller
 from fastapi.middleware.cors import CORSMiddleware
-from pony.orm import db_session
-from database.models.models import User, Robot, db
-from passlib.hash import bcrypt
+# Just for integration testing:
+# from pony.orm import db_session
+# from database.models.models import User, Robot, db
+# from passlib.hash import bcrypt
+# from database.dao.user_dao import get_user_by_email
 
 def include_controllers(app):
 	# app.include_router(user.user_controller)
@@ -18,13 +20,9 @@ def start_application():
 
 app = start_application()
 
-origins = [
-    "http://localhost:3000/"
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins, 
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
@@ -33,7 +31,7 @@ app.add_middleware(
 # db.drop_all_tables(with_all_data=True)
 # db.create_tables()
 
-# Add some users to the database
+# # Add some users to the database
 # users = [
 #     ('bas_benja', 'basbenja3@gmail.com', 'Compuamigos2', 555888, True),
 #     ('juliolcese', 'juliolcese@mi.unc.edu.ar', '1whileTrue1', 889654, False),
@@ -70,4 +68,11 @@ app.add_middleware(
 #     ('CYborg34', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
 #     ('automatax', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR)
 # ]
-
+# with db_session:
+#     for robot_name, source_code, owner_email, avatar in robots:
+#         Robot(
+#             name=robot_name,
+#             source_code=source_code,
+#             owner=get_user_by_email(owner_email),
+#             avatar=avatar
+#         )

@@ -60,8 +60,8 @@ def test_create_existent_bot():
     print('***** CREATE EXISTENT BOT *****')
     response = client.post(
         '/create-bot',
+        headers={'Authorization': MOCK_TOKEN_VALEN},
         json = {
-            'access_token': MOCK_TOKEN_VALEN,
             'name': 'jarvis22',
             'source_code': MOCK_SOURCE_CODE,
             'avatar': MOCK_AVATAR
@@ -80,8 +80,8 @@ def test_create_bot():
     print('***** CREATE NEW BOT *****')
     response = client.post(
         '/create-bot',
-        json = {
-            'access_token': MOCK_TOKEN_JULI,
+        headers={'Authorization': MOCK_TOKEN_JULI},
+        json = {            
             'name': 'R2D2',
             'source_code': MOCK_SOURCE_CODE,
             'avatar': MOCK_AVATAR
@@ -92,7 +92,6 @@ def test_create_bot():
     print('\n')
     assert response.status_code == 200
     assert response.json() == {
-        'access_token': MOCK_TOKEN_JULI,
         'name': 'R2D2',
         'source_code': MOCK_SOURCE_CODE,
         'avatar': MOCK_AVATAR
