@@ -1,9 +1,10 @@
 from random import randint
 from fastapi.testclient import TestClient
-from app.database.dao.match_dao import delete_table_match
-from app.database.dao.robot_dao import delete_table_robot
-from app.main import app
+
+from database.dao.match_dao import delete_table_match
+from database.dao.robot_dao import delete_table_robot
 from database.dao.user_dao import *
+from main import app
 from view_entities.user_view_entities import NewUserToDb
 
 client = TestClient(app)

@@ -1,4 +1,3 @@
-from multiprocessing.pool import RUN
 from pony.orm import *
 from os import getenv
 
