@@ -155,8 +155,6 @@ def test_password_format_not_valid():
     # Checks that the user was not added to the database
     assert get_user_by_username("tonimondejar") == None
 
-
-## TO DO, HOW TO PARSE A FILE (?)
 def test_wrong_avatar_file_extension():
     # Deletes the database
     assert delete_table_user()
