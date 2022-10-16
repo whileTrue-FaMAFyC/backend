@@ -46,7 +46,7 @@ def open_database(filename):
 
 # When testing (pytest), it gets set to TESTING and creates a database in
 # RAM memory
-RUNNING_ENVIRONMENT = getenv("TESTING_ENV", "DEPLOYMENT")
+RUNNING_ENVIRONMENT = getenv("DB_ENV", "DEPLOYMENT")
 if RUNNING_ENVIRONMENT == "TESTING":
     open_database(':sharedmemory:')
 else:
