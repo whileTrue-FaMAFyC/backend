@@ -4,7 +4,7 @@ from typing import Union
 class UserBase(BaseModel):
     username: str
     email: str
-    avatar: Union[str, None] = None
+    avatar: str = ""
 
 class NewUserToDb(UserBase):
     hashed_password: str

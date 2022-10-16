@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from typing import List, Union
+from typing import List
+
 from view_entities import robot_view_entities, user_view_entities
 
 class MatchInfo(BaseModel):
@@ -26,7 +27,7 @@ class MatchTest(BaseModel):
     max_players: int
     num_games: int
     num_rounds: int
-    password: Union[str, None] = None
+    password: str = ""
     robots_joined: List[robot_view_entities.RobotInMatch]
 
     class Config:

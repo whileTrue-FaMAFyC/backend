@@ -1,6 +1,7 @@
-from controllers import match_controller
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from controllers import match_controller
 
 def include_controllers(app):
 	# app.include_router(user_controller.user_router)

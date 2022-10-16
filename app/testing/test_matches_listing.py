@@ -1,8 +1,9 @@
-from database.dao import user_dao, robot_dao, match_dao
 from fastapi.testclient import TestClient
-from generate_token import MOCK_TOKEN_BENJA
-from main import app
 from pony.orm import db_session
+
+from main import app
+from database.dao import user_dao, robot_dao, match_dao
+from generate_token import MOCK_TOKEN_BENJA
 from view_entities.match_view_entities import MatchTest
 from view_entities.user_view_entities import NewUserToDb, UserInMatch
 from view_entities.robot_view_entities import NewRobot, RobotInMatch
@@ -26,9 +27,9 @@ def initial_users():
     ]
 
     for username, email, avatar, password, verif_code, verified in users:
-        user_dao.create_user(NewUserToDb(username = username, email = email, 
-                             avatar = avatar, hashed_password = password, 
-                             verification_code = verif_code, verified = verified))
+        user_dao.create_user(NewUserToDb(username=username, email=email, 
+                             avatar=avatar, hashed_password=password, 
+                             verification_code=verif_code, verified=verified))
     return
 
 # Mock robots used for the test.
@@ -45,8 +46,8 @@ def initial_robots():
     ]
 
     for name, owner, avatar, source_code in robots:
-        robot_dao.create_robot(NewRobot(name=name, email=owner, 
-                               avatar=avatar, source_code=source_code))
+        robot_dao.create_robot(NewRobot(name=name, email=owner, avatar=avatar, 
+                                        source_code=source_code))
     return
 
 # Mock matches used for the test.
@@ -73,11 +74,11 @@ def initial_matches():
     for (name, creator_user, creator_robot, min_players, max_players, 
          num_games, num_rounds, password, robots_joined) in matches:
         match_dao.create_test_match(
-            MatchTest(name = name, creator_user = creator_user,
-                      creator_robot = creator_robot, min_players = min_players,
-                      max_players = max_players, num_games = num_games, 
-                      num_rounds = num_rounds, password = password, 
-                      robots_joined = robots_joined))
+            MatchTest(name=name, creator_user=creator_user,
+                      creator_robot=creator_robot, min_players=min_players,
+                      max_players=max_players, num_games=num_games, 
+                      num_rounds=num_rounds, password=password, 
+                      robots_joined=robots_joined))
     return
 
 

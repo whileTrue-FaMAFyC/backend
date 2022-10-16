@@ -1,5 +1,6 @@
-from database.models.models import Match 
 from pony.orm import db_session
+
+from database.models.models import Match 
 from view_entities.match_view_entities import *
 from view_entities.robot_view_entities import *
 
@@ -20,10 +21,10 @@ def match_db_to_view(matches: Match):
         # info_and_robots.append(ShowMatch(match_info = matches_info[i],
         #                        robots_joined = all_robots_joined[i]))
         info_and_robots.append(
-            ShowMatch(match_id = matches_info[i].match_id,
-                      name = matches_info[i].name,
-                      creator_user = matches_info[i].creator_user,
-                      max_players = matches_info[i].max_players,
-                      robots_joined = all_robots_joined[i]))
+            ShowMatch(match_id=matches_info[i].match_id,
+                      name=matches_info[i].name,
+                      creator_user=matches_info[i].creator_user,
+                      max_players=matches_info[i].max_players,
+                      robots_joined=all_robots_joined[i]))
 
     return info_and_robots
