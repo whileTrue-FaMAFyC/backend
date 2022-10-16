@@ -6,13 +6,17 @@ from database.dao import robot_dao
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+# The difference between creating a match for testing and creating an actual
+# new match in the app is that in testing we try having more than one robot
+# joined to the match, so we add these robots at creation. Creating an actual
+# match would only add the creator's robot to it.
 @db_session
-def create_test_match(new_match: match_view_entities.TMatchView):
+def create_test_match(new_match: match_view_entities.MatchTest):
     creator = User.get(username=new_match.creator_user)
 
     set_robots = set()
     for r in new_match.robots_joined:
-      set_robots.add(robot_dao.get_robot_from_user(r.owner.username, r.name))
+      set_robots.add(robot_dao.get_robot_by_name_and_user(r.name, r.owner.username))
 
     if(new_match.password):
         match_password = pwd_context.hash(new_match.password)
@@ -34,16 +38,14 @@ def create_test_match(new_match: match_view_entities.TMatchView):
     return db_match
 
 @db_session
-# Returns True if the user with username `creator_username` hasn't created
-# a match with name `match_name` yet. False otherwise. 
-def is_name_available(match_name: str, creator_username: str):
-    matches = Match.get(creator_user = User.get(username=creator_username), 
+def get_match_by_name_and_user(match_name: str, creator_username: str):
+    matches = Match.get(creator_user = User.get(username = creator_username), 
                         name = match_name)
     return matches
 
 @db_session
-def get_matches_from(user: str):
-    matches = select(m.name for m in Match if m.creator_user.username == user)
+def get_matches_by_username(username: str):
+    matches = select(m.name for m in Match if m.creator_user.username == username)
     return matches
 
 @db_session

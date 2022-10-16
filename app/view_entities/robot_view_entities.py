@@ -1,17 +1,16 @@
-from fastapi import UploadFile
 from pydantic import BaseModel
 from typing import Union
 from view_entities import user_view_entities
 
-class RobotInMatchView(BaseModel):
-    owner : user_view_entities.UserInMatchView
+class RobotInMatch(BaseModel):
+    owner : user_view_entities.UserInMatch
     name : str
 
     class Config:
         orm_mode = True
 
-class NewRobotView(BaseModel):
+class NewRobot(BaseModel):
     name: str
     email: str
-    avatar: Union[UploadFile, None] = None
-    source_code: UploadFile
+    avatar: Union[str, None] = None
+    source_code: str
