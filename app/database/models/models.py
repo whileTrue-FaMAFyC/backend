@@ -1,3 +1,4 @@
+from os import getenv
 from pony.orm import *
 
 db = Database()
@@ -6,7 +7,7 @@ class User(db.Entity):
     user_id = PrimaryKey(int, auto=True, unsigned=True)
     username = Required(str, 20, unique=True)
     email = Required(str, 50, unique=True)
-    avatar = Optional(buffer)
+    avatar = Optional(str)
     hashed_password = Required(str)
     verification_code = Required(int, unsigned=True)
     verified = Required(bool)
@@ -19,7 +20,7 @@ class Robot(db.Entity):
     name = Required(str)
     source_code = Required(str)
     owner = Required(User)
-    avatar = Optional(buffer)
+    avatar = Optional(str)
     matches_joined = Set('Match')
     composite_key(name, owner)
 
@@ -37,4 +38,14 @@ class Match(db.Entity):
     robots_joined = Set(Robot)
     composite_key(name, creator_user)
 
-db.generate_mapping(create_tables=True)
+def open_database(filename):
+    db.bind('sqlite', filename, create_db=True)
+    db.generate_mapping(create_tables=True)
+
+# When testing (pytest), it gets set to TESTING and creates a database in
+# RAM memory
+RUNNING_ENVIRONMENT = getenv("TESTING_ENV", "DEPLOYMENT")
+if RUNNING_ENVIRONMENT == "TESTING":
+    open_database(':sharedmemory:')
+else:
+    open_database('database.sqlite')

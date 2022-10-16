@@ -1,10 +1,16 @@
 from fastapi import FastAPI
-from controllers import *
+from controllers.robot_controller import robot_controller
 from fastapi.middleware.cors import CORSMiddleware
+from pony.orm import db_session
+from database.models.models import User, Robot, db
+from passlib.hash import bcrypt
+
+db.drop_all_tables(with_all_data=True)
+db.create_tables()
 
 def include_controllers(app):
 	# app.include_router(user.user_controller)
-    # app.include_router(robot.robot_controller)
+    app.include_router(robot_controller)
     # app.include_router(match.match_controller)
     pass
 
