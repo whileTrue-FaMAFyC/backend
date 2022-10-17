@@ -15,10 +15,6 @@ class MatchInfo(BaseModel):
 class ShowMatch(MatchInfo):
     robots_joined: int
 
-# class ShowMatch(BaseModel):
-#     match_info: MatchInfo
-#     robots_joined: int
-
 class MatchTest(BaseModel):
     name: str
     creator_user: str
