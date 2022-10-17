@@ -85,7 +85,7 @@ class Robot:
         pass
     
     def move(self):
-        if (self._req_direction != self._direction) and self._velocity < 50:
+        if (self._req_direction != self._direction) and self._velocity <= 50:
             self._direction = self._req_direction
         
         if self._previous_req_velocity == self._req_velocity:
