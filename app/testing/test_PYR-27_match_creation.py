@@ -5,7 +5,7 @@ import random
 import string
 
 from database.dao import user_dao, robot_dao
-from generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
+from testing.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
 from main import app
 from view_entities.robot_view_entities import NewRobotTest
 from view_entities.user_view_entities import NewUserToDb

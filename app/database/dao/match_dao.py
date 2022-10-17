@@ -1,5 +1,5 @@
 from passlib.hash import bcrypt
-from pony.orm import db_session, select
+from pony.orm import db_session, select, delete
 
 from database.models.models import Match, Robot, User 
 from view_entities import match_view_entities
@@ -46,3 +46,11 @@ def get_matches_by_username(username: str):
 def get_all_matches():
     matches = Match.select()
     return matches
+
+@db_session
+def delete_table_match():
+    try:
+        delete(p for p in Match)
+        return True
+    except:
+        return False
