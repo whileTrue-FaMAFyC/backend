@@ -1,5 +1,6 @@
+from fastapi import HTTPException, status
+
 from database.dao import match_dao, robot_dao
-from fastapi import HTTPException
 from view_entities.match_view_entities import NewMatch
 
 def new_match_validator(creator_username: str, new_match : NewMatch):
@@ -45,8 +46,8 @@ def new_match_validator(creator_username: str, new_match : NewMatch):
 
     if(not valid_match):
         raise HTTPException(
-            status_code = 409,
-            detail = detail
+            status_code=status.HTTP_409_CONFLICT,
+            detail=detail
         )
     
     return

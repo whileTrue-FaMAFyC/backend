@@ -1,12 +1,13 @@
-from fastapi.testclient import TestClient
+from fastapi.testclient import TestClient, status
 from pony.orm import db_session
-from main import app
-from generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
-from database.dao import user_dao, robot_dao
-from view_entities.user_view_entities import NewUserToDb
-from view_entities.robot_view_entities import NewRobotTest
 import random
 import string
+
+from database.dao import user_dao, robot_dao
+from generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
+from main import app
+from view_entities.robot_view_entities import NewRobotTest
+from view_entities.user_view_entities import NewUserToDb
 
 # Usernames, robot names and match names used for the test
 tokens = [MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI]
@@ -29,10 +30,10 @@ def initial_users():
         ('tonimond', 'tonimondejar@gmail.com', MOCK_AVATAR, '122e31', '58924', True)
     ]
     for username, email, avatar, password, verif_code, verified in users:
-        user_dao.create_user(NewUserToDb(username = username, email = email, 
-                                         avatar = avatar, hashed_password = password, 
-                                         verification_code = verif_code, 
-                                         verified = verified))
+        user_dao.create_user(NewUserToDb(username=username, email=email, 
+                                         avatar=avatar, hashed_password=password, 
+                                         verification_code=verif_code, 
+                                         verified=verified))
     return
 
 @db_session
@@ -47,8 +48,8 @@ def initial_robots():
         ('robot3',"tonimondejar@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE)        
     ]
     for name, owner, avatar, source_code in robots:
-        robot_dao.create_robot(NewRobotTest(name = name, email = owner, 
-                                            avatar = avatar, source_code = source_code))
+        robot_dao.create_robot(NewRobotTest(name=name, email=owner, 
+                                            avatar=avatar, source_code=source_code))
     return
 
 
@@ -124,7 +125,7 @@ def test_successful_creation():
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == 201
+    assert response.status_code == status.
     return
 
 @db_session
@@ -254,7 +255,6 @@ def test_invalid_max_players():
 
     password = random.choice(["", get_random_password()])
 
-    print(max_players)
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
