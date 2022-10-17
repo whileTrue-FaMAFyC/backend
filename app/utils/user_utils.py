@@ -44,19 +44,18 @@ ERROR_UPDATING_USER_DATA = HTTPException(status_code=status.HTTP_500_INTERNAL_SE
 
 def is_valid_password(password):
     l, u, d = 0, 0, 0
-    if (len(password) >= 8):
-        for i in password:
-            # counting lowercase alphabets
-            if (i.islower()):
-                l+=1 
-            # counting uppercase alphabets
-            if (i.isupper()):
-                u+=1
-            # counting digits
-            if (i.isdigit()):
-                d+=1
-    
-    return (l>=1 and u>=1 and d>=1 and l+u+d==len(password))
+    for i in password:
+        # counting lowercase alphabets
+        if (i.islower()):
+            l+=1 
+        # counting uppercase alphabets
+        if (i.isupper()):
+            u+=1
+        # counting digits
+        if (i.isdigit()):
+            d+=1
+
+    return (l>=1 and u>=1 and d>=1 and len(password)>=8)
 
 
 def send_verification_email(recipient, verification_code):
@@ -70,7 +69,6 @@ def send_verification_email(recipient, verification_code):
     """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
     try:
         is_valid = validate_email(TO, verify=True) # Checks if the email address exists.
-        print(is_valid)
         if not is_valid or is_valid == None:
             return False
         server = smtplib.SMTP("smtp.gmail.com", 587)

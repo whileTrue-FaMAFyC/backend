@@ -69,10 +69,3 @@ def delete_table_user():
         return True
     except:
         return False
-
-# For testing
-# @db_session
-# def get_users_db():
-#     users = User.select()
-#     return [UserFromDb.from_orm(u) for u in users]
-
