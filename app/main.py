@@ -1,12 +1,12 @@
 from fastapi import FastAPI
-from controllers.robot_controller import robot_controller
 from fastapi.middleware.cors import CORSMiddleware
 
+from controllers import user_controller, robot_controller, match_controller
+
 def include_controllers(app):
-	# app.include_router(user.user_controller)
-    app.include_router(robot_controller)
-    # app.include_router(match.match_controller)
-    pass
+    app.include_router(user_controller.user_controller)
+    app.include_router(robot_controller.robot_controller)
+    app.include_router(match_controller.match_controller)
 
 def start_application():
 	app = FastAPI()
@@ -17,7 +17,7 @@ app = start_application()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins="*", 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]

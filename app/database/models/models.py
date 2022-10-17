@@ -3,10 +3,11 @@ from pony.orm import *
 
 db = Database()
 
+
 class User(db.Entity):
     user_id = PrimaryKey(int, auto=True, unsigned=True)
-    username = Required(str, 20, unique=True)
-    email = Required(str, 50, unique=True)
+    username = Required(str, unique=True)
+    email = Required(str, unique=True)
     avatar = Optional(str)
     hashed_password = Required(str)
     verification_code = Required(int, unsigned=True)
@@ -27,7 +28,7 @@ class Robot(db.Entity):
 
 class Match(db.Entity):
     match_id = PrimaryKey(int, auto=True, unsigned=True)
-    name = Required(str, 30)
+    name = Required(str)
     creator_user = Required(User)
     min_players = Required(int)
     max_players = Required(int)
@@ -38,13 +39,14 @@ class Match(db.Entity):
     robots_joined = Set(Robot)
     composite_key(name, creator_user)
 
+
 def open_database(filename):
     db.bind('sqlite', filename, create_db=True)
     db.generate_mapping(create_tables=True)
 
 # When testing (pytest), it gets set to TESTING and creates a database in
 # RAM memory
-RUNNING_ENVIRONMENT = getenv("TESTING_ENV", "DEPLOYMENT")
+RUNNING_ENVIRONMENT = getenv("DB_ENV", "DEPLOYMENT")
 if RUNNING_ENVIRONMENT == "TESTING":
     open_database(':sharedmemory:')
 else:

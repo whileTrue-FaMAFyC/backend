@@ -1,8 +1,16 @@
 from pydantic import BaseModel
-from typing import Union
+
+from view_entities.user_view_entities import UserInMatch
 
 class BotCreate(BaseModel):
     name: str
     source_code: str
     bot_filename: str
-    avatar: Union[str, None] = None
+    avatar: str = ""
+
+class RobotInMatch(BaseModel):
+    owner: UserInMatch
+    name: str
+
+    class Config:
+        orm_mode = True

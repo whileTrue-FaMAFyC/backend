@@ -1,4 +1,4 @@
-#!/home/julia/ANO32/IngSoft/PYROBOTS/backend/env/bin/python3.10
+#!/home/basbenja/Documents/3.2/INGENIERIA/PyRobots/backend/venv/bin/python3.10
 # -*- coding: utf-8 -*-
 import re
 import sys
