@@ -1,4 +1,5 @@
-from fastapi.testclient import TestClient, status
+from fastapi import status
+from fastapi.testclient import TestClient
 from pony.orm import db_session
 import random
 import string
@@ -125,7 +126,7 @@ def test_successful_creation():
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == status.
+    assert response.status_code == (status.HTTP_201_CREATED)
     return
 
 @db_session
@@ -153,7 +154,7 @@ def test_invalid_robot():
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == 409
+    assert response.status_code == (status.HTTP_409_CONFLICT)
     assert response.json()["detail"] == f"Robot {creator_robot} isn't "\
                                         f"in {creator_user}'s library. "
 
@@ -189,7 +190,7 @@ def test_match_name_used():
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == 409
+    assert response.status_code == (status.HTTP_409_CONFLICT)
     assert response.json()["detail"] == f"{creator_user} already has a match "\
                                         f"named {match_name}. "
 
@@ -225,7 +226,7 @@ def test_invalid_min_players():
 
     # Here max_players will be between 2 and 4, but that could be a smaller
     # value than min_players, so the detail would include that.
-    assert response.status_code == 409
+    assert response.status_code == (status.HTTP_409_CONFLICT)
     assert  ("Minimum amount of players has to be between 2 and 4." 
              in response.json()["detail"])
 
@@ -258,7 +259,7 @@ def test_invalid_max_players():
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == 409
+    assert response.status_code == (status.HTTP_409_CONFLICT)
     assert ("Maximum amount of players has to be between 2 and 4. " 
             in response.json()["detail"])
     return
@@ -290,7 +291,7 @@ def test_min_greater_than_max():
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == 409
+    assert response.status_code == (status.HTTP_409_CONFLICT)
     assert response.json()["detail"] == "Minimum amount of players can't be " \
                                         "greater than maximum amount of " \
                                         "players. "
@@ -325,7 +326,7 @@ def test_invalid_games():
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == 409
+    assert response.status_code == (status.HTTP_409_CONFLICT)
     assert response.json()["detail"] == "Number of games has to be between "\
                                         "1 and 200. "
 
@@ -359,7 +360,7 @@ def test_invalid_rounds():
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == 409
+    assert response.status_code == (status.HTTP_409_CONFLICT)
     assert response.json()["detail"] == "Number of rounds has to be between "\
                                         "1 and 10000. "
 
