@@ -1,8 +1,10 @@
 from fastapi import APIRouter, status
+from fastapi.responses import JSONResponse
 from passlib.hash import bcrypt
 from random import randint
 
 from database.dao.user_dao import *
+from utils.user_utils import generate_token, TokenData
 from validators.user_validators import *
 from view_entities.user_view_entities import *
 
@@ -41,3 +43,20 @@ async def verify_user(username: str, code: UserVerificationCode):
 
     else:
         raise ERROR_UPDATING_USER_DATA
+    
+# LOGIN
+# Get credentials (username or email and password) and check if they are correct
+# If they are, return token. If not, raise HTTP exception
+@user_controller.post("/login", status_code=status.HTTP_200_OK)
+async def login_for_access_token(login_data: UserLogin):
+     # Check credentials
+    authenticate_user(login_data.username_or_email, login_data.password) 
+    
+    user = get_user_by_username_or_email(login_data.username_or_email)     
+    
+    # Credentials are OK, generate token and return it
+    access_token = generate_token(
+        TokenData(username=user.username, email=user.email)
+    )
+    
+    return JSONResponse(content={"Authorization": access_token})

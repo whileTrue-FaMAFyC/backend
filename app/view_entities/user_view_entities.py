@@ -12,6 +12,11 @@ class UserSignUpData(UserBase):
     password: str
     avatarFilename: str = ""
 
+# To receive the login data
+class UserLogin(BaseModel):
+    username_or_email: str
+    password: str
+    
 # To insert a user to the database
 class NewUserToDb(UserBase):
     hashed_password: str

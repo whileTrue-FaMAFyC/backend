@@ -2,12 +2,13 @@ from fastapi.testclient import TestClient
 from pony.orm import db_session
 
 from main import app
-from database.dao import user_dao, robot_dao, match_dao
+from database.dao import user_dao, match_dao
 from database.models.models import db
-from testing.generate_token import MOCK_TOKEN_BENJA
-from view_entities.match_view_entities import MatchTest
+from testing.helpers.generate_token import MOCK_TOKEN_BENJA
+from testing.helpers.robot_helpers import NewRobot, create_robot
+from testing.helpers.match_helpers import MatchTest, create_test_match
 from view_entities.user_view_entities import NewUserToDb, UserInMatch
-from view_entities.robot_view_entities import NewRobot, RobotInMatch
+from view_entities.robot_view_entities import RobotInMatch
 
 client = TestClient(app)
 
@@ -47,8 +48,8 @@ def initial_robots():
     ]
 
     for name, owner, avatar, source_code in robots:
-        robot_dao.create_robot(NewRobot(name=name, email=owner, avatar=avatar, 
-                                        source_code=source_code))
+        create_robot(NewRobot(name=name, email=owner, avatar=avatar, 
+                            source_code=source_code))
     return
 
 # Mock matches used for the test.
@@ -74,7 +75,7 @@ def initial_matches():
 
     for (name, creator_user, creator_robot, min_players, max_players, 
          num_games, num_rounds, password, robots_joined) in matches:
-        match_dao.create_test_match(
+        create_test_match(
             MatchTest(name=name, creator_user=creator_user,
                       creator_robot=creator_robot, min_players=min_players,
                       max_players=max_players, num_games=num_games, 

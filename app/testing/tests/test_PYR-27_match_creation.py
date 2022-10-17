@@ -4,12 +4,13 @@ from pony.orm import db_session
 import random
 import string
 
-from database.dao import user_dao, robot_dao, match_dao
+from database.dao import user_dao
 from database.models.models import db
-from testing.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
 from main import app
-from view_entities.robot_view_entities import NewRobot
+from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
+from testing.helpers.robot_helpers import NewRobot, create_robot
 from view_entities.user_view_entities import NewUserToDb
+
 
 # Usernames, robot names and match names used for the test
 tokens = [MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI]
@@ -50,8 +51,8 @@ def initial_robots():
         ('robot3',"tonimondejar@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE)        
     ]
     for name, owner, avatar, source_code in robots:
-        robot_dao.create_robot(NewRobot(name=name, email=owner, 
-                                        avatar=avatar, source_code=source_code))
+        create_robot(NewRobot(name=name, email=owner, 
+                            avatar=avatar, source_code=source_code))
     return
 
 

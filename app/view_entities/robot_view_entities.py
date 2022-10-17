@@ -8,9 +8,3 @@ class RobotInMatch(BaseModel):
 
     class Config:
         orm_mode = True
-
-class NewRobot(BaseModel):
-    name: str
-    email: str
-    avatar: str = ""
-    source_code: str

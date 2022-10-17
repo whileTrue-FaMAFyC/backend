@@ -10,11 +10,6 @@ def sign_up_validator(user: UserSignUpData):
     if not validate_email(user.email):
         raise EMAIL_NOT_VALID
     
-    # Email exists validator
-    is_valid = validate_email(user.email, verify=True)
-    if not is_valid or is_valid == None:
-        raise EMAIL_NOT_EXISTS
-
     # Avatar format validator
     if not user.avatar.startswith("data:image/png") and user.avatar != "":
         raise AVATAR_FORMAT_NOT_VALID
@@ -31,6 +26,7 @@ def sign_up_validator(user: UserSignUpData):
     if get_user_by_email(user.email) is not None:
         raise EMAIL_ALREADY_IN_USE
 
+
 def user_verification_validator(username: str, code: int):
     user_in_db = get_user_by_username(username) 
     if user_in_db is None:
@@ -40,12 +36,22 @@ def user_verification_validator(username: str, code: int):
     if user_in_db.verification_code != code:
         raise WRONG_VERIFICATION_CODE
 
-SECRET_KEY = "2c329a8eca7d0c2ff68d261ad0b2e3efa66cc2603183fe6d0b4b219a11138c84"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 1440 # One day
 
 def validate_token(token: str):
     try:
         jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
     except:
         raise INVALID_TOKEN_EXCEPTION
+
+
+def authenticate_user(username_or_email: str, password: str):
+    user = get_user_by_username_or_email(username_or_email)
+    # User doesn't exist in database
+    if not user:
+        raise INEXISTENT_USER_EXCEPTION
+    # User exists but inserted incorrect password
+    if not verify_password(password, user.hashed_password):
+        raise CREDENTIALS_EXCEPTION
+    # User exists, inserted correct password but user is not yet verified
+    if not user.verified:
+        raise NOT_VERIFIED_EXCEPTION

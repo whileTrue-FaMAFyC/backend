@@ -1,17 +1,16 @@
 from fastapi.testclient import TestClient
 
-from database.dao.match_dao import delete_table_match
-from database.dao.robot_dao import delete_table_robot
 from database.dao.user_dao import *
+from testing.helpers.user_helpers import *
+from database.models.models import db
 from main import app
 
 client = TestClient(app)
 
 def test_successful_sign_up():
     # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
 
     response = client.post(
         "/signup",
@@ -33,9 +32,8 @@ def test_successful_sign_up():
 
 def test_successful_sign_up_without_avatar():
     # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
 
     response = client.post(
         "/signup",
@@ -54,9 +52,8 @@ def test_successful_sign_up_without_avatar():
 
 def test_username_already_in_use():
     # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
 
     response = client.post(
         "/signup",
@@ -87,9 +84,8 @@ def test_username_already_in_use():
 
 def test_email_already_in_use():
     # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
 
     response = client.post(
         "/signup",
@@ -120,9 +116,8 @@ def test_email_already_in_use():
 
 def test_email_not_valid():
     # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
 
     response = client.post(
         "/signup",
@@ -139,9 +134,8 @@ def test_email_not_valid():
 
 def test_password_format_not_valid():
     # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
 
     response = client.post(
         "/signup",
@@ -159,9 +153,8 @@ def test_password_format_not_valid():
 
 def test_wrong_avatar_file_extension():
     # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
 
     response = client.post(
         "/signup",
@@ -172,25 +165,6 @@ def test_wrong_avatar_file_extension():
     # Must fail because avatar format is not valid.
     assert response.status_code == 400
     assert response.json()["detail"] == "avatar extension file not supported"
-    
-    # Checks that the user was not added to the database
-    assert get_user_by_username("tonimondejar") == None
-
-def test_non_existent_email():
-    # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
-
-    response = client.post(
-        "/signup",
-        json={"username": "tonimondejar", "email": "antonionoexisteniahi@gmail.com",
-        "password": "Test1234", "avatar": "data:image/png;fake_avatar", "avatarFilename": "fake.png"}
-    )
-
-    # Must fail because email does not exists.
-    assert response.status_code == 400
-    assert response.json()["detail"] == "email does not exist"
     
     # Checks that the user was not added to the database
     assert get_user_by_username("tonimondejar") == None

@@ -1,9 +1,9 @@
 from random import randint
 from fastapi.testclient import TestClient
 
-from database.dao.match_dao import delete_table_match
-from database.dao.robot_dao import delete_table_robot
 from database.dao.user_dao import *
+from database.models.models import db
+from testing.helpers.user_helpers import *
 from main import app
 from view_entities.user_view_entities import NewUserToDb
 
@@ -11,9 +11,8 @@ client = TestClient(app)
 
 def test_successful_verification():
     # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
 
     code = randint(100000,999999)
 
@@ -40,9 +39,8 @@ def test_successful_verification():
 
 def test_wrong_verification_code():
     # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
     
     random_code = randint(100000,999999)
 
@@ -72,9 +70,8 @@ def test_wrong_verification_code():
 
 def test_user_not_registered():
     # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
     
     random_code = randint(100000,999999)
 
@@ -92,9 +89,8 @@ def test_user_not_registered():
 
 def test_user_already_verified():
     # Deletes the database
-    assert delete_table_user()
-    assert delete_table_robot()
-    assert delete_table_match()
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
     
     random_code = randint(100000,999999)
 
