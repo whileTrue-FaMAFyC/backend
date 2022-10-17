@@ -15,7 +15,6 @@ def start_application():
 
 app = start_application()
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins="*", 
