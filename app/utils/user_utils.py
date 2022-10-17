@@ -1,6 +1,7 @@
 from fastapi import HTTPException, status
-from validate_email_address import validate_email
+from jose import jwt
 import smtplib
+from validate_email_address import validate_email
 
 SYSTEM_MAIL = "pyrobots.noreply@gmail.com"
 
@@ -41,6 +42,16 @@ WRONG_VERIFICATION_CODE = HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
 
 ERROR_UPDATING_USER_DATA = HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="internal error when updating the user info in the database")
+
+INVALID_TOKEN_EXCEPTION = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Invalid token. Not authorized."
+)
+
+INEXISTENT_USER_EXCEPTION = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Inexistent user"
+)
 
 def is_valid_password(password):
     l, u, d = 0, 0, 0

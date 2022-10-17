@@ -1,4 +1,4 @@
-from pony.orm import db_session, delete
+from pony.orm import db_session, delete, select
 
 from database.models.models import User
 from view_entities.user_view_entities import NewUserToDb, UserFromDb
@@ -61,6 +61,10 @@ def delete_user_by_email(email: str):
         return True
     except:
         return False
+
+@db_session
+def get_usernames():
+    return select(u.username for u in User)
 
 @db_session
 def delete_table_user():
