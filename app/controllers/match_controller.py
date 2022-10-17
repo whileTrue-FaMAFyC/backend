@@ -3,6 +3,7 @@ from jose import jwt
 from typing import Union
 
 from database.dao import match_dao
+from utils.match_utils import match_db_to_view
 from utils.user_utils import *
 from validators.match_validators import new_match_validator
 from validators.user_validators import validate_token, SECRET_KEY
@@ -24,3 +25,10 @@ async def create_match(new_match: NewMatch, authorization: Union[str, None] = He
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Internal error creating the match" )
     return True
+
+@match_controller.get("/list-matches", status_code=status.HTTP_200_OK)
+async def get_matches(authorization: Union[str, None] = Header(None)):
+   validate_token(authorization)
+   matches_db = match_dao.get_all_matches()
+   matches_view = match_db_to_view(matches_db)
+   return matches_view

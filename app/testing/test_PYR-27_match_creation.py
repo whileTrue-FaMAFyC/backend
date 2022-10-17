@@ -4,10 +4,11 @@ from pony.orm import db_session
 import random
 import string
 
-from database.dao import user_dao, robot_dao
+from database.dao import user_dao, robot_dao, match_dao
+from database.models.models import db
 from testing.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
 from main import app
-from view_entities.robot_view_entities import NewRobotTest
+from view_entities.robot_view_entities import NewRobot
 from view_entities.user_view_entities import NewUserToDb
 
 # Usernames, robot names and match names used for the test
@@ -49,8 +50,8 @@ def initial_robots():
         ('robot3',"tonimondejar@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE)        
     ]
     for name, owner, avatar, source_code in robots:
-        robot_dao.create_robot(NewRobotTest(name=name, email=owner, 
-                                            avatar=avatar, source_code=source_code))
+        robot_dao.create_robot(NewRobot(name=name, email=owner, 
+                                        avatar=avatar, source_code=source_code))
     return
 
 
@@ -99,7 +100,11 @@ def client_put(creator_token: str, match_name: str, creator_robot: str,
     ) 
     return response
 
+
 def test_successful_creation():
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
+
     initial_users()
     initial_robots()
 
@@ -317,7 +322,7 @@ def test_invalid_games():
     max_players = random.randint(min_players, 4)
 
     num_games = random.choice([random.randint(-100, 0), 
-                               random.randint(200, 300)])
+                               random.randint(201, 300)])
 
     num_rounds = random.randint(1, 10000)
 

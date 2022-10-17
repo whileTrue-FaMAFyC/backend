@@ -6,7 +6,7 @@ from view_entities import robot_view_entities
 
 # Creation
 @db_session
-def create_robot(robot: robot_view_entities.NewRobotTest):
+def create_robot(robot: robot_view_entities.NewRobot):
     try:
         Robot(name=robot.name, owner=user_dao.get_user_by_email(robot.email), 
               avatar=robot.avatar, source_code=robot.source_code)

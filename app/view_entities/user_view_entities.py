@@ -30,3 +30,10 @@ class UserFromDb(UserBase):
 # To parse the request body of the verify user endpoint
 class UserVerificationCode(BaseModel):
     verification_code: int
+
+# To show in list matches
+class UserInMatch(BaseModel):
+    username: str
+    
+    class Config:
+        orm_mode = True

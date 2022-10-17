@@ -15,7 +15,8 @@ def generate_token(data: TokenData):
     data_to_encode = data.dict()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     data_to_encode.update({"exp": expire})
-    token = jwt.encode(data_to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    token = jwt.encode(data_to_encode, SECRET_KEY, ALGORITHM)
+#    token = jwt.encode(data_to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
 MOCK_TOKEN_BENJA = generate_token(
