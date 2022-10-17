@@ -6,14 +6,14 @@ class Robot:
         self.position_x = randint(0,999)
         self.position_y = randint(0,999)
         self.speed = 0
-        self.previous_speed
+        self.previous_req_speed
         self.direction = randchoice([0, 90, 180, 270])
         self.damage = 0
     
     def move(self, new_dir, new_speed):
         if (dir != self.dir) and self.speed < 50:
             self.dir = new_dir
-        if self.previous_speed == new_speed:
+        if self.previous_req_speed == new_speed:
             self.speed = new_speed
         else:
             self.speed = math.ceil(abs(self.speed - new_speed))/2
@@ -34,5 +34,3 @@ class Robot:
             self.damage += 2
         self.position_x = new_position_x
         self.position_y = new_position_y
-
-
