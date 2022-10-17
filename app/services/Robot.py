@@ -1,8 +1,10 @@
-
+from math import ceil, cos, radians, sin
 from random import randint
-import math
 
-METERS_AT_SPEED_1 = 1
+from utils.service_utils import round_up
+
+# Meters advanced when moving at 1% velocity
+M_VELOC_1 = 10
 
 class Robot:   
     def __init__(self, robot_id: int):
@@ -54,20 +56,26 @@ class Robot:
         gets called more than one time, just the last one has effect. The
         movement gets executed at the end of the round.
         """
-        pass
+        if (direction in range(0, 360)):
+            self._req_direction = direction
+            
+        if (velocity in range(0, 101)):
+            self._req_velocity = velocity
+            
+        return
     
     # Status
     def get_direction(self):
-        pass
+        return self._direction
     
     def get_velocity(self):
-        pass
-    
+        return self._velocity
+
     def get_position(self):
-        pass
+        return self._position
     
     def get_damage(self):
-        pass
+        return self._damage
     
     # Actions
     def _scan(self):
@@ -77,34 +85,21 @@ class Robot:
         pass
     
     def move(self):
-        if (self._req_direction != self._direction) and self.speed < 50:
+        if (self._req_direction != self._direction) and self._velocity < 50:
             self._direction = self._req_direction
         
         if self._previous_req_velocity == self._req_velocity:
             self._velocity = self._req_velocity
         else:
-            self._velocity = math.ceil((self._velocity + self._req_velocity)/2)
+            self._velocity = ceil((self._velocity + self._req_velocity)/2)
         
         self._previous_req_velocity = self._req_velocity
 
-        distance_x = math.ceil(math.cos(self._direction)*(self._velocity*METERS_AT_SPEED_1))
-        distance_y = math.ceil(math.sin(self._direction)*(self._velocity*METERS_AT_SPEED_1))
-        
-        if (0 <= self._direction <= 90):
-            new_pos_x = distance_x + self._position[0]
-            new_pos_y = distance_y + self._position[1]
+        distance_x = round_up((cos(radians(self._direction))*self._velocity)*M_VELOC_1)
+        distance_y = round_up((sin(radians(self._direction))*self._velocity)*M_VELOC_1)
 
-        if (90 < self._direction <= 180):
-            new_pos_x = distance_x - self._position[0]
-            new_pos_y = distance_y + self._position[1]
-
-        if (180 < self._direction <= 270):
-            new_pos_x = distance_x - self._position[0]
-            new_pos_y = distance_y - self._position[1]
-
-        if (270 < self._direction < 360):
-            new_pos_x = distance_x + self._position[0]
-            new_pos_y = distance_y - self._position[1]
+        new_pos_x = self._position[0] + distance_x
+        new_pos_y = self._position[1] + distance_y
 
         # Check if the robot hit a wall and do the corresponding damage
         if (new_pos_x > 999):
@@ -120,5 +115,4 @@ class Robot:
             new_pos_y = 0
             self._damage += 2
 
-        self._position[0] = new_pos_x
-        self._position[1] = new_pos_y
+        self._position = (new_pos_x, new_pos_y)
