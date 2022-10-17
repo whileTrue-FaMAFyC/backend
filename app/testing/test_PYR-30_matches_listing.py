@@ -3,7 +3,8 @@ from pony.orm import db_session
 
 from main import app
 from database.dao import user_dao, robot_dao, match_dao
-from generate_token import MOCK_TOKEN_BENJA
+from database.models.models import db
+from testing.generate_token import MOCK_TOKEN_BENJA
 from view_entities.match_view_entities import MatchTest
 from view_entities.user_view_entities import NewUserToDb, UserInMatch
 from view_entities.robot_view_entities import NewRobot, RobotInMatch
@@ -81,9 +82,11 @@ def initial_matches():
                       robots_joined=robots_joined))
     return
 
-
 # Test case where there are no matches created.
 def test_no_matches():
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
+
     response = client.get("/matches/list-matches",
                           headers = {"Authorization": MOCK_TOKEN_BENJA})
     assert response.status_code == 200

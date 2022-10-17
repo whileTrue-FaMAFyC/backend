@@ -16,6 +16,7 @@ def generate_token(data: TokenData):
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     data_to_encode.update({"exp": expire})
     token = jwt.encode(data_to_encode, SECRET_KEY, ALGORITHM)
+#    token = jwt.encode(data_to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
 MOCK_TOKEN_BENJA = generate_token(
@@ -29,6 +30,13 @@ MOCK_TOKEN_JULI = generate_token(
     TokenData(
         username='jolcese', 
         email='juliolcese@gmail.com'
+    )
+)
+
+MOCK_TOKEN_TONI = generate_token(
+    TokenData(
+        username='tonimond', 
+        email='tonimondejar@gmail.com'
     )
 )
 

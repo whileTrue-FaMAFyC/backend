@@ -3,6 +3,7 @@ from pony.orm import *
 
 db = Database()
 
+
 class User(db.Entity):
     user_id = PrimaryKey(int, auto=True, unsigned=True)
     username = Required(str, unique=True)
@@ -37,6 +38,7 @@ class Match(db.Entity):
     hashed_password = Optional(str)
     robots_joined = Set(Robot)
     composite_key(name, creator_user)
+
 
 def open_database(filename):
     db.bind('sqlite', filename, create_db=True)
