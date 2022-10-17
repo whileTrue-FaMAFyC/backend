@@ -33,7 +33,7 @@ async def sign_up_post(user: UserSignUpData):
         return user_to_db
 
 @user_controller.put("/verifyuser/{username}", status_code=status.HTTP_200_OK)
-def verify_user(username: str, code: UserVerificationCode):
+async def verify_user(username: str, code: UserVerificationCode):
     user_verification_validator(username, code.verification_code)
 
     if update_user_verification(username): # Check if updating the verified attribute had any problems.
