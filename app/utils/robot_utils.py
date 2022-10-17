@@ -12,10 +12,10 @@ ROBOT_DB_EXCEPTION = HTTPException(
     detail="Internal error when creating the new bot in the database."
 )
 
-def parse_b64_source_code(b64_source_code: str):
-    without_prefix = b64_source_code.replace('data:text/x-python;base64,', '')
-    source_code = b64decode(without_prefix).decode()
-    return source_code
+# def parse_b64_source_code(b64_source_code: str):
+#     without_prefix = b64_source_code.replace('data:text/x-python;base64,', '')
+#     source_code = b64decode(without_prefix).decode()
+#     return source_code
 
 # Create new file in user directory
 # def create_bot_file(username: str, bot_filename: str, source_code: str):

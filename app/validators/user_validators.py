@@ -10,6 +10,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 1440 # One day
 # NOTE: jwt.decode() raises an exception if the token passed is invalid
 def validate_token(token: str):
     try:
-        jwt.decode(token, SECRET_KEY, algorithm=ALGORITHM)
+        jwt.decode(token, SECRET_KEY, ALGORITHM)
     except:
-        return INVALID_TOKEN_EXCEPTION
+        raise INVALID_TOKEN_EXCEPTION

@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from generate_token import MOCK_TOKEN_VALEN, MOCK_TOKEN_JULI
+from generate_token_benja import MOCK_TOKEN_VALEN, MOCK_TOKEN_JULI
 from main import app
 from pony.orm import db_session
 from database.models.models import User, Robot
@@ -75,6 +75,29 @@ def test_create_existent_bot():
     assert response.json() == {
         'detail': "User already has a bot with this name."
     }
+
+
+# Invalid token
+def test_invalid_token():
+    print('***** CREATE INVALID TOKEN *****')
+    response = client.post(
+        '/create-bot',
+        headers={'Authorization': 'dsafaerafasf.sfaserfasf'},
+        json = {
+            'name': 'jarvis22',
+            'source_code': MOCK_SOURCE_CODE,
+            'bot_filename': 'mybot.py',
+            'avatar': MOCK_AVATAR
+        }
+    )
+    
+    print(response.json())
+    print('\n')
+    assert response.status_code == 401
+    assert response.json() == {
+        'detail': "Invalid token. Not authorized."
+    }
+
 
 # Create new bot succesfully
 def test_create_bot():

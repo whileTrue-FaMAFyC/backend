@@ -7,5 +7,5 @@ INVALID_TOKEN_EXCEPTION = HTTPException(
 
 INEXISTENT_USER_EXCEPTION = HTTPException(
     status_code=401,
-    detail="Inexistent user"
+    detail="inexistent user"
 )
