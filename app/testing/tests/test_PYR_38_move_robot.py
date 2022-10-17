@@ -2,20 +2,21 @@ from services.Robot import Robot
 
 r1 = Robot(1)
 r2 = Robot(2)
+r3 = Robot(3)
 
-def test_increase_speed():
+def test_increase_velocity():
     assert r1.get_velocity() == 0
     r1.drive(0, 80)
     r1.move()
     assert r1.get_velocity() == 40
 
-def test_decrease_speed():
+def test_decrease_velocity():
     assert r1.get_velocity() == 40
     r1.drive(0, 20)
     r1.move()
     assert r1.get_velocity() == 30
 
-def test_request_same_speed():
+def test_request_same_velocity():
     assert r1.get_velocity() == 30
     r1.drive(0, 20)
     r1.move()
@@ -68,3 +69,19 @@ def test_move_fourth_quadrant():
     r2.move()
     assert r2.get_position()[0] > initial_x or r2.get_damage() > initial_damage
     assert r2.get_position()[1] < initial_y or r2.get_damage() > initial_damage
+
+def test_direction_change():
+    assert r3.get_velocity() <= 50
+    initial_direction = r3.get_direction()
+    r3.drive(10, 100)
+    r3.move()
+    assert r3.get_direction() != initial_direction
+
+def test_no_direction_change():
+    r3.drive(10, 100)
+    r3.move()
+    assert r3.get_velocity() > 50
+    initial_direction = r3.get_direction()
+    r3.drive(50, 10)
+    r3.move()
+    assert r3.get_direction() == initial_direction
