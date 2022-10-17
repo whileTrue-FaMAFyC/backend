@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 from pony.orm import db_session
 
 from main import app
-from database.dao import user_dao, match_dao
+from database.dao import user_dao
 from database.models.models import db
 from testing.helpers.generate_token import MOCK_TOKEN_BENJA
 from testing.helpers.robot_helpers import NewRobot, create_robot

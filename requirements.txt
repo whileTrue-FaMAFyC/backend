@@ -22,7 +22,6 @@ passlib==1.7.4
 pluggy==1.0.0
 pony==0.7.16
 py==1.11.0
-py3dns==3.2.1
 pyasn1==0.4.8
 pycparser==2.21
 pydantic==1.10.2

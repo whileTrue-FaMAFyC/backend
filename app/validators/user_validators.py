@@ -36,10 +36,10 @@ def user_verification_validator(username: str, code: int):
     if user_in_db.verification_code != code:
         raise WRONG_VERIFICATION_CODE
 
-
+# NOTE: jwt.decode() raises an exception upon invalid token
 def validate_token(token: str):
     try:
-        jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+        jwt.decode(token, SECRET_KEY, ALGORITHM)
     except:
         raise INVALID_TOKEN_EXCEPTION
 

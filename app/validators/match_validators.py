@@ -5,8 +5,8 @@ from view_entities.match_view_entities import NewMatch
 
 def new_match_validator(creator_username: str, new_match : NewMatch):
     # To check if the user has a robot with the provided name
-    users_robot = robot_dao.get_robot_by_name_and_user(new_match.creator_robot, 
-                                                        creator_username)
+    users_robot = robot_dao.get_bot_by_owner_and_name(creator_username, 
+                                                      new_match.creator_robot)
     # To check if the user already created a match with the provided name
     name_in_use = match_dao.get_match_by_name_and_user(new_match.name, 
                                                        creator_username)

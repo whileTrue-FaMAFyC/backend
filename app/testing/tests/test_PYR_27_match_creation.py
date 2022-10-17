@@ -7,13 +7,13 @@ import string
 from database.dao import user_dao
 from database.models.models import db
 from main import app
-from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
+from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI_J, MOCK_TOKEN_TONI
 from testing.helpers.robot_helpers import NewRobot, create_robot
 from view_entities.user_view_entities import NewUserToDb
 
 
 # Usernames, robot names and match names used for the test
-tokens = [MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI]
+tokens = [MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI_J, MOCK_TOKEN_TONI]
 users = ['basbenja', 'jolcese', 'tonimond']
 robots = [['robot1', 'robot2'], ['robot1', 'robot2'], ['robot1', 'robot2', 'robot3']]
 matches = []

@@ -3,7 +3,7 @@ from passlib.hash import bcrypt
 from pydantic import BaseModel
 from typing import List
 
-from database.dao.robot_dao import get_robot_by_name_and_user
+from database.dao.robot_dao import get_bot_by_owner_and_name
 from database.models.models import User, Match
 from view_entities.robot_view_entities import RobotInMatch
 
@@ -31,7 +31,7 @@ def create_test_match(new_match: MatchTest):
 
     set_robots = set()
     for r in new_match.robots_joined:
-      set_robots.add(get_robot_by_name_and_user(r.name, r.owner.username))
+      set_robots.add(get_bot_by_owner_and_name(r.owner.username, r.name))
 
     if(new_match.password):
         match_password = bcrypt.hash(new_match.password)
