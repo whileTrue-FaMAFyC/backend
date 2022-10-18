@@ -1,5 +1,4 @@
-from services.robot import Robot
-from utils.services_utils import COLLISION_DAMAGE, GameException
+from utils.services_utils import *
 
 class Game():
     def __init__(self, num_rounds: int, robots: list):
@@ -20,12 +19,16 @@ class Game():
     def _check_collisions(self, robot):
         for robot2 in self.robots:
             if robot != robot2 and robot.get_position() == robot2.get_position():
-                robot.increase_damage(COLLISION_DAMAGE)
+                robot._increase_damage(COLLISION_DAMAGE)
 
     def execute_round(self):
         if self.num_rounds_executed == self.num_rounds:
         # You can´t execute another round. Max number of rounds executed reached
             raise GameException(detail="All rounds already executed")
+
+        if self.get_robots_alive() == 0:
+        # You can´t execute another round. All robots dead.
+            raise GameException(detail="All robots dead")
 
         for r in self.robots:
             r.respond()
@@ -35,7 +38,7 @@ class Game():
         #     r.scan()
         # for r in self.robots:
         #     r.shoot()
-        # self.update_life_remaining()
+        # self.update_damage()
 
         for r in self.robots:
         # Check if the robot got killed during the shooting stage
@@ -43,7 +46,12 @@ class Game():
                 r._move()
 
         for r in self.robots:
-        # Check if the robot got killed during the moving stage (collision with the walls damage)
+            if r.get_damage() >= 100:
+                r._position = OUT_OF_BOUNDS
+
+        for r in self.robots:
+        # Check if the robot got killed during the moving stage 
+        # (collision with the walls damage)
             if r.get_damage() < 100:
                 self._check_collisions(r)
         

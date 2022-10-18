@@ -8,6 +8,8 @@ COLLISION_DAMAGE = 2
 # Meters advanced when moving at 1% velocity
 M_VELOC_1 = 10
 
+OUT_OF_BOUNDS = (1500,1500)
+
 class GameException(Exception):
     def __init__(self, detail):
         self.message = detail

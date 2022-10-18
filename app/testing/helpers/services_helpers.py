@@ -1,10 +1,10 @@
-from services.robot import Robot
+from services.Robot import Robot
 
+# To mock the initial position or a specific damage percentage 
 class RobotTest(Robot):
-
     def set_initial_position(self, x, y):
         self._position = (x, y)
 
-    def set_initial_damage(self, initial_damage):
-        self._damage = initial_damage
+    def set_damage(self, damage):
+        self._damage = damage
     
