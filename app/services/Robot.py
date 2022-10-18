@@ -81,7 +81,7 @@ class Robot:
     def _shoot(self):
         pass
     
-    def move(self):
+    def _move(self):
         if (self._req_direction != self._direction) and self._velocity <= 50:
             self._direction = self._req_direction
         
