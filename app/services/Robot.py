@@ -1,10 +1,7 @@
 from math import ceil, cos, radians, sin
 from random import randint
 
-from utils.service_utils import round_up
-
-# Meters advanced when moving at 1% velocity
-M_VELOC_1 = 10
+from utils.services_utils import round_up, M_VELOC_1
 
 class Robot:   
     def __init__(self, robot_id: int):
