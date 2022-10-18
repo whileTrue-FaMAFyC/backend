@@ -13,7 +13,7 @@ class Robot:
         self._req_velocity: int = 0
         self._position: tuple(int, int) = (randint(0, 999), randint(0, 999))
         self._damage: int = 0        
-    
+
     # Cannon
     def is_cannon_ready(self):
         """"
@@ -81,7 +81,7 @@ class Robot:
     def _shoot(self):
         pass
     
-    def move(self):
+    def _move(self):
         if (self._req_direction != self._direction) and self._velocity <= 50:
             self._direction = self._req_direction
         
