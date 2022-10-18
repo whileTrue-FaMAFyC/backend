@@ -92,8 +92,8 @@ class Robot:
         
         self._previous_req_velocity = self._req_velocity
 
-        distance_x = round_up((cos(radians(self._direction))*self._velocity)*M_VELOC_1)
-        distance_y = round_up((sin(radians(self._direction))*self._velocity)*M_VELOC_1)
+        distance_x = round_up((round(cos(radians(self._direction)), 5)*self._velocity)*M_VELOC_1)
+        distance_y = round_up((round(sin(radians(self._direction)), 5)*self._velocity)*M_VELOC_1)
 
         new_pos_x = self._position[0] + distance_x
         new_pos_y = self._position[1] + distance_y
@@ -113,3 +113,7 @@ class Robot:
             self._damage += 2
 
         self._position = (new_pos_x, new_pos_y)
+
+    # Is called when two bots crash
+    def _increase_damage(self, damage_to_increase: int):
+        self._damage += damage_to_increase
