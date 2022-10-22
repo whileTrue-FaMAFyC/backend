@@ -1,6 +1,11 @@
 from fastapi import HTTPException
-from base64 import b64decode
 import os
+from pony.orm import db_session
+
+from database.models.models import Robot
+from view_entities.robot_view_entities import *
+
+
 
 BOT_NAME_EXCEPTION = HTTPException(
     status_code=409,
@@ -27,4 +32,10 @@ ROBOT_DB_EXCEPTION = HTTPException(
 #     # Create the file
 #     f = open(f'../robots/{bot_filename}', 'w')
 #     f.write(source_code)
-    
+
+# Transforms the robots selected from the database to the format that will be
+# sent to the frontend.
+@db_session
+def robot_db_to_view(robots: Robot):
+    robots_names = [RobotName.from_orm(r) for r in robots]
+    return robots_names
