@@ -13,12 +13,14 @@ match_controller = APIRouter(prefix="/matches")
 
 @match_controller.post("/new-match", status_code=status.HTTP_201_CREATED)
 async def create_match(new_match: NewMatch, authorization: Union[str, None] = Header(None)):
-    
     validate_token(authorization)
+
     token_data = jwt.decode(authorization, SECRET_KEY)
+    
     creator_username = token_data['username']
     
     new_match_validator(creator_username, new_match)  
+    
     created = match_dao.create_new_match(creator_username, new_match)
     
     if not created:
@@ -27,8 +29,11 @@ async def create_match(new_match: NewMatch, authorization: Union[str, None] = He
     return True
 
 @match_controller.get("/list-matches", status_code=status.HTTP_200_OK)
-async def get_matches(authorization: Union[str, None] = Header(None)):
+async def get_matches(authorization: Union[str, None] = Header(None)):   
    validate_token(authorization)
+
    matches_db = match_dao.get_all_matches()
+   
    matches_view = match_db_to_view(matches_db)
+   
    return matches_view
