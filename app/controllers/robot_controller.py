@@ -33,8 +33,13 @@ async def create_bot(
 @robot_controller.get("/list-robots", status_code=status.HTTP_200_OK)
 async def get_matches(authorization: Union[str, None] = Header(None)):
    validate_token(authorization)
+
    token_data = jwt.decode(authorization, SECRET_KEY)
+   
    username = token_data['username']
+   
    robots_db = get_bots_by_owner(username)
+   
    robots_view = robot_db_to_view(robots_db)
+   
    return robots_view

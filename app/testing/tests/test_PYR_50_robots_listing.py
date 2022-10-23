@@ -94,8 +94,8 @@ def test_no_robots():
 
 expected_response =  [{"name": "R2D2"}, {"name": "WALL-E"}, {"name": "jarvis22"}]
 
-# In this test we first create new matches and then analyze the behavior.
-def test_with_matches():
+def test_with_robots():
+    # First we add some robots to the users library.
     user_tested_robots()
 
     response = client.get("/list-robots",
