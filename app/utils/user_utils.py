@@ -52,17 +52,17 @@ USER_ALREADY_VERIFIED = HTTPException(
 
 CREDENTIALS_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="invalid credentials"
+    detail="Invalid credentials."
 )
 
 NOT_VERIFIED_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="not verified user"
+    detail="Not verified user."
 )
 
 INEXISTENT_USER_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="inexistent user"
+    detail="Inexistent user."
 )
 
 WRONG_VERIFICATION_CODE = HTTPException(
@@ -131,7 +131,7 @@ class TokenData(BaseModel):
     email: str
 
 
-# Utility function to generate a token that representes 'data'
+# Utility function to generate a token that represents 'data'
 def generate_token(data: TokenData):
     data_to_encode = data.dict()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)

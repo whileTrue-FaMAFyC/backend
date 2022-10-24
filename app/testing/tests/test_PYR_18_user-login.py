@@ -47,7 +47,7 @@ def test_inexistent_user():
     print('\n')
     assert response.status_code == 401
     assert response.json() == {
-        'detail': 'inexistent user'
+        'detail': 'Inexistent user.'
     }
 
 # Try logging in with wrong password
@@ -65,7 +65,7 @@ def test_invalid_credentials():
     print('\n')
     assert response.status_code == 401
     assert response.json() == {
-        'detail': 'invalid credentials'
+        'detail': 'Invalid credentials.'
     }
 
 # Not verified user tries to log in
@@ -83,7 +83,7 @@ def test_not_verified_user():
     print('\n')
     assert response.status_code == 401
     assert response.json() == {
-        'detail': 'not verified user'
+        'detail': 'Not verified user.'
     }
 
 # Logging in with username and correct password
@@ -100,7 +100,7 @@ def test_login_username():
     
     print(response.json())
     print('\n')
-    assert response.json()['Authorization'] is not None
+    assert response.json()['Authorization'] != ''
     assert response.status_code == 200
 
 # Logging in with email and correct password
@@ -117,5 +117,5 @@ def test_login_email():
     
     print(response.json())
     print('\n') 
-    assert response.json()['Authorization'] is not None
+    assert response.json()['Authorization'] != ''
     assert response.status_code == 200
