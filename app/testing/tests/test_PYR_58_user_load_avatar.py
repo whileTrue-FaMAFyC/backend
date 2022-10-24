@@ -7,7 +7,7 @@ from main import app
 
 client = TestClient(app)
 
-def test_successful_load_avatar():
+def test_successful_load_not_default_avatar():
     # Deletes the database
     db.drop_all_tables(with_all_data=True)
     db.create_tables()
@@ -20,12 +20,34 @@ def test_successful_load_avatar():
 
     response = client.post(
         "/load-avatar/tonimondejar",
-        json={"avatar": "data:image/png;fake_default", "avatarFilename": "default.png"}
+        json={"avatar": "data:image/png;not_default"}
     )
 
     assert response.status_code == 200
 
-    assert get_user_by_username("tonimondejar").avatar == "data:image/png;fake_default"
+    assert get_user_by_username("tonimondejar").avatar == "data:image/png;not_default"
+
+    assert delete_user_by_username("tonimondejar")
+
+def test_successful_load_default_avatar():
+    # Deletes the database
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
+
+    user_to_db = NewUserToDb(username="tonimondejar", email="antoniomondejar2001@gmail.com",
+    hashed_password="fake_hash", verification_code=123456, verified=True)
+
+    # Adds the user to the database and checks if it was correctly added
+    assert create_user(user_to_db)
+
+    response = client.post(
+        "/load-avatar/tonimondejar",
+        json={"avatar": ""}
+    )
+
+    assert response.status_code == 200
+
+    assert get_user_by_username("tonimondejar").avatar == "default"
 
     assert delete_user_by_username("tonimondejar")
 
@@ -104,7 +126,7 @@ def test_avatar_format_not_valid():
 
     response = client.post(
         "/load-avatar/tonimondejar",
-        json={"avatar": "fake_default", "avatarFilename": "default.png"}
+        json={"avatar": "data:python-x/fake_default", "avatarFilename": "default.png"}
     )
 
     assert response.status_code == 415

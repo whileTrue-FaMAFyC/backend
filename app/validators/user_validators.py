@@ -13,7 +13,7 @@ def sign_up_validator(user: UserSignUpData):
     # Password format validator
     if not is_valid_password(user.password):
         raise PASSWORD_FORMAT_NOT_VALID
-    
+
     # Username not in use validator
     if get_user_by_username(user.username) is not None:
         raise USERNAME_ALREADY_IN_USE
@@ -65,5 +65,5 @@ def load_avatar_validator(username: str, avatar: UserAvatar):
     if user_in_db.avatar != "":
         raise AVATAR_ALREADY_LOADED
 
-    if not avatar.avatar.startswith("data:image/"):
+    if not avatar.avatar.startswith("data:image/") and avatar.avatar != "":
         raise AVATAR_FORMAT_NOT_VALID

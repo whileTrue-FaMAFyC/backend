@@ -46,7 +46,9 @@ async def verify_user(username: str, code: UserVerificationCode):
 async def load_avatar(username: str, avatar: UserAvatar):
     load_avatar_validator(username, avatar)
 
-    if update_user_avatar(username, avatar.avatar):
+    avatar_file = get_avatar_file(avatar.avatar)
+
+    if update_user_avatar(username, avatar_file):
         return True
     else:
         raise ERROR_UPDATING_USER_DATA

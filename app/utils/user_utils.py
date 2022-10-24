@@ -142,3 +142,9 @@ def generate_token(data: TokenData):
     data_to_encode.update({"exp": expire})
     token = jwt.encode(data_to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return token
+
+def get_avatar_file(avatar: str):
+    if (avatar==""):
+        return "default"
+    else:
+        return avatar

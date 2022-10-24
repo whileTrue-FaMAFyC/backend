@@ -45,4 +45,3 @@ class UserInMatch(BaseModel):
 # To parse user avatar
 class UserAvatar(BaseModel):
     avatar: str
-    avatarFilename: str
