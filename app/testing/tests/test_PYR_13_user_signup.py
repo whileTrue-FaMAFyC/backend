@@ -80,7 +80,7 @@ def test_username_already_in_use():
 
     # Must fail because username is already in use.
     assert response.status_code == 409
-    assert response.json()["detail"] == "username already in use"
+    assert response.json()["detail"] == "Username already in use."
     
     #Checks that the user was not added to the database
     assert get_user_by_email("antonio.mondejar@mi.unc.edu.ar") == None
@@ -112,7 +112,7 @@ def test_email_already_in_use():
 
     # Must fail because email is already in use.
     assert response.status_code == 409
-    assert response.json()["detail"] == "email already associated with another user"
+    assert response.json()["detail"] == "Email already associated with another user."
 
     # Checks that the user was not added to the database
     assert get_user_by_username("tonimondejar1") == None
@@ -133,7 +133,7 @@ def test_email_not_valid():
 
     # Must fail because email is not valid.
     assert response.status_code == 400
-    assert response.json()["detail"] == "email not valid"
+    assert response.json()["detail"] == "Email not valid."
 
     # Checks that the user was not added to the database
     assert get_user_by_username("tonimondejar") == None
@@ -152,7 +152,7 @@ def test_password_format_not_valid():
 
     # Must fail because password format is not valid.
     assert response.status_code == 400
-    assert response.json()["detail"] == "password format not valid"
+    assert response.json()["detail"] == "Password format not valid."
     
     # Checks that the user was not added to the database
     assert get_user_by_username("tonimondejar") == None
@@ -170,7 +170,7 @@ def test_wrong_avatar_file_extension():
     
     # Must fail because avatar format is not valid.
     assert response.status_code == 400
-    assert response.json()["detail"] == "avatar extension file not supported"
+    assert response.json()["detail"] == "Avatar extension file not supported."
     
     # Checks that the user was not added to the database
     assert get_user_by_username("tonimondejar") == None
