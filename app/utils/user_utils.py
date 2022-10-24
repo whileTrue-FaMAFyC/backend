@@ -99,7 +99,8 @@ def send_verification_email(recipient, verification_code):
     FROM = SYSTEM_MAIL
     TO = recipient
     SUBJECT = "Here is your verification code"
-    TEXT = f"Your verification code is: {verification_code}.\nDo not reply this email."
+    TEXT = (f"Your verification code is: {verification_code}. It is valid for 4 hours." +
+    "\nDo not reply this email.")
 
     # Prepare actual message
     message = """From: %s\nTo: %s\nSubject: %s\n\n%s
