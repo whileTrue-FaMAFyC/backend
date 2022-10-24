@@ -32,7 +32,7 @@ async def sign_up_post(user: UserSignUpData):
     if not create_user(user_to_db):
         raise ERROR_INSERTING_DATA
     else:
-        return user_to_db
+        return True
 
 @user_controller.put("/verifyuser/{username}", status_code=status.HTTP_200_OK)
 async def verify_user(username: str, code: UserVerificationCode):

@@ -27,11 +27,11 @@ PASSWORD_FORMAT_NOT_VALID = HTTPException(
     detail="password format not valid")
 
 USERNAME_ALREADY_IN_USE = HTTPException(
-    status_code=status.HTTP_400_BAD_REQUEST,
+    status_code=status.HTTP_409_CONFLICT,
     detail="username already in use")
 
 EMAIL_ALREADY_IN_USE = HTTPException(
-    status_code=status.HTTP_400_BAD_REQUEST,
+    status_code=status.HTTP_409_CONFLICT,
     detail="email already associated with another user")
 
 ERROR_INSERTING_DATA = HTTPException(
