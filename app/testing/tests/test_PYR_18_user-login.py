@@ -83,7 +83,7 @@ def test_not_verified_user():
     print('\n')
     assert response.status_code == 401
     assert response.json() == {
-        'detail': 'not verified user'
+        'detail': 'Not verified user.'
     }
 
 # Logging in with username and correct password

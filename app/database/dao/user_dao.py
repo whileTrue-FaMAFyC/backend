@@ -41,6 +41,15 @@ def get_user_by_username_or_email(username_or_email: str):
     return user
 
 @db_session
+def update_user_avatar(username: str, avatar: str):
+    try:
+        user_db = User.get(username=username)
+        user_db.set(avatar=avatar)
+        return True
+    except:
+        return False
+
+@db_session
 def update_user_verification(username: str):
     try:
         user_db = User.get(username=username)

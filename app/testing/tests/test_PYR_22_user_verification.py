@@ -82,10 +82,10 @@ def test_user_not_registered():
         }
     )
 
-    assert response.status_code == 400
+    assert response.status_code == 401
 
     # Must fail because the username does not exist in the database
-    assert response.json()["detail"] == "user not registered"
+    assert response.json()["detail"] == "User not registered."
 
 def test_user_already_verified():
     # Deletes the database

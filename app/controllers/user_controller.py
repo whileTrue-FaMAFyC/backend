@@ -18,11 +18,9 @@ async def sign_up_post(user: UserSignUpData):
 
     verification_code = randint(100000,999999)
 
-    avatar_file = insert_filename_to_file(user.avatar, user.avatarFilename)
-
     user_to_db = NewUserToDb(username=user.username, email=user.email,
-                            avatar=avatar_file, hashed_password=encrypted_password,
-                            verification_code=verification_code, verified=False)
+                            hashed_password=encrypted_password, verification_code=verification_code,
+                            verified=False)
 
     # Sends the email with the verification code.
     if not send_verification_email(user.email, verification_code):
@@ -32,7 +30,7 @@ async def sign_up_post(user: UserSignUpData):
     if not create_user(user_to_db):
         raise ERROR_INSERTING_DATA
     else:
-        return user_to_db
+        return True
 
 @user_controller.put("/verifyuser/{username}", status_code=status.HTTP_200_OK)
 async def verify_user(username: str, code: UserVerificationCode):
@@ -43,7 +41,16 @@ async def verify_user(username: str, code: UserVerificationCode):
 
     else:
         raise ERROR_UPDATING_USER_DATA
-    
+
+@user_controller.post("/load-avatar/{username}", status_code=status.HTTP_200_OK)
+async def load_avatar(username: str, avatar: UserAvatar):
+    load_avatar_validator(username, avatar)
+
+    if update_user_avatar(username, avatar.avatar):
+        return True
+    else:
+        raise ERROR_UPDATING_USER_DATA
+
 # LOGIN
 # Get credentials (username or email and password) and check if they are correct
 # If they are, return token. If not, raise HTTP exception
