@@ -118,10 +118,4 @@ def test_create_bot():
     print(response.json())
     print('\n')
     assert response.status_code == 200
-    assert response.json() == {
-        'name': 'R2D2',
-        'source_code': MOCK_SOURCE_CODE,
-        'bot_filename': 'mybot.py',
-        'avatar': MOCK_AVATAR
-    }
-
+    assert response.json() == True
