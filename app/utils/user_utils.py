@@ -43,11 +43,11 @@ ERROR_SENDING_VERIFICATION_EMAIL = HTTPException(
     detail="internal error sending the email with the verification code")
 
 USER_NOT_REGISTERED = HTTPException(
-    status_code=status.HTTP_400_BAD_REQUEST,
+    status_code=status.HTTP_401_UNAUTHORIZED,
     detail="user not registered")
 
 USER_ALREADY_VERIFIED = HTTPException(
-    status_code=status.HTTP_400_BAD_REQUEST,
+    status_code=status.HTTP_409_CONFLICT,
     detail="user already verified")
 
 CREDENTIALS_EXCEPTION = HTTPException(

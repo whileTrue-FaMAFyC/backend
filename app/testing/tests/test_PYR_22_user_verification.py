@@ -30,9 +30,10 @@ def test_successful_verification():
     )
 
     assert response.status_code == 200
-
+    user = get_user_by_username("tonimondejar")
+    
     # Checks if the verified attribute was correctly updated
-    assert response.json()["verified"] == True
+    assert user.verified == True
 
     # Deletes user from the database
     assert delete_user_by_username("tonimondejar")
@@ -82,7 +83,7 @@ def test_user_not_registered():
         }
     )
 
-    assert response.status_code == 400
+    assert response.status_code == 401
 
     # Must fail because the username does not exist in the database
     assert response.json()["detail"] == "user not registered"
@@ -107,7 +108,7 @@ def test_user_already_verified():
         }
     )
 
-    assert response.status_code == 400
+    assert response.status_code == 409
 
     # Must fail because the user is already verified
     assert response.json()["detail"] == "user already verified"
