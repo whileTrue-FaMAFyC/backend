@@ -1,4 +1,5 @@
 from pony.orm import db_session
+from utils.robot_utils import insert_filename_to_file
 from database.dao.user_dao import get_user_by_username
 from view_entities.robot_view_entities import BotCreate
 from database.models.models import Robot
@@ -14,7 +15,10 @@ def create_new_bot(owner_username: str, bot_data: BotCreate):
     try:
         Robot(
             name=bot_data.name,
-            source_code=bot_data.source_code,
+            source_code=insert_filename_to_file(
+                bot_data.source_code, 
+                bot_data.bot_filename
+            ),
             owner=get_user_by_username(owner_username),
             avatar=bot_data.avatar
         )
