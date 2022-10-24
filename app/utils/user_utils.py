@@ -52,7 +52,7 @@ USER_ALREADY_VERIFIED = HTTPException(
 
 CREDENTIALS_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="invalid credentials"
+    detail="Invalid credentials."
 )
 
 NOT_VERIFIED_EXCEPTION = HTTPException(
@@ -62,7 +62,7 @@ NOT_VERIFIED_EXCEPTION = HTTPException(
 
 INEXISTENT_USER_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="inexistent user"
+    detail="Inexistent user."
 )
 
 WRONG_VERIFICATION_CODE = HTTPException(
@@ -120,6 +120,27 @@ def send_verification_email(recipient, verification_code):
         return False
 
 
+def send_cleanup_email(recipient, verification_code):
+    FROM = SYSTEM_MAIL
+    TO = recipient
+    SUBJECT = "Please signup again"
+    TEXT = f"Your verification code: {verification_code} is no longer valid. Please signup again."
+
+    # Prepare actual message
+    message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.ehlo()
+        server.starttls()
+        server.login(SYSTEM_MAIL, SYSTEM_MAIL_PASSWORD)
+        server.sendmail(FROM, TO, message)
+        server.close()
+        return True
+    except:
+        return False
+
+
 def insert_filename_to_file(file: str, filename: str):
     if file == "":
         return ""
@@ -135,7 +156,7 @@ class TokenData(BaseModel):
     email: str
 
 
-# Utility function to generate a token that representes 'data'
+# Utility function to generate a token that represents 'data'
 def generate_token(data: TokenData):
     data_to_encode = data.dict()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)

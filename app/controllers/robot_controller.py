@@ -11,13 +11,15 @@ from view_entities.robot_view_entities import BotCreate
 
 robot_controller = APIRouter()
 
-# Create new bot (VERSION WITH TOKEN)
-@robot_controller.post("/create-bot")
+
+# Create new bot
+@robot_controller.post("/create-bot", status_code=status.HTTP_200_OK)
 async def create_bot(
     authorization: Union[str, None] = Header(None), 
     bot_data: BotCreate = None
 ):
     validate_token(authorization)
+    
     # Token is valid, now decode it to get payload
     token_data = jwt.decode(authorization, SECRET_KEY)
     
@@ -28,12 +30,14 @@ async def create_bot(
     if not create_new_bot(owner_username, bot_data):
         raise ROBOT_DB_EXCEPTION
     
-    return bot_data
+    return True
+
 
 @robot_controller.get("/list-robots", status_code=status.HTTP_200_OK)
 async def get_matches(authorization: Union[str, None] = Header(None)):
    validate_token(authorization)
 
+    # Token is valid, now decode it to get payload
    token_data = jwt.decode(authorization, SECRET_KEY)
    
    username = token_data['username']
