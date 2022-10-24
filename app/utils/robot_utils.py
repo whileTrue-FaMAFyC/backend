@@ -1,19 +1,18 @@
-from fastapi import HTTPException
-import os
+from fastapi import HTTPException, status
+# import os
 from pony.orm import db_session
 
 from database.models.models import Robot
 from view_entities.robot_view_entities import *
 
 
-
 BOT_NAME_EXCEPTION = HTTPException(
-    status_code=409,
+    status_code=status.HTTP_409_CONFLICT,
     detail="User already has a bot with this name."
 )
 
 ROBOT_DB_EXCEPTION = HTTPException(
-    status_code=500,
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="Internal error when creating the new bot in the database."
 )
 
