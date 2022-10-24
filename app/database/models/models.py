@@ -1,3 +1,4 @@
+from datetime import datetime
 from os import getenv
 from pony.orm import *
 
@@ -12,6 +13,7 @@ class User(db.Entity):
     hashed_password = Required(str)
     verification_code = Required(int, unsigned=True)
     verified = Required(bool)
+    created_time = Required(datetime, default=lambda: datetime.now())
     robots = Set('Robot')
     matches_created = Set('Match')
 
