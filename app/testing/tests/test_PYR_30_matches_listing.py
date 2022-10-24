@@ -7,6 +7,7 @@ from database.models.models import db
 from testing.helpers.generate_token import MOCK_TOKEN_BENJA
 from testing.helpers.robot_helpers import NewRobot, create_robot
 from testing.helpers.match_helpers import MatchTest, create_test_match
+from utils.user_utils import INVALID_TOKEN_EXCEPTION
 from view_entities.user_view_entities import NewUserToDb, UserInMatch
 from view_entities.robot_view_entities import RobotInMatch
 
@@ -23,7 +24,7 @@ MOCK_AVATAR = """iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8B
 @db_session
 def initial_users():
     users = [
-        ('basbenja', 'basbenja@gmail.com', MOCK_AVATAR, 'compu2317', '12345', True),
+        ('basbenja', 'basbenja@gmail.com', "", 'compu2317', '12345', True),
         ('jolcese', 'juliolcese@gmail.com', MOCK_AVATAR, 'Whil3True', '56542', True),
         ('tonimond', 'tonimondejar@gmail.com', MOCK_AVATAR, '122e31', '58924', True)
     ]
@@ -41,8 +42,8 @@ def initial_robots():
         ('robot1',"basbenja@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
         ('robot2',"basbenja@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
         ('robot1',"juliolcese@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
-        ('robot2',"juliolcese@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
-        ('robot1',"tonimondejar@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
+        ('robot2',"juliolcese@gmail.com", "", MOCK_SOURCE_CODE),
+        ('robot1',"tonimondejar@gmail.com", "", MOCK_SOURCE_CODE),
         ('robot2',"tonimondejar@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
         ('robot3',"tonimondejar@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE)        
     ]
@@ -121,3 +122,10 @@ def test_with_matches():
 
     assert response.status_code == 200
     assert response.json() == expected_response
+
+def test_invalid_token():
+    response = client.get("/matches/list-matches",
+                          headers = {"Authorization": ""})
+
+    assert response.status_code == INVALID_TOKEN_EXCEPTION.status_code
+    assert response.json()["detail"] == INVALID_TOKEN_EXCEPTION.detail

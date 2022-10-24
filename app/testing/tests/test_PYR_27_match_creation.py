@@ -9,6 +9,7 @@ from database.models.models import db
 from main import app
 from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI_J, MOCK_TOKEN_TONI
 from testing.helpers.robot_helpers import NewRobot, create_robot
+from utils.user_utils import INVALID_TOKEN_EXCEPTION
 from view_entities.user_view_entities import NewUserToDb
 
 
@@ -29,7 +30,7 @@ client = TestClient(app)
 def initial_users():
     users = [
         ('basbenja', 'basbenja@gmail.com', MOCK_AVATAR, 'compu2317', '12345', True),
-        ('jolcese', 'juliolcese@gmail.com', MOCK_AVATAR, 'Whil3True', '56542', True),
+        ('jolcese', 'juliolcese@gmail.com', "", 'Whil3True', '56542', True),
         ('tonimond', 'tonimondejar@gmail.com', MOCK_AVATAR, '122e31', '58924', True)
     ]
     for username, email, avatar, password, verif_code, verified in users:
@@ -42,10 +43,10 @@ def initial_users():
 @db_session
 def initial_robots():
     robots = [
-        ('robot1',"basbenja@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
+        ('robot1',"basbenja@gmail.com", "", MOCK_SOURCE_CODE),
         ('robot2',"basbenja@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
         ('robot1',"juliolcese@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
-        ('robot2',"juliolcese@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
+        ('robot2',"juliolcese@gmail.com", "", MOCK_SOURCE_CODE),
         ('robot1',"tonimondejar@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
         ('robot2',"tonimondejar@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE),
         ('robot3',"tonimondejar@gmail.com", MOCK_AVATAR, MOCK_SOURCE_CODE)        
@@ -58,11 +59,9 @@ def initial_robots():
 
 def get_random_password():
     random_source = string.ascii_letters + string.digits + string.punctuation
-    password = random.choice(string.ascii_lowercase)
-    password += random.choice(string.ascii_uppercase)
-    password += random.choice(string.digits)
-    length = random.randint(5, 100)
-
+    password = ""
+    length = random.randint(0, 16)
+    print(length)
     for i in range(length):
         password += random.choice(random_source)
 
@@ -74,7 +73,7 @@ def get_random_password():
 def get_random_match_name():
     password = ""
     random_source = string.ascii_letters + string.digits + string.punctuation
-    length = random.randint(1, 30)
+    length = random.randint(3, 16)
 
     for i in range(length):
         password += random.choice(random_source)
@@ -102,7 +101,37 @@ def client_put(creator_token: str, match_name: str, creator_robot: str,
     return response
 
 
-def test_successful_creation():
+def test_successful_creation_password():
+    db.drop_all_tables(with_all_data=True)
+    db.create_tables()
+
+    initial_users()
+    initial_robots()
+
+    user_index = random.randint(0,2)
+    creator_token = tokens[user_index]
+
+    match_name = get_random_match_name()
+
+    robot_index = random.randint(0, max(1,user_index))
+    creator_robot = robots[user_index][robot_index]
+
+    min_players = random.choice([2,3,4])
+
+    max_players = random.randint(min_players, 4)
+
+    num_games = random.randint(1, 200)
+
+    num_rounds = random.randint(1, 10000)
+
+    password = get_random_password()
+    
+    response = client_put(creator_token, match_name, creator_robot, min_players, 
+                          max_players, num_games, num_rounds, password)
+
+    assert response.status_code == (status.HTTP_201_CREATED)
+
+def test_successful_creation_no_password():
     db.drop_all_tables(with_all_data=True)
     db.create_tables()
 
@@ -127,13 +156,12 @@ def test_successful_creation():
 
     num_rounds = random.randint(1, 10000)
 
-    password = random.choice(["", get_random_password()])
+    password = ""
 
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_201_CREATED)
-    return
 
 @db_session
 def test_invalid_robot():
@@ -156,15 +184,13 @@ def test_invalid_robot():
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-
+    
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_409_CONFLICT)
     assert response.json()["detail"] == f"Robot {creator_robot} isn't "\
                                         f"in {creator_user}'s library. "
-
-    return
 
 @db_session
 def test_match_name_used():
@@ -192,15 +218,13 @@ def test_match_name_used():
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-
+    
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_409_CONFLICT)
     assert response.json()["detail"] == f"{creator_user} already has a match "\
                                         f"named {match_name}. "
-
-    return
 
 @db_session
 def test_invalid_min_players():
@@ -226,17 +250,15 @@ def test_invalid_min_players():
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-
+    
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
     # Here max_players will be between 2 and 4, but that could be a smaller
     # value than min_players, so the detail would include that.
-    assert response.status_code == (status.HTTP_409_CONFLICT)
+    assert response.status_code == (status.HTTP_400_BAD_REQUEST)
     assert  ("Minimum amount of players has to be between 2 and 4." 
              in response.json()["detail"])
-
-    return
 
 @db_session
 def test_invalid_max_players():
@@ -261,14 +283,13 @@ def test_invalid_max_players():
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-
+    
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == (status.HTTP_409_CONFLICT)
+    assert response.status_code == (status.HTTP_400_BAD_REQUEST)
     assert ("Maximum amount of players has to be between 2 and 4. " 
             in response.json()["detail"])
-    return
 
 @db_session
 def test_min_greater_than_max():
@@ -293,16 +314,14 @@ def test_min_greater_than_max():
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-
+    
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == (status.HTTP_409_CONFLICT)
+    assert response.status_code == (status.HTTP_400_BAD_REQUEST)
     assert response.json()["detail"] == "Minimum amount of players can't be " \
                                         "greater than maximum amount of " \
                                         "players. "
-
-    return
 
 @db_session
 def test_invalid_games():
@@ -328,15 +347,13 @@ def test_invalid_games():
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-
+    
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == (status.HTTP_409_CONFLICT)
+    assert response.status_code == (status.HTTP_400_BAD_REQUEST)
     assert response.json()["detail"] == "Number of games has to be between "\
                                         "1 and 200. "
-
-    return
 
 @db_session
 def test_invalid_rounds():
@@ -362,12 +379,122 @@ def test_invalid_rounds():
                                 random.randint(10001, 10100)])
 
     password = random.choice(["", get_random_password()])
-
+    
     response = client_put(creator_token, match_name, creator_robot, min_players, 
                           max_players, num_games, num_rounds, password)
 
-    assert response.status_code == (status.HTTP_409_CONFLICT)
+    assert response.status_code == (status.HTTP_400_BAD_REQUEST)
     assert response.json()["detail"] == "Number of rounds has to be between "\
                                         "1 and 10000. "
 
-    return
+@db_session
+def test_long_password():
+
+    user_index = random.randint(0,2)
+    creator_token = tokens[user_index]
+    creator_user = users[user_index]
+
+    match_name = get_random_match_name()
+    while((creator_user, match_name) in matches):
+        match_name = get_random_match_name()
+        
+    robot_index = random.randint(0, max(1,user_index))
+    creator_robot = robots[user_index][robot_index]
+
+    min_players = random.choice([2,3,4])
+
+    max_players = random.randint(min_players, 4)
+    
+    num_games = random.randint(1, 200)
+
+    num_rounds = random.randint(1, 10000)
+
+    password = "thisHasMoreThan16Characters"
+    
+    response = client_put(creator_token, match_name, creator_robot, min_players, 
+                          max_players, num_games, num_rounds, password)
+
+    assert response.status_code == (status.HTTP_400_BAD_REQUEST)
+    assert response.json()["detail"] == "The password can't have more than "\
+                                        "16 characters. "
+
+@db_session
+def test_long_match_name():
+
+    user_index = random.randint(0,2)
+    creator_token = tokens[user_index]
+
+    match_name = "thisHasMoreThan16Characters"
+        
+    robot_index = random.randint(0, max(1,user_index))
+    creator_robot = robots[user_index][robot_index]
+
+    min_players = random.choice([2,3,4])
+
+    max_players = random.randint(min_players, 4)
+
+    num_games = random.randint(1, 200)
+
+    num_rounds = random.randint(1, 10000)
+
+    password = random.choice(["", get_random_password()])
+    
+    response = client_put(creator_token, match_name, creator_robot, min_players, 
+                          max_players, num_games, num_rounds, password)
+
+    assert response.status_code == (status.HTTP_400_BAD_REQUEST)
+    assert response.json()["detail"] == "The match name has to have between "\
+                                        "3 and 16 characters. "
+
+@db_session
+def test_short_match_name():
+
+    user_index = random.randint(0,2)
+    creator_token = tokens[user_index]
+
+    match_name = "ab"
+        
+    robot_index = random.randint(0, max(1,user_index))
+    creator_robot = robots[user_index][robot_index]
+
+    min_players = random.choice([2,3,4])
+
+    max_players = random.randint(min_players, 4)
+
+    num_games = random.randint(1, 200)
+
+    num_rounds = random.randint(1, 10000)
+
+    password = random.choice(["", get_random_password()])
+    
+    response = client_put(creator_token, match_name, creator_robot, min_players, 
+                          max_players, num_games, num_rounds, password)
+
+    assert response.status_code == (status.HTTP_400_BAD_REQUEST)
+    assert response.json()["detail"] == "The match name has to have between "\
+                                        "3 and 16 characters. "
+
+def test_invalid_token():
+    user_index = random.randint(0,2)
+    creator_token = ""
+
+    match_name = get_random_match_name()
+
+    robot_index = random.randint(0, max(1,user_index))
+    creator_robot = robots[user_index][robot_index]
+
+    min_players = random.choice([2,3,4])
+
+    max_players = random.randint(min_players, 4)
+
+    num_games = random.randint(1, 200)
+
+    num_rounds = random.randint(1, 10000)
+
+    password = get_random_password()
+    
+    response = client_put(creator_token, match_name, creator_robot, min_players, 
+                          max_players, num_games, num_rounds, password)
+
+    assert response.status_code == INVALID_TOKEN_EXCEPTION.status_code
+    assert response.json()["detail"] == INVALID_TOKEN_EXCEPTION.detail
