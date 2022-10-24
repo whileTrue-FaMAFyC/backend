@@ -8,7 +8,9 @@ from utils.user_utils import generate_token, TokenData
 from validators.user_validators import *
 from view_entities.user_view_entities import *
 
+
 user_controller = APIRouter()
+
 
 @user_controller.post("/signup", status_code=status.HTTP_201_CREATED)
 async def sign_up_post(user: UserSignUpData):
@@ -34,15 +36,18 @@ async def sign_up_post(user: UserSignUpData):
     else:
         return user_to_db
 
+
 @user_controller.put("/verifyuser/{username}", status_code=status.HTTP_200_OK)
 async def verify_user(username: str, code: UserVerificationCode):
     user_verification_validator(username, code.verification_code)
 
-    if update_user_verification(username): # Check if updating the verified attribute had any problems.
-        return UserFromDb.from_orm(get_user_by_username(username)) # Returns user_info.
-
+    # Check if updating the verified attribute had any problems.
+    if update_user_verification(username): 
+        # Returns user info
+        return UserFromDb.from_orm(get_user_by_username(username))
     else:
         raise ERROR_UPDATING_USER_DATA
+
     
 # LOGIN
 # Get credentials (username or email and password) and check if they are correct
