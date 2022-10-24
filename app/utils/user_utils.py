@@ -1,13 +1,9 @@
-from database.dao.user_dao import delete_unverified_users, get_unverified_users
-
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
 from jose import jwt
 from passlib.hash import bcrypt
 from pydantic import BaseModel
-import schedule
 import smtplib
-import time
 
 
 SECRET_KEY = "2c329a8eca7d0c2ff68d261ad0b2e3efa66cc2603183fe6d0b4b219a11138c84"
@@ -124,8 +120,7 @@ def send_cleanup_email(recipient, verification_code):
     FROM = SYSTEM_MAIL
     TO = recipient
     SUBJECT = "Please signup again"
-    TEXT = f"Your verification code: {verification_code} is no longer valid."
-    "Please signup again.\nDo not reply this email."
+    TEXT = f"Your verification code: {verification_code} is no longer valid. Please signup again."
 
     # Prepare actual message
     message = """From: %s\nTo: %s\nSubject: %s\n\n%s
@@ -164,20 +159,3 @@ def generate_token(data: TokenData):
     data_to_encode.update({"exp": expire})
     token = jwt.encode(data_to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return token
-
-
-def unverified_users_cleanup():
-    users = get_unverified_users()
-    for u in users:
-        send_cleanup_email(u.email, u.verification_code)
-    delete_unverified_users()
-
-
-def schedule_unverified_users_cleanup():
-    schedule.every(4).hours.do(unverified_users_cleanup)
-
-    while True:
-        schedule.run_pending()
-        # Suspends execution of this thread for 100 seconds.
-        time.sleep(100)
-        # NOTE: The cleanup function will be running on a different thread.

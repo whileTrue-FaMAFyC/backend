@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta
 from threading import Thread
 from pony.orm import db_session, select, delete
-from utils.user_utils import unverified_users_cleanup
+import schedule, time
 
 from database.models.models import User, RUNNING_ENVIRONMENT
+from utils.user_utils import send_cleanup_email
 from view_entities.user_view_entities import NewUserToDb
+
 #
 # The db_session() decorator performs the following actions on exiting function:
 #
@@ -69,6 +71,23 @@ def delete_unverified_users():
         return True
     except:
         return False
+
+@db_session
+def unverified_users_cleanup():
+    users = get_unverified_users()
+    for u in users:
+        send_cleanup_email(u.email, u.verification_code)
+    delete_unverified_users()
+
+
+def schedule_unverified_users_cleanup():
+    schedule.every(4).hours.do(unverified_users_cleanup)
+
+    while True:
+        schedule.run_pending()
+        # Suspends execution of this thread for 100 seconds.
+        time.sleep(100)
+        # NOTE: The cleanup function will be running on a different thread.
 
 # Creates a thread for cleanup unverified users every 4 hours.
 if RUNNING_ENVIRONMENT == "DEPLOYMENT":
