@@ -44,11 +44,11 @@ ERROR_SENDING_VERIFICATION_EMAIL = HTTPException(
 
 USER_NOT_REGISTERED = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="user not registered")
+    detail="User not registered.")
 
 USER_ALREADY_VERIFIED = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
-    detail="user already verified")
+    detail="User already verified.")
 
 CREDENTIALS_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -67,11 +67,11 @@ INEXISTENT_USER_EXCEPTION = HTTPException(
 
 WRONG_VERIFICATION_CODE = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
-    detail="wrong verification code")
+    detail="Wrong verification code.")
 
 ERROR_UPDATING_USER_DATA = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    detail="internal error when updating the user info in the database")
+    detail="Internal error when updating the user info in the database.")
 
 INVALID_TOKEN_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
