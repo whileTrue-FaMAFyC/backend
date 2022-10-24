@@ -12,10 +12,11 @@ def test_unverified_users_cleanup():
     # We use a fake created time so the cleanup deletes the users.
     fake_created_time = datetime.now() - timedelta(hours=5)
     
-    users = [("tonimondejar", "antoniomondejar2001@gmail.com", "Test1234",
-    "fake_avatar", 123456, False), ("tonimondejar1", "antoniomondejar@gmail.com",
-    "Test1234","fake_avatar", 123456, False), ("tonimondejar2", "antoniomondejar1@gmail.com",
-    "Test1234","fake_avatar", 123456, False)]
+    users = [
+        ("tonimondejar", "antoniomondejar2001@gmail.com", "Test1234","fake_avatar", 123456, False),
+        ("tonimondejar1", "antoniomondejar@gmail.com", "Test1234","fake_avatar", 123456, False),
+        ("tonimondejar2", "antoniomondejar1@gmail.com", "Test1234","fake_avatar", 123456, False)
+    ]
     
     for username, email, password, avatar, code, verified in users:
         with db_session:
