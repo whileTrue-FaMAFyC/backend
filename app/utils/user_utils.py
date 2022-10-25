@@ -16,39 +16,48 @@ SYSTEM_MAIL_PASSWORD = "kltrgevemdlcywkq"
 
 EMAIL_NOT_VALID = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
-    detail="Email not valid.")
+    detail="Email not valid."
+)
 
 AVATAR_FORMAT_NOT_VALID = HTTPException(
     status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-    detail="Avatar extension file not supported.")
+    detail="Avatar extension file not supported."
+)
 
 PASSWORD_FORMAT_NOT_VALID = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
-    detail="Password format not valid.")
+    detail="Password format not valid."
+)
 
 USERNAME_ALREADY_IN_USE = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
-    detail="Username already in use.")
+    detail="Username already in use."
+)
 
 EMAIL_ALREADY_IN_USE = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
-    detail="Email already associated with another user.")
+    detail="Email already associated with another user."
+)
 
 ERROR_INSERTING_DATA = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    detail="Internal error when inserting the user into the database.")
+    detail="Internal error when inserting the user into the database."
+)
     
 ERROR_SENDING_VERIFICATION_EMAIL = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    detail="Internal error sending the email with the verification code.")
+    detail="Internal error sending the email with the verification code."
+)
 
 USER_NOT_REGISTERED = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="User not registered.")
+    detail="User not registered."
+)
 
 USER_ALREADY_VERIFIED = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
-    detail="User already verified.")
+    detail="User already verified."
+)
 
 CREDENTIALS_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -67,11 +76,13 @@ INEXISTENT_USER_EXCEPTION = HTTPException(
 
 WRONG_VERIFICATION_CODE = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
-    detail="Wrong verification code.")
+    detail="Wrong verification code."
+)
 
 ERROR_UPDATING_USER_DATA = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    detail="Internal error when updating the user info in the database.")
+    detail="Internal error when updating the user info in the database."
+)
 
 INVALID_TOKEN_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
