@@ -25,3 +25,7 @@ class MatchInfo(BaseModel):
 
 class ShowMatch(MatchInfo):
     robots_joined: int
+
+class JoinMatch(BaseModel):
+    creator_user: str
+    match_name: str
