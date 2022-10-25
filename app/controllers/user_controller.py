@@ -32,13 +32,13 @@ async def sign_up_post(user: UserSignUpData):
     else:
         return True
 
+
 @user_controller.put("/verifyuser/{username}", status_code=status.HTTP_200_OK)
 async def verify_user(username: str, code: UserVerificationCode):
     user_verification_validator(username, code.verification_code)
 
     if update_user_verification(username): # Check if updating the verified attribute had any problems.
-        return UserFromDb.from_orm(get_user_by_username(username)) # Returns user_info.
-
+        return True
     else:
         raise ERROR_UPDATING_USER_DATA
 

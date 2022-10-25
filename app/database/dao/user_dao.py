@@ -100,5 +100,5 @@ def schedule_unverified_users_cleanup():
 
 # Creates a thread for cleanup unverified users every 4 hours.
 if RUNNING_ENVIRONMENT == "DEPLOYMENT":
-    unverified_users_cleanup_thread = Thread(unverified_users_cleanup)
+    unverified_users_cleanup_thread = Thread(target=unverified_users_cleanup)
     unverified_users_cleanup_thread.start()
