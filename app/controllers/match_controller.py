@@ -3,7 +3,7 @@ from jose import jwt
 from typing import Union
 
 from database.dao import match_dao
-from utils.match_utils import match_db_to_view
+from utils.match_utils import ERROR_CREATING_MATCH, match_db_to_view
 from utils.user_utils import *
 from validators.match_validators import new_match_validator
 from validators.user_validators import validate_token, SECRET_KEY
@@ -24,8 +24,7 @@ async def create_match(new_match: NewMatch, authorization: Union[str, None] = He
     created = match_dao.create_new_match(creator_username, new_match)
     
     if not created:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            detail="Internal error creating the match" )
+        raise ERROR_CREATING_MATCH
     return True
 
 @match_controller.get("/list-matches", status_code=status.HTTP_200_OK)
