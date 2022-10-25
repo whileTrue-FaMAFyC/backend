@@ -55,6 +55,15 @@ def get_usernames():
     return select(u.username for u in User)
 
 @db_session
+def update_user_avatar(username: str, avatar: str):
+    try:
+        user_db = User.get(username=username)
+        user_db.set(avatar=avatar)
+        return True
+    except:
+        return False
+
+@db_session
 def update_user_verification(username: str):
     try:
         user_db = User.get(username=username)

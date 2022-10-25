@@ -8,7 +8,6 @@ class UserBase(BaseModel):
 # To parse the parameters of the post request
 class UserSignUpData(UserBase):
     password: str
-    avatarFilename: str = ""
 
 # To receive the login data
 class UserLogin(BaseModel):
@@ -40,3 +39,7 @@ class UserInMatch(BaseModel):
     
     class Config:
         orm_mode = True
+
+# To parse user avatar
+class UserAvatar(BaseModel):
+    avatar: str
