@@ -43,7 +43,6 @@ async def verify_user(username: str, code: UserVerificationCode):
 
     if update_user_verification(username): # Check if updating the verified attribute had any problems.
         return True
-
     else:
         raise ERROR_UPDATING_USER_DATA
 
