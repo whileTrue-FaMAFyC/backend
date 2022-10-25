@@ -1,8 +1,15 @@
+from fastapi import HTTPException, status
 from pony.orm import db_session
 
 from database.models.models import Match 
 from view_entities.match_view_entities import *
 from view_entities.robot_view_entities import *
+
+
+ERROR_CREATING_MATCH = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error creating the match. "
+)
 
 # Transforms the matches selected from the database to the format that will be
 # sent to the frontend.
