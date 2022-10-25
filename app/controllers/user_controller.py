@@ -41,10 +41,8 @@ async def sign_up_post(user: UserSignUpData):
 async def verify_user(username: str, code: UserVerificationCode):
     user_verification_validator(username, code.verification_code)
 
-    # Check if updating the verified attribute had any problems.
-    if update_user_verification(username): 
-        # Returns user info
-        return UserFromDb.from_orm(get_user_by_username(username))
+    if update_user_verification(username): # Check if updating the verified attribute had any problems.
+        return True
     else:
         raise ERROR_UPDATING_USER_DATA
 

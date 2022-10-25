@@ -43,12 +43,12 @@ ERROR_SENDING_VERIFICATION_EMAIL = HTTPException(
     detail="Internal error sending the email with the verification code.")
 
 USER_NOT_REGISTERED = HTTPException(
-    status_code=status.HTTP_400_BAD_REQUEST,
-    detail="user not registered")
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="User not registered.")
 
 USER_ALREADY_VERIFIED = HTTPException(
-    status_code=status.HTTP_400_BAD_REQUEST,
-    detail="user already verified")
+    status_code=status.HTTP_409_CONFLICT,
+    detail="User already verified.")
 
 CREDENTIALS_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -67,11 +67,11 @@ INEXISTENT_USER_EXCEPTION = HTTPException(
 
 WRONG_VERIFICATION_CODE = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
-    detail="wrong verification code")
+    detail="Wrong verification code.")
 
 ERROR_UPDATING_USER_DATA = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    detail="internal error when updating the user info in the database")
+    detail="Internal error when updating the user info in the database.")
 
 INVALID_TOKEN_EXCEPTION = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -99,7 +99,8 @@ def send_verification_email(recipient, verification_code):
     FROM = SYSTEM_MAIL
     TO = recipient
     SUBJECT = "Here is your verification code"
-    TEXT = f"Your verification code is: {verification_code}.\nDo not reply this email."
+    TEXT = (f"Your verification code is: {verification_code}. It is valid for 4 hours." +
+    "\nDo not reply this email.")
 
     # Prepare actual message
     message = """From: %s\nTo: %s\nSubject: %s\n\n%s
