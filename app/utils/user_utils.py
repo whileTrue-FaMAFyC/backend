@@ -16,31 +16,31 @@ SYSTEM_MAIL_PASSWORD = "kltrgevemdlcywkq"
 
 EMAIL_NOT_VALID = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
-    detail="email not valid")
+    detail="Email not valid.")
 
 AVATAR_FORMAT_NOT_VALID = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
-    detail="avatar extension file not supported")
+    detail="Avatar extension file not supported.")
 
 PASSWORD_FORMAT_NOT_VALID = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
-    detail="password format not valid")
+    detail="Password format not valid.")
 
 USERNAME_ALREADY_IN_USE = HTTPException(
-    status_code=status.HTTP_400_BAD_REQUEST,
-    detail="username already in use")
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Username already in use.")
 
 EMAIL_ALREADY_IN_USE = HTTPException(
-    status_code=status.HTTP_400_BAD_REQUEST,
-    detail="email already associated with another user")
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Email already associated with another user.")
 
 ERROR_INSERTING_DATA = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    detail="internal error when inserting the user into the database")
+    detail="Internal error when inserting the user into the database.")
     
 ERROR_SENDING_VERIFICATION_EMAIL = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    detail="internal error sending the email with the verification code")
+    detail="Internal error sending the email with the verification code.")
 
 USER_NOT_REGISTERED = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
