@@ -38,3 +38,9 @@ ROBOT_DB_EXCEPTION = HTTPException(
 def robot_db_to_view(robots: Robot):
     robots_names = [RobotName.from_orm(r) for r in robots]
     return robots_names
+
+
+def insert_filename_to_file(file: str, filename: str):
+    if file == "":
+        return ""
+    return "name:" + filename + ";" + file
