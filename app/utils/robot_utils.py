@@ -36,8 +36,9 @@ ROBOT_DB_EXCEPTION = HTTPException(
 # sent to the frontend.
 @db_session
 def robot_db_to_view(robots: Robot):
-    robots_names = [RobotName.from_orm(r) for r in robots]
-    return robots_names
+    users_robots = [ShowRobot.from_orm(r) for r in robots]
+    print(users_robots)
+    return users_robots
 
 
 def insert_filename_to_file(file: str, filename: str):
