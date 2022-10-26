@@ -40,3 +40,17 @@ def get_match_by_name_and_user(match_name: str, creator_username: str):
 def get_all_matches():
     matches = Match.select()
     return matches
+
+@db_session
+def update_joining_user_match(joining_username: str, match: match_view_entities.JoinMatch):
+    match_in_db = Match.get(creator_user=match.creator_user, name=match.match_name)
+
+    joining_user_in_db = User.get(username=joining_username)
+
+    joining_robot_in_db = Robot.get(name=match.joining_robot, owner=joining_user_in_db)
+
+    try:
+        match_in_db.robots_joined.add(joining_robot_in_db)
+        return True
+    except:
+        return False

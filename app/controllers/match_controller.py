@@ -5,7 +5,7 @@ from typing import Union
 from database.dao import match_dao
 from utils.match_utils import ERROR_CREATING_MATCH, match_db_to_view
 from utils.user_utils import *
-from validators.match_validators import new_match_validator
+from validators.match_validators import new_match_validator, join_match_validator
 from validators.user_validators import validate_token, SECRET_KEY
 from view_entities.match_view_entities import NewMatch, JoinMatch
 
@@ -41,13 +41,15 @@ async def get_matches(authorization: Union[str, None] = Header(None)):
 def join_match(match: JoinMatch, authorization: Union[str, None] = Header(None)):
     validate_token(authorization)
 
-    # validate_match_join(match) validates if is possible to join the match
-
     token_data = jwt.decode(authorization, SECRET_KEY)
     
     joining_user = token_data['username']
 
-    ## UPDATE MATCH INFO, ADD USER TO MATCH SET
+    join_match_validator(joining_user, match)
+
+    if not match_dao.update_joining_user_match(joining_user, match):
+        raise HTTPException()
 
     ## SUSCRIBE USER TO WEB SOCKET
     
+    return True

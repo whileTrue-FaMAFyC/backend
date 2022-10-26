@@ -1,7 +1,8 @@
 from fastapi import HTTPException, status
 
 from database.dao import match_dao, robot_dao
-from view_entities.match_view_entities import NewMatch
+from utils.user_utils import verify_password
+from view_entities.match_view_entities import JoinMatch, NewMatch
 
 def new_match_validator(creator_username: str, new_match : NewMatch):
     # To check if the user has a robot with the provided name
@@ -68,3 +69,30 @@ def new_match_validator(creator_username: str, new_match : NewMatch):
         )
     
     return
+
+def join_match_validator(username: str, match: JoinMatch):
+    # To check if the user has a robot with the provided name
+    joining_robot_in_db = robot_dao.get_bot_by_owner_and_name(username, 
+                                                      match.joining_robot)
+    # To check if the match exists
+    match_in_db = match_dao.get_match_by_name_and_user(match.match_name, 
+                                                       match.creator_user)
+
+    if not joining_robot_in_db:
+        raise HTTPException()
+    
+    if not match_in_db:
+        raise HTTPException()
+    
+    if match.match_password == "":
+        if match_in_db.hashed_password != "":
+            raise HTTPException()
+    else:
+        if not verify_password(match.match_password, match_in_db.hashed_password):
+            raise HTTPException()
+    
+    if len(match_in_db.robots_joined) == match_in_db.max_players:
+        raise HTTPException()
+    
+    if match_in_db.started:
+        raise HTTPException()
