@@ -30,7 +30,7 @@ class ConnectionManager:
         for connection in self.connections:
             await connection.send_text(data)
 
-lobbys: dict[str, ConnectionManager] = {}
+lobbys: Dict[str, ConnectionManager] = {}
 
 
 @match_controller.post("/new-match", status_code=status.HTTP_201_CREATED)
@@ -67,5 +67,11 @@ async def join_lobby(
     creator_username: str,
     match_name: str
 ):
+    token = websocket.headers['sec-websocket-protocol']
+    print(token)
+    
+    # validate_token(token)
+
     lobbys[creator_username + "_" + match_name].connect(websocket)
+    print(lobbys[creator_username + "_" + match_name].connections)
     pass
