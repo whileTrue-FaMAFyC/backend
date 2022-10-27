@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from view_entities import robot_view_entities, user_view_entities
+from view_entities import user_view_entities
 
 class NewMatch(BaseModel):
     name: str
@@ -25,3 +25,10 @@ class MatchInfo(BaseModel):
 
 class ShowMatch(MatchInfo):
     robots_joined: int
+
+class AbandonMatch(BaseModel):
+    creator_user: str
+    name: str
+
+    class Config:
+        orm_mode = True

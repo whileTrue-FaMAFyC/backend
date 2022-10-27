@@ -1,4 +1,4 @@
-from pony.orm import db_session
+from pony.orm import db_session, select
 
 from database.dao.user_dao import get_user_by_username
 from database.models.models import Robot
@@ -32,3 +32,8 @@ def create_new_bot(owner_username: str, bot_data: BotCreate):
 @db_session 
 def get_bots_by_owner(owner_username: str):
     return Robot.select(owner=get_user_by_username(owner_username))
+
+# @db_session 
+# def get_bots_id_by_owner(owner_username: str):
+#     return select(r.robot_id for r in Robot if
+#                   r.owner == get_user_by_username(owner_username))

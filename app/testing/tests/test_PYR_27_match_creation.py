@@ -61,7 +61,6 @@ def get_random_password():
     random_source = string.ascii_letters + string.digits + string.punctuation
     password = ""
     length = random.randint(0, 16)
-    print(length)
     for i in range(length):
         password += random.choice(random_source)
 

@@ -1,8 +1,8 @@
 from fastapi import HTTPException, status
-# import os
-from pony.orm import db_session
+from pony.orm import db_session, left_join
 
-from database.models.models import Robot
+from database.models.models import Robot, Match, User
+from view_entities.match_view_entities import AbandonMatch
 from view_entities.robot_view_entities import *
 
 
@@ -44,3 +44,28 @@ def insert_filename_to_file(file: str, filename: str):
     if file == "":
         return ""
     return "name:" + filename + ";" + file
+
+# @db_session
+# def get_player_in_match(match: AbandonMatch, abandoning_username: str):
+    
+#     query = left_join(
+#         (r.owner)
+#         for m in Match for r in m.robots_joined
+#         if m.name == match.name and
+#            m.creator_user == User.get(username=match.creator_user) and
+#            r.owner == User.get(username=abandoning_username)
+#     )
+#     print("\n")
+#     query.show()
+#     return query
+
+@db_session
+def get_robot_in_match(match: AbandonMatch, abandoning_username: str):
+    
+    return left_join(
+        (r)
+        for m in Match for r in m.robots_joined
+        if m.name == match.name and
+           m.creator_user == User.get(username=match.creator_user) and
+           r.owner == User.get(username=abandoning_username)
+        )

@@ -1,12 +1,12 @@
 from passlib.hash import bcrypt
-from pony.orm import db_session, select, delete
+from pony.orm import db_session, select
 
-from database.dao import robot_dao
 from database.models.models import Match, Robot, User 
-from view_entities import match_view_entities
+from utils.robot_utils import get_robot_in_match
+from view_entities.match_view_entities import NewMatch, AbandonMatch
 
 @db_session
-def create_new_match(creator_username, new_match: match_view_entities.NewMatch):
+def create_new_match(creator_username, new_match: NewMatch):
     creator = User.get(username=creator_username)
     robot_creator = Robot.get(name=new_match.creator_robot, owner=creator)
     
@@ -40,3 +40,24 @@ def get_match_by_name_and_user(match_name: str, creator_username: str):
 def get_all_matches():
     matches = Match.select()
     return matches
+
+@db_session
+def select_robots_from_match(match_name: str, creator_username: str):
+    
+    return select(m.robots_joined for m in Match
+                  if m.creator_user == User.get(username=creator_username)
+                  and m.name == match_name)
+
+@db_session
+def update_abandoning_user(abandoning_user: str, match_info: AbandonMatch):
+    
+    match = Match.get(name=match_info.name, 
+                      creator_user=User.get(username=match_info.creator_user))
+
+    robot = get_robot_in_match(match_info, abandoning_user)
+    
+    try:
+        match.robots_joined.remove(robot)
+        return True
+    except:
+        return False

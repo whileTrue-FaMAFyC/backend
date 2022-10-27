@@ -11,6 +11,21 @@ ERROR_CREATING_MATCH = HTTPException(
     detail="Internal error creating the match. "
 )
 
+INEXISTENT_MATCH_EXCEPTION = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The match doesn't exist."
+)
+
+ERROR_DELETING_USER = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error removing the user from the match."
+)
+
+USER_NOT_JOINED_EXCEPTION = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The user isn't in the match."
+)
+
 # Transforms the matches selected from the database to the format that will be
 # sent to the frontend.
 @db_session
