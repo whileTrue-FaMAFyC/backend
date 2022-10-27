@@ -37,7 +37,6 @@ ROBOT_DB_EXCEPTION = HTTPException(
 @db_session
 def robot_db_to_view(robots: Robot):
     users_robots = [ShowRobot.from_orm(r) for r in robots]
-    print(users_robots)
     return users_robots
 
 
