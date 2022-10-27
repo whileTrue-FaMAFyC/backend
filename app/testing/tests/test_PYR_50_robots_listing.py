@@ -46,7 +46,7 @@ def initial_users():
 def initial_robots():
     robots = [
         ('robot_cool', MOCK_SOURCE_CODE, 'isra1234@hotmail.com', MOCK_AVATAR),
-        ('world_destroyer_29', MOCK_SOURCE_CODE, 'cassinalucas@gmail.com', MOCK_AVATAR),
+        ('R2D2', MOCK_SOURCE_CODE, 'cassinalucas@gmail.com', MOCK_AVATAR),
         ('_theTERMINATOR', MOCK_SOURCE_CODE, 'cassinalucas@gmail.com', MOCK_AVATAR),
         ('0ptimusPrime', MOCK_SOURCE_CODE, 'basbenja3@gmail.com', MOCK_AVATAR),
         ('CYborg34', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
@@ -66,7 +66,7 @@ def initial_robots():
 def user_tested_robots():
     robots = [
         ('R2D2', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
-        ('WALL-E', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
+        ('WALL-E', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', ""),
         ('jarvis22', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
     ]
     for robot_name, source_code, owner_email, avatar in robots:
@@ -92,7 +92,9 @@ def test_no_robots():
     assert response.json() == []
     return
 
-expected_response =  [{"name": "R2D2"}, {"name": "WALL-E"}, {"name": "jarvis22"}]
+expected_response =  [{"name": "R2D2", "avatar": MOCK_AVATAR}, 
+                      {"name": "WALL-E", "avatar": ""}, 
+                      {"name": "jarvis22", "avatar": MOCK_AVATAR}]
 
 def test_with_robots():
     # First we add some robots to the users library.

@@ -15,8 +15,9 @@ class RobotInMatch(BaseModel):
     class Config:
         orm_mode = True
 
-class RobotName(BaseModel):
+class ShowRobot(BaseModel):
     name: str
-
+    avatar: str
+    
     class Config:
         orm_mode = True
