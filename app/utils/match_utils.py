@@ -11,6 +11,41 @@ ERROR_CREATING_MATCH = HTTPException(
     detail="Internal error creating the match. "
 )
 
+NOT_EXISTENT_ROBOT = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Robot selected is not in your library."
+)
+
+NOT_EXISTENT_MATCH = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The match selected does not exists."
+)
+
+USER_ALREADY_JOINED = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The user has already joined."
+)
+
+INCORRECT_PASSWORD = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Incorrect password."
+)
+
+MAX_PLAYERS_REACHED = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Max players reached. Cannot join the match."
+)
+
+MATCH_ALREADY_STARTED = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The match has already started."
+)
+
+INTERNAL_ERROR_UPDATING_MATCH_INFO = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error when updating the match info."
+)
+
 # Transforms the matches selected from the database to the format that will be
 # sent to the frontend.
 @db_session

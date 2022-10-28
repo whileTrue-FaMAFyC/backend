@@ -42,8 +42,17 @@ def get_all_matches():
     return matches
 
 @db_session
+def get_users_in_match(match_name: str, creator_username: str):
+    match_in_db = Match.get(creator_user=User.get(username=creator_username), 
+                        name=match_name)
+    users = []
+    for r in match_in_db.robots_joined:
+        users.append(r.owner.username)
+    return users
+
+@db_session
 def update_joining_user_match(joining_username: str, match: match_view_entities.JoinMatch):
-    match_in_db = Match.get(creator_user=match.creator_user, name=match.match_name)
+    match_in_db = Match.get(creator_user=User.get(username=match.creator_user), name=match.match_name)
 
     joining_user_in_db = User.get(username=joining_username)
 
