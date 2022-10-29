@@ -1,4 +1,4 @@
-from math import ceil, cos, radians, sin, degrees, atan
+from math import ceil, cos, radians, sin, degrees, atan2, sqrt
 from random import randint
 
 from utils.services_utils import round_up, M_VELOC_1
@@ -13,8 +13,9 @@ class Robot:
         self._req_velocity: int = 0
         self._position: tuple(int, int) = (randint(0, 999), randint(0, 999))
         self._damage: int = 0
-        self._scan_angle: int = 0
+        self._scan_direction: int = 0
         self._scan_resolution: int = 0
+        self._scan_result: int = 1415
 
     def __eq__(self, other):
         return self._id == other._id
@@ -42,14 +43,17 @@ class Robot:
         With this method, the scanner gets pointed in any direction (from 0 to 
         359). The scan result will be available in the next round.
         """
-        pass
+        if 0 <= direction and direction <= 359:
+            self._scan_direction = direction
+        if 0 <= resolution_in_degrees and resolution_in_degrees <= 10:
+            self._scan_resolution = resolution_in_degrees
     
     def scanned(self):
         """
         Returns the scan result from the previous round: returns the distance to
-        the closes robot in the pointed direction.
+        the closest robot in the pointed direction.
         """
-        pass
+        return self._scan_result
     
     # Motor
     def drive(self, direction, velocity):
@@ -85,18 +89,53 @@ class Robot:
         # The maximum possible distance between two robots is 1414 meters
         # sqrt(1000^2 + 1000^2) = 1414,21
         min_distance = 1415
-        min_angle = self._scan_angle - self._scan_resolution
-        max_angle = self._scan_angle + self._scan_resolution        
+
+        min_angle = self._scan_direction - self._scan_resolution
+        new_min = False
+
+        # This is the case where the scan direction is near 0 and the resolution 
+        # is such that the minimum calculated would be negative. We substract
+        # 360 to get the equivalent angle in an appropiate range.
+        if min_angle < 0:
+            min_angle += 360
+            new_min = True
+
+        max_angle = self._scan_direction + self._scan_resolution        
+        new_max = False
         
+        # Same as before, but now the maximum calculated would be greater than 
+        # 359, so we add 360 to get the equivalent angle in an appropiate range.
+        if max_angle > 359:
+            max_angle -= 360
+            new_max = True
+
         for r in robots:
-            x_distance = abs(r[0] - self._position[0])
-            y_distance = abs(r[1] - self._position[1])
-            angle_difference = degrees(atan(x_distance/y_distance))
+            x_distance = r[0] - self._position[0]
+            y_distance = r[1] - self._position[1]
+            
+            angle_diff = degrees(atan2(y_distance,x_distance))
+            if angle_diff < 0:
+                angle_diff += 360
 
-            if (min_angle <= angle_difference or angle_difference <= max_angle):
-                min_distance = sin(radians(angle_difference))*x_distance
+            distance = sqrt(pow(x_distance, 2)+pow(y_distance, 2))
 
-        return min_distance
+            if distance < min_distance and (
+               (not new_min and not new_max 
+                and angle_diff >= min_angle and angle_diff <= max_angle)
+               or 
+               # The case where one of the limits went out of range. In this case
+               # 0 will be between the valid values of angle_diff, so we can
+               # consider two possibilities: angle_diff is between min_angle and
+               # 360 or between 0 and max_angle. As angle_diff is between 0 and 360,
+               # we can confirm that if it's greater than min_angle, it's also
+               # smaller than 0, and that if it's smaller than max_angle, it's
+               # also greater than 0. This is why we can use or here.               
+               (new_min or new_max and
+                (angle_diff >= min_angle or angle_diff <= max_angle))):
+                    
+                    min_distance = distance
+
+        self._scan_result = round(min_distance)
     
     def _shoot(self):
         pass
