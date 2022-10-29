@@ -1,4 +1,4 @@
-from math import ceil, cos, radians, sin
+from math import ceil, cos, radians, sin, degrees, atan
 from random import randint
 
 from utils.services_utils import round_up, M_VELOC_1
@@ -12,7 +12,12 @@ class Robot:
         self._previous_req_velocity: int = 0
         self._req_velocity: int = 0
         self._position: tuple(int, int) = (randint(0, 999), randint(0, 999))
-        self._damage: int = 0        
+        self._damage: int = 0
+        self._scan_angle: int = 0
+        self._scan_resolution: int = 0
+
+    def __eq__(self, other):
+        return self._id == other._id
 
     # Cannon
     def is_cannon_ready(self):
@@ -75,8 +80,23 @@ class Robot:
         return self._damage
     
     # Actions
-    def _scan(self):
-        pass
+    def _scan(self, robots):
+
+        # The maximum possible distance between two robots is 1414 meters
+        # sqrt(1000^2 + 1000^2) = 1414,21
+        min_distance = 1415
+        min_angle = self._scan_angle - self._scan_resolution
+        max_angle = self._scan_angle + self._scan_resolution        
+        
+        for r in robots:
+            x_distance = abs(r[0] - self._position[0])
+            y_distance = abs(r[1] - self._position[1])
+            angle_difference = degrees(atan(x_distance/y_distance))
+
+            if (min_angle <= angle_difference or angle_difference <= max_angle):
+                min_distance = sin(radians(angle_difference))*x_distance
+
+        return min_distance
     
     def _shoot(self):
         pass
