@@ -14,7 +14,7 @@ ERROR_CREATING_MATCH = HTTPException(
 # Transforms the matches selected from the database to the format that will be
 # sent to the frontend.
 @db_session
-def match_db_to_view(matches: Match):
+def match_db_to_view(matches: Match): # No es list[Match] o algo así?
     matches_info = [MatchInfo.from_orm(m) for m in matches]
     all_robots_joined = []
     info_and_robots = []
@@ -24,10 +24,13 @@ def match_db_to_view(matches: Match):
 
     for i in range(0, len(matches_info)):
         info_and_robots.append(
-            ShowMatch(match_id=matches_info[i].match_id,
-                      name=matches_info[i].name,
-                      creator_user=matches_info[i].creator_user,
-                      max_players=matches_info[i].max_players,
-                      robots_joined=all_robots_joined[i]))
+            ShowMatch(
+                match_id=matches_info[i].match_id,
+                name=matches_info[i].name,
+                creator_user=matches_info[i].creator_user,
+                max_players=matches_info[i].max_players,
+                robots_joined=all_robots_joined[i]
+            )
+        )
 
     return info_and_robots
