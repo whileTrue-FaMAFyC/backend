@@ -1,11 +1,6 @@
-from math import sin, cos, radians
-
 from testing.helpers.services_helpers import RobotTest
 
 r1 = RobotTest(1)
-r1.set_initial_position(575,325)
-r2 = RobotTest(2)
-r3 = RobotTest(3)
 
 def test_point_scanner():
     assert r1.get_scanner_details() == (0,0)

@@ -39,7 +39,7 @@ class Game():
 
             for other_r in self.robots:
                 if not other_r == r:
-                    others_positions.append(other_r.get_position)
+                    others_positions.append(other_r.get_position())
 
             r._scan(others_positions)
             

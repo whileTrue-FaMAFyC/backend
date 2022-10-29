@@ -84,7 +84,7 @@ class Robot:
         return self._damage
     
     # Actions
-    def _scan(self, robots):
+    def _scan(self, robots_positions):
 
         # The maximum possible distance between two robots is 1414 meters
         # sqrt(1000^2 + 1000^2) = 1414,21
@@ -109,15 +109,18 @@ class Robot:
             max_angle -= 360
             new_max = True
 
-        for r in robots:
+        for r in robots_positions:
             x_distance = r[0] - self._position[0]
             y_distance = r[1] - self._position[1]
             
-            angle_diff = degrees(atan2(y_distance,x_distance))
+            # tang(angle_diff) = y_distance/x_distance, so to obtain angle_diff
+            # we use atan(y_distance/x_distance), atan2 allows us to take into
+            # consideration the quadrant of the angle.
+            angle_diff = degrees(atan2(y_distance, x_distance))
             if angle_diff < 0:
                 angle_diff += 360
 
-            distance = sqrt(pow(x_distance, 2)+pow(y_distance, 2))
+            distance = sqrt(pow(x_distance, 2) + pow(y_distance, 2))
 
             if distance < min_distance and (
                (not new_min and not new_max 
