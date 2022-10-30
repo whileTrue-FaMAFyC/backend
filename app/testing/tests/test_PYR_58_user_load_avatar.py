@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 
 from database.dao.user_dao import *
 from main import app
-from testing.helpers.user_helpers import *
 from testing.helpers.mock_db import MOCK_AVATAR
 
 client = TestClient(app)

@@ -1,13 +1,11 @@
 from fastapi import status
 from fastapi.testclient import TestClient
-from pony.orm import db_session
 import random
 import string
 
 from main import app
 from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
 from utils.user_utils import INVALID_TOKEN_EXCEPTION
-from view_entities.user_view_entities import NewUserToDb
 
 
 # Usernames, robot names and match names used for the test
