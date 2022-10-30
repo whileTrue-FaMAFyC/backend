@@ -1,9 +1,11 @@
 from random import randint
+from typing import List
+
 from services.game import Game, Missile
 from testing.helpers.services_helpers import *
 
 
-robots: list[RobotTest] = [Robot1(1), Robot2(2), Robot3(3), Robot4(4)]
+robots: List[RobotTest] = [Robot1(1), Robot2(2), Robot3(3), Robot4(4)]
 
 robots[0].set_initial_position(802,798)
 robots[1].set_initial_position(234, 799)
