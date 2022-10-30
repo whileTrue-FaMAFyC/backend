@@ -1,5 +1,5 @@
-import numpy as np
 import math
+import numpy as np
 
 
 COLLISION_DAMAGE = 2
@@ -8,6 +8,10 @@ COLLISION_DAMAGE = 2
 M_VELOC_1 = 10
 
 OUT_OF_BOUNDS = (1500,1500)
+
+# The maximum possible distance between two robots is 1414 meters
+# sqrt(1000^2 + 1000^2) = 1414,21
+MAX_POSSIBLE_DISTANCE = 1415
 
 ROUNDS_TO_RELOAD_CANNON_500_TO_700 = 4
 ROUNDS_TO_RELOAD_CANNON_300_TO_500 = 3

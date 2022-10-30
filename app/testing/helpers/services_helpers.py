@@ -13,6 +13,9 @@ class RobotTest(Robot):
     
     def get_req_velocity(self):
         return self._req_velocity
+
+    def get_scanner_details(self):
+        return (self._scan_direction, self._scan_resolution)
     
     
 class Robot1(RobotTest):

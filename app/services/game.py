@@ -64,8 +64,15 @@ class Game():
             r.respond()
 
         # TO DO
-        # for r in self.robots:
-        #     r.scan()
+        for r in self.robots:
+            others_positions = []
+
+            for other_r in self.robots:
+                if not other_r == r:
+                    others_positions.append(other_r.get_position())
+
+            r._scan(others_positions)
+            
         for r in self.robots:
             r._attack()
             if r._missile_final_position != (None, None):
