@@ -11,6 +11,11 @@ ERROR_CREATING_MATCH = HTTPException(
     detail="Internal error creating the match. "
 )
 
+INEXISTENT_MATCH_EXCEPTION = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The match doesn't exist."
+)
+
 # Transforms the matches selected from the database to the format that will be
 # sent to the frontend.
 @db_session

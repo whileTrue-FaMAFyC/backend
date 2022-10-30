@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect, status, Header
+from fastapi import APIRouter, Query, WebSocket, status, Header
 from jose import jwt
 from typing import Union, List, Dict
 
@@ -72,34 +72,26 @@ async def get_matches(authorization: Union[str, None] = Header(None)):
 async def get_lobby(match_id: int, authorization: Union[str, None] = Header(None)):
     validate_token(authorization)
     
+    if get_match_by_id(match_id) is None:
+        raise INEXISTENT_MATCH_EXCEPTION
+    
     return get_lobby_info(match_id)
     
-    
-async def get_token(
-    websocket: WebSocket,
-    token: Union[str, None] = Query(default=None)
-):
-    if token is None:
-        raise INVALID_TOKEN_EXCEPTION
-    return token
-
     
 @match_controller.websocket("/ws/follow-lobby/{match_id}")
 async def follow_lobby(
     websocket: WebSocket, 
     match_id: int,
-    token: str = Depends(get_token)
+    token: Union[str, None] = Query(None)
 ):
+    validate_token(token)
     token_data = jwt.decode(token, SECRET_KEY) 
     username = token_data['username']
     
-    await lobbys[match_id].connect(websocket)
-    print(f"{username} has now joined the lobby")
-    
     try:
-        while True:
-            data = await websocket.receive_text()
-            await websocket.send_text(data)
-    except WebSocketDisconnect:
-        lobbys[match_id].disconnect(websocket)
+        await lobbys[match_id].connect(websocket)
+        print(f"{username} has now joined the lobby")
+    except:
         print(f"{username} left the lobby")
+    
+    return

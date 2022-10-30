@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 
-from main import app
 from database.dao.match_dao import get_match_by_name_and_user
+from main import app
 from testing.helpers.generate_token import MOCK_TOKEN_BENJA
 
 
@@ -9,14 +9,12 @@ client = TestClient(app)
 
 
 def test_join_lobby():    
-    match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id
+    match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id    
     
     response = client.get(
         f'/matches/join-lobby/?match_id={match_id}',
         headers = {'Authorization': MOCK_TOKEN_BENJA},
-    )
-    
-    print(response.json())
+    )    
     
     assert response.status_code == 200
     assert response.json() == {

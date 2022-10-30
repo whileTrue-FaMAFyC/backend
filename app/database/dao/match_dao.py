@@ -9,10 +9,7 @@ def create_new_match(creator_username, new_match: NewMatch):
     creator = User.get(username=creator_username)
     robot_creator = Robot.get(name=new_match.creator_robot, owner=creator)
     
-    if (new_match.password):
-        match_password = bcrypt.hash(new_match.password)
-    else: # The match doesn't have a password
-        match_password = ""
+    match_password = bcrypt.hash(new_match.password) if new_match.password else ""
     
     try:
         Match(
@@ -39,6 +36,11 @@ def get_match_by_name_and_user(match_name: str, creator_username: str):
 
 
 @db_session
+def get_match_by_id(match_id: str):
+    return Match[match_id]
+
+
+@db_session
 def get_all_matches():
     matches = Match.select()
     return matches
@@ -46,7 +48,7 @@ def get_all_matches():
 
 @db_session
 def get_lobby_info(match_id: int):
-    match: Match = Match.get(match_id=match_id)
+    match: Match = Match[match_id]
     creator_username = match.creator_user.username
     
     user_robot = {}
