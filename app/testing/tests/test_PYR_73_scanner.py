@@ -1,7 +1,9 @@
 from testing.helpers.services_helpers import RobotTest
+from utils.services_utils import MAX_POSSIBLE_DISTANCE
 
 r1 = RobotTest(1)
 
+# point_scanner() tests
 def test_point_scanner():
     assert r1.get_scanner_details() == (0,0)
     r1.point_scanner(175,6)
@@ -28,11 +30,11 @@ def test_direction_more_than_359():
     assert r1.get_scanner_details() == (123,4)
 
 
-
+# _scan() tests
 def test_no_robots():
     r1.point_scanner(175,5)
     r1._scan([])
-    assert r1.scanned() == 1415
+    assert r1.scanned() == None
 
 def test_enemy_in_first_quadrant():
     r1.set_initial_position(400,300)
@@ -62,7 +64,7 @@ def test_no_enemies_in_scan():
     r1.set_initial_position(400,300)
     r1.point_scanner(302,10)
     r1._scan([(100,100)])
-    assert r1.scanned() == 1415
+    assert r1.scanned() == None
 
 def test_many_enemies_in_scan():
     r1.set_initial_position(400,300)

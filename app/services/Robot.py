@@ -1,7 +1,7 @@
 from math import ceil, cos, radians, sin, degrees, atan2, sqrt
 from random import randint
 
-from utils.services_utils import round_up, M_VELOC_1
+from utils.services_utils import round_up, M_VELOC_1, MAX_POSSIBLE_DISTANCE
 
 class Robot:   
     def __init__(self, robot_id: int):
@@ -15,7 +15,7 @@ class Robot:
         self._damage: int = 0
         self._scan_direction: int = 0
         self._scan_resolution: int = 0
-        self._scan_result: int = 1415
+        self._scan_result: int = None
 
     def __eq__(self, other):
         return self._id == other._id
@@ -86,9 +86,7 @@ class Robot:
     # Actions
     def _scan(self, robots_positions):
 
-        # The maximum possible distance between two robots is 1414 meters
-        # sqrt(1000^2 + 1000^2) = 1414,21
-        min_distance = 1415
+        min_distance = MAX_POSSIBLE_DISTANCE
 
         min_angle = self._scan_direction - self._scan_resolution
         new_min = False
@@ -137,8 +135,11 @@ class Robot:
                 (angle_diff >= min_angle or angle_diff <= max_angle))):
                     
                     min_distance = distance
-
-        self._scan_result = round(min_distance)
+        
+        if min_distance == MAX_POSSIBLE_DISTANCE:
+            self._scan_result = None
+        else:
+            self._scan_result = round(min_distance)
     
     def _shoot(self):
         pass
