@@ -4,7 +4,7 @@ from pony.orm import db_session
 from database.dao import match_dao, robot_dao
 from utils.match_utils import INEXISTENT_MATCH_EXCEPTION, USER_NOT_JOINED_EXCEPTION
 from utils.robot_utils import get_robot_in_match
-from view_entities.match_view_entities import AbandonMatch, NewMatch
+from view_entities.match_view_entities import NewMatch
 
 def new_match_validator(creator_username: str, new_match : NewMatch):
     # To check if the user has a robot with the provided name
@@ -73,9 +73,9 @@ def new_match_validator(creator_username: str, new_match : NewMatch):
     return
 
 @db_session
-def abandon_match_validator(match: AbandonMatch, abandoning_username: str):
+def abandon_match_validator(match_id: int, abandoning_username: str):
 
-    robots_in_match = match_dao.select_robots_from_match(match.name, match.creator_user)
+    robots_in_match = match_dao.select_robots_from_match_by_id(match_id)
 
     # If robots_in_match is empty, it means the match doesn't exists because
     # there is always at least one robot joined to a match (the creator).
@@ -83,7 +83,7 @@ def abandon_match_validator(match: AbandonMatch, abandoning_username: str):
         raise INEXISTENT_MATCH_EXCEPTION
 
     # Tries to get the robot with which the user joined the match.     
-    abandoning_robot = get_robot_in_match(match, abandoning_username)
+    abandoning_robot = get_robot_in_match(match_id, abandoning_username)
 
     if not abandoning_robot:
         raise USER_NOT_JOINED_EXCEPTION

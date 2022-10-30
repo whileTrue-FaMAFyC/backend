@@ -1,7 +1,9 @@
 from pydantic import BaseModel
+from typing import Dict
 
 from view_entities import user_view_entities
 
+# To add a new match to the database
 class NewMatch(BaseModel):
     name: str
     creator_robot: str
@@ -14,6 +16,7 @@ class NewMatch(BaseModel):
     class Config:
         orm_mode = True
 
+# For listing matches
 class MatchInfo(BaseModel):
     match_id: int
     name: str
@@ -23,12 +26,18 @@ class MatchInfo(BaseModel):
     class Config:
         orm_mode = True
 
+# For listing matches with amount of robots joined
 class ShowMatch(MatchInfo):
     robots_joined: int
 
-class AbandonMatch(BaseModel):
-    creator_user: str
+# For showing the match details inside the lobby
+class LobbyInfo(BaseModel):
     name: str
-
-    class Config:
-        orm_mode = True
+    creator_username: str
+    min_players: int
+    max_players: int
+    num_games: int
+    num_rounds: int
+    users_joined: int
+    user_robot: Dict[str, str]
+    started: bool
