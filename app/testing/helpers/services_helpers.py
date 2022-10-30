@@ -13,3 +13,32 @@ class RobotTest(Robot):
     
     def get_req_velocity(self):
         return self._req_velocity
+    
+    
+class Robot1(RobotTest):
+    def initialize(self):
+        pass
+    
+    def respond(self):
+        self.drive(0, 10)
+
+class Robot2(RobotTest):
+    def initialize(self):
+        pass
+    
+    def respond(self):
+        self.drive(180,10)
+
+class Robot3(RobotTest):
+    def initialize(self):
+        pass
+    
+    def respond(self):
+        self.drive(45,10)
+
+class Robot4(RobotTest):
+    def initialize(self):
+        pass
+    
+    def respond(self):
+        pass
