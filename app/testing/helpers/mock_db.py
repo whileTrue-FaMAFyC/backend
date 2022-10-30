@@ -15,6 +15,20 @@ MOCK_AVATAR = """iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8B
 
 MOCK_CREATED_TIME = datetime.now() - timedelta(hours=5)
 
+TEST_SOURCE_CODE_TONI = """name:robot_test.py;base64,Y2xhc3MgUm9ib3RUZXN0KFJvYm9
+                    0KToKICAgIGRlZiBpbml0aWFsaXplKHNlbGYpOgogICAgICAgIHNlbGYudGV
+                    zdF92YXJpYWJsZSA9ICdTb3kgZWwgcm9ib3QgZGUgdG9uaScKICAgIGRlZiB
+                    yZXNwb25kKCk6CiAgICAgICAgcGFzcw=="""
+
+TEST_SOURCE_CODE_JULI = """name:robot_test.py;base64,Y2xhc3MgUm9ib3RUZXN0KFJvYm9
+                    0KToKICAgIGRlZiBpbml0aWFsaXplKHNlbGYpOgogICAgICAgIHNlbGYudGV
+                    zdF92YXJpYWJsZSA9ICJTb3kgZWwgcm9ib3QgZGUganVsaSIKICAgIGRlZiB
+                    yZXNwb25kKCk6CiAgICAgICAgcGFzcw=="""
+
+TEST_SOURCE_CODE_BENJA = """name:robot_test.py;base64,Y2xhc3MgUm9ib3RUZXN0KFJvYm
+                    90KToKICAgIGRlZiBpbml0aWFsaXplKHNlbGYpOgogICAgICAgIHNlbGYudG
+                    VzdF92YXJpYWJsZSA9ICJTb3kgZWwgcm9ib3QgZGUgYmVuamEiCiAgICBkZW
+                    YgcmVzcG9uZCgpOgogICAgICAgIHBhc3M="""
 @db_session
 def users():
     users = [
@@ -50,11 +64,11 @@ def robots():
         ('WALL-E', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', ""),
         ('jarvis22', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
         ('0ptimusPrime', MOCK_SOURCE_CODE, 'basbenja3@gmail.com', MOCK_AVATAR),
-        ('Bumblebee', MOCK_SOURCE_CODE, 'basbenja3@gmail.com', MOCK_AVATAR),
+        ('Bumblebee', TEST_SOURCE_CODE_BENJA, 'basbenja3@gmail.com', MOCK_AVATAR),
         ('_tron', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('MegaByte', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
-        ('CYborg34', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
-        ('automatax', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
+        ('CYborg34', TEST_SOURCE_CODE_TONI, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
+        ('automatax', TEST_SOURCE_CODE_JULI, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
         ('astroGirl', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR)
     ]
 
