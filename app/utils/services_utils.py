@@ -3,7 +3,6 @@ import math
 from typing import List
 from base64 import b64decode 
 
-from database.dao.robot_dao import get_source_code_by_id
 
 def round_up(x):
     return np.sign(x)*(math.ceil(abs(x)))
