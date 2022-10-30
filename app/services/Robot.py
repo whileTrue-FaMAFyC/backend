@@ -88,15 +88,15 @@ class Robot:
     def _attack(self):
         if self.is_cannon_ready() and self._cannon_distance > 0:
             distance_x = round_up(
-                (round(cos(radians(self._direction)), 5)*self._velocity)*self._cannon_distance
+                round(cos(radians(self._direction)), 5)*self._cannon_distance
             )
             distance_y = round_up(
-                (round(sin(radians(self._direction)), 5)*self._velocity)*self._cannon_distance
+                round(sin(radians(self._direction)), 5)*self._cannon_distance
             )
 
             missile_final_position_x = self._position[0] + distance_x
             missile_final_position_y = self._position[1] + distance_y
-            
+
             # Check if the missile hit a wall
             if (missile_final_position_x > 999):
                 missile_final_position_x = 999
@@ -106,6 +106,7 @@ class Robot:
                 missile_final_position_y = 999
             if (missile_final_position_y < 0):
                 missile_final_position_y = 0
+
             self._missile_final_position = (missile_final_position_x, missile_final_position_y)
 
             # Set number of rounds that the user needs to wait for the cannon to reload.
@@ -117,6 +118,7 @@ class Robot:
                 self._rounds_to_wait_for_cannon = ROUNDS_TO_RELOAD_CANNON_100_TO_300
             else:
                 self._rounds_to_wait_for_cannon = ROUNDS_TO_RELOAD_CANNON_BELOW_100
+
         else:
             self._rounds_to_wait_for_cannon = max(0, self._rounds_to_wait_for_cannon - 1)
             self._missile_final_position = (None,None)

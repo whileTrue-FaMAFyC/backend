@@ -1,7 +1,10 @@
+from typing import List
+
+from services.Robot import Robot
 from utils.services_utils import *
 
 class Game():
-    def __init__(self, num_rounds: int, robots: list):
+    def __init__(self, num_rounds: int, robots: List[Robot]):
         self.num_rounds = num_rounds
         self.robots = robots
         self._num_rounds_executed = 0
@@ -17,7 +20,7 @@ class Game():
                 robots_alive_acc += 1
         return robots_alive_acc
 
-    def _check_collisions(self, robot):
+    def _check_collisions(self, robot: Robot):
         for robot2 in self.robots:
             if robot != robot2 and robot.get_position() == robot2.get_position():
                 robot._increase_damage(COLLISION_DAMAGE)
@@ -43,7 +46,8 @@ class Game():
                 self._missiles.append((
                     r.get_position(),
                     r._missile_final_position,
-                    r._cannon_direction, r._cannon_distance
+                    r._cannon_direction,
+                    r._cannon_distance
                 ))
 
         for r in self.robots:
