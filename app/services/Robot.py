@@ -1,7 +1,7 @@
 from math import ceil, cos, radians, sin, degrees, atan2, sqrt
 from random import randint
 
-from utils.services_utils import round_up, M_VELOC_1, MAX_POSSIBLE_DISTANCE
+from utils.services_utils import *
 
 class Robot:   
     def __init__(self, robot_id: int):
@@ -13,6 +13,11 @@ class Robot:
         self._req_velocity: int = 0
         self._position: tuple(int, int) = (randint(0, 999), randint(0, 999))
         self._damage: int = 0
+        self._cannon_direction = 0
+        self._cannon_distance = 0
+        self._rounds_to_wait_for_cannon = 0
+        self._missile_final_position = (None,None)
+        self._damage: int = 0        
         self._scan_direction: int = 0
         self._scan_resolution: int = 0
         self._scan_result: int = None
@@ -27,7 +32,7 @@ class Robot:
         reload. This functions is used to check if the cannon is completely
         reload.
         """
-        pass
+        return self._rounds_to_wait_for_cannon == 0
     
     def cannon(self, degree: int, distance: int):
         """
@@ -35,7 +40,10 @@ class Robot:
         more than one time, just the last one has effect. The shoot gets 
         executed at the end of the round.
         """
-        pass
+        if degree in range(360):
+            self._cannon_direction = degree
+        if distance in range(1,701):
+            self._cannon_distance = distance
     
     # Scanner
     def point_scanner(self, direction, resolution_in_degrees):
@@ -140,9 +148,44 @@ class Robot:
             self._scan_result = None
         else:
             self._scan_result = round(min_distance)
-    
-    def _shoot(self):
-        pass
+
+    def _attack(self):
+        if self.is_cannon_ready() and self._cannon_distance > 0:
+            distance_x = round_up(
+                round(cos(radians(self._direction)), 5)*self._cannon_distance
+            )
+            distance_y = round_up(
+                round(sin(radians(self._direction)), 5)*self._cannon_distance
+            )
+
+            missile_final_position_x = self._position[0] + distance_x
+            missile_final_position_y = self._position[1] + distance_y
+
+            # Check if the missile hit a wall
+            if (missile_final_position_x > 999):
+                missile_final_position_x = 999
+            if (missile_final_position_x < 0):
+                missile_final_position_x = 0
+            if (missile_final_position_y > 999):
+                missile_final_position_y = 999
+            if (missile_final_position_y < 0):
+                missile_final_position_y = 0
+
+            self._missile_final_position = (missile_final_position_x, missile_final_position_y)
+
+            # Set number of rounds that the user needs to wait for the cannon to reload.
+            if self._cannon_distance in range(500,701):
+                self._rounds_to_wait_for_cannon = ROUNDS_TO_RELOAD_CANNON_500_TO_700
+            elif self._cannon_distance in range(300,500):
+                self._rounds_to_wait_for_cannon = ROUNDS_TO_RELOAD_CANNON_300_TO_500
+            elif self._cannon_distance in range(100, 300):
+                self._rounds_to_wait_for_cannon = ROUNDS_TO_RELOAD_CANNON_100_TO_300
+            else:
+                self._rounds_to_wait_for_cannon = ROUNDS_TO_RELOAD_CANNON_BELOW_100
+
+        else:
+            self._rounds_to_wait_for_cannon = max(0, self._rounds_to_wait_for_cannon - 1)
+            self._missile_final_position = (None,None)
     
     def _move(self):
         if (self._req_direction != self._direction) and self._velocity <= 50:
@@ -177,6 +220,6 @@ class Robot:
 
         self._position = (new_pos_x, new_pos_y)
 
-    # Is called when two bots crash
     def _increase_damage(self, damage_to_increase: int):
         self._damage += damage_to_increase
+    
