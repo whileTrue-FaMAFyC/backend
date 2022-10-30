@@ -26,6 +26,11 @@ USER_NOT_JOINED_EXCEPTION = HTTPException(
     detail="The user isn't in the match."
 )
 
+CREATOR_CANT_ABANDON_EXCEPTION = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The creator can't abandon the match."
+)
+
 # Transforms the matches selected from the database to the format that will be
 # sent to the frontend.
 @db_session

@@ -7,7 +7,7 @@ from utils.match_utils import *
 from utils.user_utils import *
 from validators.match_validators import new_match_validator, abandon_match_validator
 from validators.user_validators import validate_token, SECRET_KEY
-from view_entities.match_view_entities import NewMatch
+from view_entities.match_view_entities import NewMatch, MatchId
 
 match_controller = APIRouter(prefix="/matches")
 
@@ -101,7 +101,7 @@ async def follow_lobby(
         print(f"{username} left the lobby")
 
 @match_controller.delete("/abandon-match", status_code=status.HTTP_200_OK)
-async def abandon_match(match_id: int, authorization: Union[str, None] = Header(None)):
+async def abandon_match(match: MatchId, authorization: Union[str, None] = Header(None)):
     
     validate_token(authorization)
 
@@ -109,15 +109,15 @@ async def abandon_match(match_id: int, authorization: Union[str, None] = Header(
     
     abandoning_user = token_data['username']
 
-    abandon_match_validator(match_id, abandoning_user)
+    abandon_match_validator(match, abandoning_user)
 
-    if not update_abandoning_user(match_id, abandoning_user):
+    if not update_abandoning_user(match, abandoning_user):
         raise ERROR_DELETING_USER
 
     validate_token(authorization)
     
-    info = get_lobby_info(match_id)
+    info = get_lobby_info(match.match_id)
 
-    lobbys[match_id].broadcast(info)
+    lobbys[match.match_id].broadcast(info)
 
     return True

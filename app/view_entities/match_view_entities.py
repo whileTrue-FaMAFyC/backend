@@ -41,3 +41,6 @@ class LobbyInfo(BaseModel):
     users_joined: int
     user_robot: Dict[str, str]
     started: bool
+
+class MatchId(BaseModel):
+    match_id: int

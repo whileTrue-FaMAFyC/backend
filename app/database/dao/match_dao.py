@@ -3,7 +3,7 @@ from pony.orm import db_session, select
 
 from database.models.models import Match, Robot, User 
 from utils.robot_utils import get_robot_in_match
-from view_entities.match_view_entities import NewMatch, LobbyInfo
+from view_entities.match_view_entities import NewMatch, LobbyInfo, MatchId
 
 @db_session
 def create_new_match(creator_username, new_match: NewMatch):
@@ -48,11 +48,11 @@ def select_robots_from_match_by_id(match_id: int):
                   if m.match_id == match_id)
 
 @db_session
-def update_abandoning_user(match_id: int, abandoning_user: str):
+def update_abandoning_user(match: MatchId, abandoning_user: str):
     
-    match = Match.get(match_id=match_id)
+    match = Match.get(match_id=match.match_id)
 
-    robot = get_robot_in_match(match_id, abandoning_user)
+    robot = get_robot_in_match(match.match_id, abandoning_user)
     
     try:
         match.robots_joined.remove(robot)
@@ -80,3 +80,8 @@ def get_lobby_info(match_id: int):
         user_robot=user_robot,
         started=match.started 
     )
+
+@db_session
+def get_match_creator_by_id(match_id: int):
+
+    return Match.get(match_id=match_id)
