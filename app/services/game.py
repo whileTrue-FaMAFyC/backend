@@ -3,6 +3,13 @@ from typing import List
 from services.Robot import Robot
 from utils.services_utils import *
 
+class Missile():
+    def __init__(self, current_position, final_position, direction, remaining):
+        self.current_position: tuple(int, int) = current_position
+        self.final_position: tuple(int, int) = final_position
+        self.direction: int = direction
+        self.remaining_distance: int = remaining
+
 class Game():
     def __init__(self, num_rounds: int, robots: List[Robot]):
         self.num_rounds = num_rounds
@@ -43,11 +50,11 @@ class Game():
         for r in self.robots:
             r._attack()
             if r._missile_final_position != (None, None):
-                self._missiles.append((
-                    r.get_position(),
-                    r._missile_final_position,
-                    r._cannon_direction,
-                    r._cannon_distance
+                self._missiles.append(Missile(
+                    current_position=r.get_position(),
+                    final_position=r._missile_final_position,
+                    direction=r._cannon_direction,
+                    remaining_distance=r._cannon_distance
                 ))
 
         for r in self.robots:
