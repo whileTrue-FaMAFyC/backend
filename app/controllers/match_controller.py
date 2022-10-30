@@ -51,7 +51,7 @@ async def create_match(new_match: NewMatch, authorization: Union[str, None] = He
     
     # Once added to the database, get the id assigned to the match and create
     # a websocket manager for the lobby
-    match_id = get_match_by_name_and_user(new_match.name, creator_username)
+    match_id = get_match_by_name_and_user(new_match.name, creator_username).match_id
     lobbys[match_id] = LobbyManager()
     
     return True
@@ -99,7 +99,7 @@ async def follow_lobby(
     try:
         while True:
             data = await websocket.receive_text()
-            print(data)
+            await websocket.send_text(data)
     except WebSocketDisconnect:
         lobbys[match_id].disconnect(websocket)
         print(f"{username} left the lobby")

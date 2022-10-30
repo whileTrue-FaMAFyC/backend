@@ -1,6 +1,5 @@
 from fastapi import status
 from fastapi.testclient import TestClient
-from pony.orm import db_session
 import random
 import string
 

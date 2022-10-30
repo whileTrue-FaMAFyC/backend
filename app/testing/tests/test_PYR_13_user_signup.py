@@ -1,7 +1,6 @@
 from fastapi.testclient import TestClient
 
 from database.dao.user_dao import *
-from testing.helpers.user_helpers import *
 from main import app
 
 client = TestClient(app)
