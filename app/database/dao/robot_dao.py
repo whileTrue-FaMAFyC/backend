@@ -33,6 +33,7 @@ def create_new_bot(owner_username: str, bot_data: BotCreate):
 def get_bots_by_owner(owner_username: str):
     return Robot.select(owner=get_user_by_username(owner_username))
 
+
 @db_session
-def get_source_code_by_id(robot_id: str):
+def get_source_code_by_id(robot_id: int):
     return Robot[robot_id].source_code
