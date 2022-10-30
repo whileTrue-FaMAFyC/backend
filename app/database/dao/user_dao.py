@@ -36,6 +36,14 @@ def get_unverified_users():
                     datetime.now()-u.created_time >= timedelta(hours=4)))
 
 @db_session
+def get_user_avatar(username: str):
+    user_avatar = User.get(username=username).avatar
+    if user_avatar == "default":
+        return ""
+    else:
+        return user_avatar
+
+@db_session
 def get_user_by_email(email: str):
     return User.get(email=email)
 

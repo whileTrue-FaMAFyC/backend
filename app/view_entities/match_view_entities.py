@@ -27,7 +27,10 @@ class ShowMatch(MatchInfo):
     robots_joined: int
 
 class JoinMatch(BaseModel):
-    match_name: str
-    creator_user: str
+    match_id: int
     match_password: str = ""
     joining_robot: str
+
+class JoinMatchBroadcast(BaseModel):
+    action: str
+    data: user_view_entities.JoinMatchUser

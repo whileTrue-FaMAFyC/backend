@@ -1,15 +1,38 @@
-from fastapi import APIRouter, HTTPException, status, Header
+from fastapi import APIRouter, WebSocket, status, Header
 from jose import jwt
-from typing import Union
+from typing import Union, List, Dict
 
-from database.dao import match_dao
-from utils.match_utils import ERROR_CREATING_MATCH, match_db_to_view, INTERNAL_ERROR_UPDATING_MATCH_INFO
+from database.dao import match_dao, user_dao
+from utils.match_utils import *
 from utils.user_utils import *
 from validators.match_validators import new_match_validator, join_match_validator
 from validators.user_validators import validate_token, SECRET_KEY
 from view_entities.match_view_entities import NewMatch, JoinMatch
+from view_entities.user_view_entities import JoinMatchUser
 
 match_controller = APIRouter(prefix="/matches")
+
+
+class LobbyManager:
+    def __init__(self):
+        self.active_connections: List[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        self.active_connections.remove(websocket)
+
+    # async def send_personal_message(self, message: str, websocket: WebSocket):
+    #     await websocket.send_text(message)
+
+    async def broadcast(self, message: Dict):
+        for connection in self.active_connections:
+            await connection.send_text(message)
+
+lobbys: Dict[int, LobbyManager] = {}
+
 
 @match_controller.post("/new-match", status_code=status.HTTP_201_CREATED)
 async def create_match(new_match: NewMatch, authorization: Union[str, None] = Header(None)):
@@ -50,6 +73,14 @@ def join_match(match: JoinMatch, authorization: Union[str, None] = Header(None))
     if not match_dao.update_joining_user_match(joining_user, match):
         raise INTERNAL_ERROR_UPDATING_MATCH_INFO
 
-    ## SEND MESSAGE TO SUSCRIBERS 
-    
+    ## SEND MESSAGE TO SUSCRIBERS
+    joining_user_avatar = user_dao.get_user_avatar(joining_user)
+    message_to_broadcast = JoinMatchBroadcast(
+        action="join",
+        data=JoinMatchUser(
+            joining_user, joining_user_avatar
+        )
+    )
+    lobbys[match.match_id].broadcast(message_to_broadcast)
+
     return True
