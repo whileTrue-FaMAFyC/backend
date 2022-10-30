@@ -12,7 +12,11 @@ class Robot:
         self._previous_req_velocity: int = 0
         self._req_velocity: int = 0
         self._position: tuple(int, int) = (randint(0, 999), randint(0, 999))
-        self._damage: int = 0        
+        self._damage: int = 0  
+        self._cannon_direction = 0 
+        self._cannon_distance = 0
+        self._rounds_to_wait_for_cannon = 0
+        self._missile_final_position = (None, None)
 
     # Cannon
     def is_cannon_ready(self):

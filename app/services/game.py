@@ -1,10 +1,19 @@
 from utils.services_utils import *
+from math import cos, sin, radians
+
+class Missile():
+    def __init__ (self, current_position, final_position, direction, remaining_distance):
+        self.current_position = current_position
+        self.final_position = final_position
+        self.direction = direction
+        self.remaining_distance = remaining_distance
 
 class Game():
     def __init__(self, num_rounds: int, robots: list):
         self.num_rounds = num_rounds
         self.robots = robots
         self.num_rounds_executed = 0
+        self._missiles = [Missile]
     
     def get_rounds_remaining(self):
         return self.num_rounds - self.num_rounds_executed
@@ -20,6 +29,20 @@ class Game():
         for robot2 in self.robots:
             if robot != robot2 and robot.get_position() == robot2.get_position():
                 robot._increase_damage(COLLISION_DAMAGE)
+
+    def _advance_missile(self, missile: Missile):
+        if missile.remaining_distance <= MISSILE_ADVANCE:
+            missile.current_position = missile.final_position
+
+        else:
+            missile.current_position = (
+                missile.current_position[0] + 
+                round_up(round(cos(radians(missile.direction)), 5)*MISSILE_ADVANCE), 
+                missile.current_position[1] + 
+                round_up(round(sin(radians(missile.direction)), 5)*MISSILE_ADVANCE)
+            )
+
+        missile.remaining_distance -= MISSILE_ADVANCE
 
     def execute_round(self):
         if self.num_rounds_executed == self.num_rounds:
@@ -40,6 +63,9 @@ class Game():
         #     r.shoot()
         # self.update_damage()
 
+        for m in self._missiles:
+            self._advance_missile(m)
+        
         for r in self.robots:
         # Check if the robot got killed during the shooting stage
             if r.get_damage() < 100:

@@ -1,4 +1,5 @@
 from services.Robot import Robot
+from services.game import Game
 
 class RobotTest(Robot):
     # To mock the initial position or a specific damage percentage 
@@ -13,3 +14,7 @@ class RobotTest(Robot):
     
     def get_req_velocity(self):
         return self._req_velocity
+
+class GameTest(Game):
+    def set_missiles(self, missiles):
+        self._missiles = missiles
