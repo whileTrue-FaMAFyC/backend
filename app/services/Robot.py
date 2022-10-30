@@ -222,4 +222,3 @@ class Robot:
 
     def _increase_damage(self, damage_to_increase: int):
         self._damage += damage_to_increase
-    
