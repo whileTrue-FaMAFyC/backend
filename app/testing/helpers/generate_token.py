@@ -20,19 +20,12 @@ def generate_token(data: TokenData):
 
 MOCK_TOKEN_BENJA = generate_token(
     TokenData(
-        username='basbenja', 
-        email='basbenja@gmail.com'
+        username='bas_benja', 
+        email='basbenja3@gmail.com'
     )
 )
 
-MOCK_TOKEN_JULI_J = generate_token(
-    TokenData(
-        username='jolcese', 
-        email='juliolcese@gmail.com'
-    )
-)
-
-MOCK_TOKEN_JULI_B = generate_token(
+MOCK_TOKEN_JULI = generate_token(
     TokenData(
         username='juliolcese', 
         email='juliolcese@mi.unc.edu.ar'
@@ -41,8 +34,8 @@ MOCK_TOKEN_JULI_B = generate_token(
 
 MOCK_TOKEN_TONI = generate_token(
     TokenData(
-        username='tonimond', 
-        email='tonimondejar@gmail.com'
+        username='tonimondejar', 
+        email='mondejarantonio@hotmail.com'
     )
 )
 
