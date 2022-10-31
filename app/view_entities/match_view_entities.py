@@ -34,6 +34,7 @@ class ShowMatch(MatchInfo):
     
 # For showing the match details inside the lobby
 class LobbyInfo(BaseModel):
+    requester_username: str
     name: str
     creator_username: str
     min_players: int

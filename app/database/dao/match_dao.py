@@ -59,6 +59,7 @@ def get_lobby_info(match_id: int, username: str):
         user_robot[robot.owner.username] = robot.name
     
     return LobbyInfo(
+        requester_username=username,
         name=match.name,
         creator_username=creator_username,
         min_players=match.min_players,

@@ -36,5 +36,4 @@ def test_various_lobbys():
         )
         assert response.status_code == 201
     
-    print(lobbys)
     assert len(lobbys) == 3

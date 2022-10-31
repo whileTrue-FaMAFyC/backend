@@ -17,6 +17,7 @@ def test_join_lobby_creator():
     
     assert response.status_code == 200
     assert response.json() == {
+        'requester_username': 'bas_benja',
         'name': 'match1',
         'creator_username': 'bas_benja',
         'min_players': 2,
@@ -40,6 +41,7 @@ def test_join_lobby_not_creator_joined():
     
     assert response.status_code == 200
     assert response.json() == {
+        'requester_username': 'juliolcese',
         'name': 'match1',
         'creator_username': 'bas_benja',
         'min_players': 2,
@@ -63,6 +65,7 @@ def test_join_lobby_not_creator_not_joined():
     
     assert response.status_code == 200
     assert response.json() == {
+        'requester_username': 'tonimondejar',
         'name': 'match1',
         'creator_username': 'bas_benja',
         'min_players': 2,
