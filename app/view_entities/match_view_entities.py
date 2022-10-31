@@ -43,3 +43,5 @@ class LobbyInfo(BaseModel):
     users_joined: int
     user_robot: Dict[str, str]
     started: bool
+    im_in: bool
+    is_creator: bool

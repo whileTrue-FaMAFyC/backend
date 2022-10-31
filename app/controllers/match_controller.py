@@ -71,27 +71,32 @@ async def get_matches(authorization: Union[str, None] = Header(None)):
 @match_controller.get("/join-lobby", status_code=status.HTTP_200_OK)
 async def get_lobby(match_id: int, authorization: Union[str, None] = Header(None)):
     validate_token(authorization)
+    token_data = jwt.decode(authorization, SECRET_KEY) 
+    username = token_data['username']
     
     if get_match_by_id(match_id) is None:
         raise INEXISTENT_MATCH_EXCEPTION
     
-    return get_lobby_info(match_id)
+    return get_lobby_info(match_id, username)
     
     
 @match_controller.websocket("/ws/follow-lobby/{match_id}")
 async def follow_lobby(
     websocket: WebSocket, 
     match_id: int,
-    token: Union[str, None] = Query(None)
+    authorization: Union[str, None] = Query(None)
 ):
-    validate_token(token)
-    token_data = jwt.decode(token, SECRET_KEY) 
+    validate_token(authorization)
+    token_data = jwt.decode(authorization, SECRET_KEY) 
     username = token_data['username']
+    
+    if get_match_by_id(match_id) is None:
+        raise INEXISTENT_MATCH_EXCEPTION
     
     try:
         await lobbys[match_id].connect(websocket)
         print(f"{username} has now joined the lobby")
     except:
-        print(f"{username} left the lobby")
+        print(f"Error connecting to the lobby")
     
     return

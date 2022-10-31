@@ -35,7 +35,7 @@ def test_websockets_for_same_lobby():
     
     for token in tokens:
         with client.websocket_connect(
-            f"/matches/ws/follow-lobby/{match_id}?token={token}"
+            f"/matches/ws/follow-lobby/{match_id}?authorization={token}"
         ) as websocket:
             websocket.close()
     

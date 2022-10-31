@@ -47,12 +47,15 @@ def get_all_matches():
 
 
 @db_session
-def get_lobby_info(match_id: int):
+def get_lobby_info(match_id: int, username: str):
     match: Match = Match[match_id]
     creator_username = match.creator_user.username
     
+    im_in = False
     user_robot = {}
     for robot in match.robots_joined:
+        if robot.owner.username == username:
+            im_in = True
         user_robot[robot.owner.username] = robot.name
     
     return LobbyInfo(
@@ -64,5 +67,7 @@ def get_lobby_info(match_id: int):
         num_rounds=match.num_rounds,
         users_joined=len(user_robot),
         user_robot=user_robot,
-        started=match.started 
+        started=match.started,
+        im_in=im_in,
+        is_creator=(creator_username==username)
     )
