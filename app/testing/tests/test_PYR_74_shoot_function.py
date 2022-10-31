@@ -1,3 +1,4 @@
+from app.utils.services_utils import MISSILE_HALF_SIZE
 from testing.helpers.services_helpers import RobotTest
 
 def test_attack_500_to_700():
@@ -7,7 +8,7 @@ def test_attack_500_to_700():
     assert robot._cannon_direction == 0
     assert robot._cannon_distance == 600
     robot._attack()
-    assert robot._missile_final_position == (999,499)
+    assert robot._missile_final_position == (999-MISSILE_HALF_SIZE,499)
     assert robot._rounds_to_wait_for_cannon == 4
 
 def test_attack_300_to_500():
@@ -47,7 +48,7 @@ def test_need_to_wait_for_reload():
     assert robot._cannon_direction == 0
     assert robot._cannon_distance == 600
     robot._attack()
-    assert robot._missile_final_position == (999,499)
+    assert robot._missile_final_position == (999-MISSILE_HALF_SIZE,499)
     assert robot._rounds_to_wait_for_cannon == 4
 
     robot.cannon(0,200)
@@ -66,4 +67,3 @@ def test_distance_0():
     robot._attack()
     assert robot._missile_final_position == (None,None)
     assert robot._rounds_to_wait_for_cannon == 0
-

@@ -48,8 +48,8 @@ def test_robots_move():
 
 def test_check_collisions():
     robots = [Robot1(1), Robot2(2)]
-    robots[0].set_initial_position(0,0)
-    robots[1].set_initial_position(100,0)
+    robots[0].set_initial_position(100,100)
+    robots[1].set_initial_position(200,100)
 
     game = Game(100, robots)
 
