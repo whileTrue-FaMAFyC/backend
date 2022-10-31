@@ -1,11 +1,17 @@
 import math
-import numpy as np
+from numpy import add, sign
 from typing import List
 from base64 import b64decode
 
 from database.dao.robot_dao import get_source_code_by_id
 
+ROBOT_SIZE = 50
+
+ROBOT_HALF_SIZE = int(ROBOT_SIZE/2)
+
 COLLISION_DAMAGE = 2
+
+MISSILE_HALF_SIZE = 1
 
 # Meters advanced when moving at 1% velocity
 M_VELOC_1 = 10
@@ -60,4 +66,24 @@ def create_robots_instances(robots_id: List[int]):
 
 
 def round_up(x):
-    return np.sign(x)*(math.ceil(abs(x)))
+    return sign(x)*(math.ceil(abs(x)))
+
+
+def get_vertex(center: tuple[int, int]):
+    return [tuple(add(center, (-ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))), 
+            tuple(add(center, (ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))),
+            tuple(add(center, (ROBOT_HALF_SIZE, ROBOT_HALF_SIZE))),
+            tuple(add(center, (-ROBOT_HALF_SIZE, ROBOT_HALF_SIZE)))]
+
+
+def is_inside(vertexs: List[tuple[int, int]], center: tuple[int, int]):
+    is_inside = False
+    
+    for v in vertexs:
+        check_x = v[0] in range(center[0]-ROBOT_HALF_SIZE, 1+center[0]+ROBOT_HALF_SIZE)
+        check_y = v[1] in range(center[1]-ROBOT_HALF_SIZE, 1+center[1]+ROBOT_HALF_SIZE)
+        is_inside = check_x and check_y
+        if is_inside:
+            break
+
+    return is_inside

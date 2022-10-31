@@ -4,6 +4,7 @@ from typing import List
 from services.Robot import Robot
 from utils.services_utils import *
 
+
 class Missile():
     def __init__(self, current_position, final_position, direction, remaining_distance):
         self.current_position: tuple(int, int) = current_position
@@ -34,7 +35,8 @@ class Game():
 
     def _check_collisions(self, robot: Robot):
         for robot2 in self.robots:
-            if robot != robot2 and robot.get_position() == robot2.get_position():
+            vertexs = get_vertex(tuple(robot2.get_position()))
+            if robot != robot2 and is_inside(vertexs, robot.get_position()):
                 robot._increase_damage(COLLISION_DAMAGE)
 
 
@@ -59,11 +61,11 @@ class Game():
             # Check if there is any robot nearby
             for r in self.robots:
                 distance = dist(r.get_position(), missile.current_position)
-                if distance < 5:
+                if distance < 5*5:
                     r._increase_damage(10)
-                elif distance < 20:
+                elif distance < 20*5:
                     r._increase_damage(5)
-                elif distance < 40:
+                elif distance < 40*5:
                     r._increase_damage(3)
     
     

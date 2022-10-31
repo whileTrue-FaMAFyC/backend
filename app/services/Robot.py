@@ -11,7 +11,8 @@ class Robot:
         self._velocity: int = 0
         self._previous_req_velocity: int = 0
         self._req_velocity: int = 0
-        self._position: tuple(int, int) = (randint(0, 999), randint(0, 999))
+        self._position: tuple[int, int] = (randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE), 
+                                           randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE))
         self._damage: int = 0
         self._cannon_direction = 0
         self._cannon_distance = 0
@@ -169,14 +170,14 @@ class Robot:
             missile_final_position_y = self._position[1] + distance_y
 
             # Check if the missile hit a wall
-            if (missile_final_position_x > 999):
-                missile_final_position_x = 999
-            if (missile_final_position_x < 0):
-                missile_final_position_x = 0
-            if (missile_final_position_y > 999):
-                missile_final_position_y = 999
-            if (missile_final_position_y < 0):
-                missile_final_position_y = 0
+            if (missile_final_position_x > 999-MISSILE_HALF_SIZE):
+                missile_final_position_x = 999-MISSILE_HALF_SIZE
+            if (missile_final_position_x < MISSILE_HALF_SIZE):
+                missile_final_position_x = MISSILE_HALF_SIZE
+            if (missile_final_position_y > 999-MISSILE_HALF_SIZE):
+                missile_final_position_y = 999-MISSILE_HALF_SIZE
+            if (missile_final_position_y < MISSILE_HALF_SIZE):
+                missile_final_position_y = MISSILE_HALF_SIZE
 
             self._missile_final_position = (missile_final_position_x, missile_final_position_y)
 
@@ -209,21 +210,21 @@ class Robot:
         distance_x = round_up((round(cos(radians(self._direction)), 5)*self._velocity)*M_VELOC_1)
         distance_y = round_up((round(sin(radians(self._direction)), 5)*self._velocity)*M_VELOC_1)
 
-        new_pos_x = self._position[0] + distance_x
-        new_pos_y = self._position[1] + distance_y
+        new_pos_x = int(self._position[0] + distance_x)
+        new_pos_y = int(self._position[1] + distance_y)
 
         # Check if the robot hit a wall and do the corresponding damage
-        if (new_pos_x > 999):
-            new_pos_x = 999
+        if (new_pos_x > 999-ROBOT_HALF_SIZE):
+            new_pos_x = 999-ROBOT_HALF_SIZE
             self._damage += 2
-        if (new_pos_x < 0):
-            new_pos_x = 0
+        if (new_pos_x < ROBOT_HALF_SIZE):
+            new_pos_x = ROBOT_HALF_SIZE
             self._damage += 2
-        if (new_pos_y > 999):
-            new_pos_y = 999
+        if (new_pos_y > 999-ROBOT_HALF_SIZE):
+            new_pos_y = 999-ROBOT_HALF_SIZE
             self._damage += 2
-        if (new_pos_y < 0):
-            new_pos_y = 0
+        if (new_pos_y < ROBOT_HALF_SIZE):
+            new_pos_y = ROBOT_HALF_SIZE
             self._damage += 2
 
         self._position = (new_pos_x, new_pos_y)

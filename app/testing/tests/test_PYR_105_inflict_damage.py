@@ -7,25 +7,26 @@ from testing.helpers.services_helpers import *
 
 robots: List[RobotTest] = [Robot1(1), Robot2(2), Robot3(3), Robot4(4)]
 
-robots[0].set_initial_position(802,798)
+robots[0].set_initial_position(802, 798)
 robots[1].set_initial_position(234, 799)
-robots[2].set_initial_position(123,50)
+robots[2].set_initial_position(243, 52)
 robots[3].set_initial_position(101, 64)
 
 missiles = [
-    # Hits robots[0] with damage 10
+    # Hits robots[0] with damage 10 (distance = 25)
     Missile((799,799), (799,799), randint(0,360), randint(0,700)),
     
-    # Hits robots[0] with damage 10
+    # Hits robots[0] with damage 10 (distance = 25)
     Missile((798,798), (798,798), randint(0,360), randint(0,700)),
     
-    # Hits robots[1] with damage 5
-    Missile((250,800), (250,800), randint(0,360), randint(0,700)),
+    # Hits robots[1] with damage 5 (distance = 100)
+    Missile((278,886), (278,886), randint(0,360), randint(0,700)),
     
-    # Hits robots[1] with damage 3
-    Missile((232,777), (232,777), randint(0,360), randint(0,700)),
+    # Hits robots[1] with damage 3 (distance = 200)
+    Missile((426,839), (426,839), randint(0,360), randint(0,700)),
     
-    # Hit robots[2] with damage 3 and robots[3] with damage 10 
+    # Hit robots[2] with damage 3 (distance = 200) 
+    # and robots[3] with damage 10 (distance = 25)
     Missile((100,65), (100,65), randint(0,360), randint(0,700))
 ]
 
