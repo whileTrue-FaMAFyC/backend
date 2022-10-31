@@ -1,9 +1,9 @@
 import math
 from numpy import add, sign
-from typing import List
+from typing import Dict, List, Tuple
 from base64 import b64decode
 
-from database.dao.robot_dao import get_source_code_by_id
+from database.dao.robot_dao import get_source_code_by_id, get_name_and_creator_by_id
 
 ROBOT_SIZE = 50
 
@@ -53,7 +53,7 @@ def extract_class_name(filename):
     return class_name[:len(class_name)-3]
 
 
-def create_robots_instances(robots_id: List[int]):
+def create_robots_instances(robots_id):
     robots = []
     for r in robots_id:
         source_code_in_db = get_source_code_by_id(r)
@@ -69,14 +69,14 @@ def round_up(x):
     return sign(x)*(math.ceil(abs(x)))
 
 
-def get_vertex(center: tuple[int, int]):
+def get_vertex(center: Tuple[int, int]):
     return [tuple(add(center, (-ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))), 
             tuple(add(center, (ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))),
             tuple(add(center, (ROBOT_HALF_SIZE, ROBOT_HALF_SIZE))),
             tuple(add(center, (-ROBOT_HALF_SIZE, ROBOT_HALF_SIZE)))]
 
 
-def is_inside(vertexs: List[tuple[int, int]], center: tuple[int, int]):
+def is_inside(vertexs: List[Tuple[int, int]], center: Tuple[int, int]):
     is_inside = False
     
     for v in vertexs:
@@ -87,3 +87,36 @@ def is_inside(vertexs: List[tuple[int, int]], center: tuple[int, int]):
             break
 
     return is_inside
+
+
+def match_winner(robots_id: List[int], game_results: Dict[int, Dict[str, int]]):
+    max_won = 0
+    max_tied = 0
+    winners_robots = []
+    winners = []
+
+    for i in robots_id:
+        if game_results[i]["games_won"] == max_won:
+            winners_robots.append(i)
+        elif game_results[i]["games_won"] > max_won:
+            max_won = game_results[i]["games_won"]
+            winners_robot = [i]
+
+    for i in robots_id:
+        if game_results[i]["games_won"] == max_won:
+            winners_robots.append(i)
+    
+    if len(winners_robot) > 1:
+        for i in winners_robots:
+            tied_robots = []
+            if game_results[i]["games_tied"] == max_tied:
+                tied_robots.append(i)
+            elif game_results[i]["games_tied"] > max_tied:
+                max_won = game_results[i]["games_tied"]
+                tied_robots = [i]
+        winners_robots = tied_robots
+
+    for r in winners_robots:
+        winners.append(get_name_and_creator_by_id(r))
+        
+    return winners

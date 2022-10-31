@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 from view_entities import robot_view_entities, user_view_entities
 
@@ -24,4 +25,15 @@ class MatchInfo(BaseModel):
         orm_mode = True
 
 class ShowMatch(MatchInfo):
+    robots_joined: int
+
+class StartMatch(BaseModel):
+    num_games: int
+    num_rounds: int
+    robots_joined: List[robot_view_entities.RobotPlayer]
+
+class StartMatchValidator(BaseModel):
+    creator_username: str
+    min_players: int
+    started: bool
     robots_joined: int

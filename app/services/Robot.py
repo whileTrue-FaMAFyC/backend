@@ -27,6 +27,11 @@ class Robot:
     def __eq__(self, other):
         return self._id == other._id
 
+
+    def get_robot_id(self):
+        return self._id
+
+
     # Cannon
     def is_cannon_ready(self):
         """"

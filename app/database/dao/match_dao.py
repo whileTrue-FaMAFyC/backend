@@ -3,7 +3,7 @@ from pony.orm import db_session, select, delete
 
 from database.dao import robot_dao
 from database.models.models import Match, Robot, User 
-from view_entities import match_view_entities
+from view_entities import match_view_entities, robot_view_entities
 
 @db_session
 def create_new_match(creator_username, new_match: match_view_entities.NewMatch):
@@ -40,3 +40,29 @@ def get_match_by_name_and_user(match_name: str, creator_username: str):
 def get_all_matches():
     matches = Match.select()
     return matches
+
+@db_session
+def get_match_info(match_id: int):
+    match_details = Match[match_id]
+    robots = []
+    for r in match_details.robots_joined:
+        robots.append(robot_view_entities.RobotPlayer.from_orm(r))
+
+    return match_view_entities.StartMatch(
+        num_games=match_details.num_games, 
+        num_rounds=match_details.num_rounds, 
+        robots_joined=robots
+    )
+
+@db_session
+def get_match_by_id(match_id: int):
+    return Match[match_id]
+
+@db_session
+def update_executed_match(match_id: int):
+    try:
+        match = Match[match_id]
+        match.set(started=True)
+        return True
+    except:
+        return False

@@ -79,26 +79,29 @@ class Game():
             raise GameException(detail="All robots dead")
 
         for r in self.robots:
-            r.respond()
+            if r.get_damage() < 100:
+                r.respond()
 
         for r in self.robots:
             others_positions = []
 
             for other_r in self.robots:
-                if not other_r == r:
+                if not other_r == r and other_r.get_damage() < 100:
                     others_positions.append(other_r.get_position())
-
-            r._scan(others_positions)
+            
+            if r.get_damage() < 100:
+                r._scan(others_positions)
             
         for r in self.robots:
-            r._attack()
-            if r._missile_final_position != (None, None):
-                self._missiles.append(Missile(
-                    current_position=r.get_position(),
-                    final_position=r._missile_final_position,
-                    direction=r._cannon_direction,
-                    remaining_distance=r._cannon_distance
-                ))
+            if r.get_damage() < 100:
+                r._attack()
+                if r._missile_final_position != (None, None):
+                    self._missiles.append(Missile(
+                        current_position=r.get_position(),
+                        final_position=r._missile_final_position,
+                        direction=r._cannon_direction,
+                        remaining_distance=r._cannon_distance
+                    ))
         
         for m in self._missiles:
             self._advance_missile(m)
