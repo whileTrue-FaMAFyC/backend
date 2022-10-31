@@ -41,6 +41,14 @@ class Match(db.Entity):
     robots_joined = Set(Robot)
     composite_key(name, creator_user)
 
+class MatchResult(db.Entity):
+    match_result_id = PrimaryKey(int, auto=True)
+    robot = Required(Robot)
+    match = Required(Match)
+    games_won = Required(int, default=0)
+    games_tied = Required(int, default=0)
+    games_lost = Required(int, default=0)
+    composite_key(robot, match)
 
 def open_database(filename):
     db.bind('sqlite', filename, create_db=True)
