@@ -11,7 +11,7 @@ client = TestClient(app)
 def test_join_lobby_creator():    
     match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id    
     response = client.get(
-        f'/matches/join-lobby/?match_id={match_id}',
+        f'/matches/join-lobby?match_id={match_id}',
         headers = {'Authorization': MOCK_TOKEN_BENJA},
     )    
     
@@ -34,7 +34,7 @@ def test_join_lobby_creator():
 def test_join_lobby_not_creator_joined():
     match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id    
     response = client.get(
-        f'/matches/join-lobby/?match_id={match_id}',
+        f'/matches/join-lobby?match_id={match_id}',
         headers = {'Authorization': MOCK_TOKEN_JULI},
     )    
     
@@ -57,7 +57,7 @@ def test_join_lobby_not_creator_joined():
 def test_join_lobby_not_creator_not_joined():
     match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id    
     response = client.get(
-        f'/matches/join-lobby/?match_id={match_id}',
+        f'/matches/join-lobby?match_id={match_id}',
         headers = {'Authorization': MOCK_TOKEN_TONI},
     )    
     
