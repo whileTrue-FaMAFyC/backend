@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, WebSocket, status, Header
+from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect, status, Header
 from jose import jwt
 from typing import Union, List, Dict
 
@@ -93,10 +93,11 @@ async def follow_lobby(
     if get_match_by_id(match_id) is None:
         raise INEXISTENT_MATCH_EXCEPTION
     
-    try:
-        await lobbys[match_id].connect(websocket)
-        print(f"{username} has now joined the lobby")
-    except:
-        print(f"Error connecting to the lobby")
-    
-    return
+    await lobbys[match_id].connect(websocket)
+    print(f"{username} has now joined the lobby")
+    while True:
+        try:
+            await websocket.receive_text()
+        except WebSocketDisconnect:
+            print(f"{username} web socket connection closed")
+            return
