@@ -1,5 +1,5 @@
 from passlib.hash import bcrypt
-from pony.orm import db_session, select, delete
+from pony.orm import db_session
 
 from view_entities.match_view_entities import *
 from database.models.models import Match, Robot, User 
@@ -56,7 +56,7 @@ def get_lobby_info(match_id: int, username: str):
     for robot in match.robots_joined:
         if robot.owner.username == username:
             im_in = True
-        user_robot[robot.owner.username] = robot.name
+        user_robot[robot.owner.username] = (robot.owner.avatar, robot.name, robot.avatar)
     
     return LobbyInfo(
         requester_username=username,

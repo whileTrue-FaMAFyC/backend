@@ -42,7 +42,7 @@ class LobbyInfo(BaseModel):
     num_games: int
     num_rounds: int
     users_joined: int
-    user_robot: Dict[str, str]
+    user_robot: Dict
     started: bool
     im_in: bool
     is_creator: bool
