@@ -10,6 +10,9 @@ COLLISION_DAMAGE = 2
 # Meters advanced when moving at 1% velocity
 M_VELOC_1 = 10
 
+# Meters a missile advances in a round
+MISSILE_ADVANCE = 100
+
 OUT_OF_BOUNDS = (1500,1500)
 
 # The maximum possible distance between two robots is 1414 meters

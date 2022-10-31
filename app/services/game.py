@@ -1,9 +1,8 @@
-import math
+from math import cos, sin, radians, dist
 from typing import List
 
 from services.Robot import Robot
 from utils.services_utils import *
-
 
 class Missile():
     def __init__(self, current_position, final_position, direction, remaining_distance):
@@ -12,13 +11,15 @@ class Missile():
         self.direction: int = direction
         self.remaining_distance: int = remaining_distance
 
+
 class Game():
     def __init__(self, num_rounds: int, robots: List[Robot]):
         self.num_rounds = num_rounds
         self.robots = robots
         self._num_rounds_executed = 0
         self._missiles = []
-    
+
+
     def get_rounds_remaining(self):
         return self.num_rounds - self.num_rounds_executed
 
@@ -37,12 +38,27 @@ class Game():
                 robot._increase_damage(COLLISION_DAMAGE)
 
 
+    def _advance_missile(self, missile: Missile):
+        if missile.remaining_distance <= MISSILE_ADVANCE:
+            missile.current_position = missile.final_position
+
+        else:
+            missile.current_position = (
+                missile.current_position[0] + 
+                round_up(round(cos(radians(missile.direction)), 5)*MISSILE_ADVANCE), 
+                missile.current_position[1] + 
+                round_up(round(sin(radians(missile.direction)), 5)*MISSILE_ADVANCE)
+            )
+
+        missile.remaining_distance -= MISSILE_ADVANCE
+
+
     def _inflict_damage(self, missile: Missile):
         # Missile reached its final position
         if missile.current_position == missile.final_position:
             # Check if there is any robot nearby
             for r in self.robots:
-                distance = math.dist(r.get_position(), missile.current_position)
+                distance = dist(r.get_position(), missile.current_position)
                 if distance < 5:
                     r._increase_damage(10)
                 elif distance < 20:
@@ -63,7 +79,6 @@ class Game():
         for r in self.robots:
             r.respond()
 
-        # TO DO
         for r in self.robots:
             others_positions = []
 
@@ -84,8 +99,11 @@ class Game():
                 ))
         
         for m in self._missiles:
-            self._inflict_damage(m)
+            self._advance_missile(m)
 
+        for m in self._missiles:
+            self._inflict_damage(m)
+        
         for r in self.robots:
         # Check if the robot got killed during the shooting stage
             if r.get_damage() < 100:

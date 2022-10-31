@@ -1,4 +1,4 @@
-from math import ceil, cos, radians, sin, degrees, atan2, sqrt
+from math import  atan2, ceil, cos, degrees, radians, sin, sqrt
 from random import randint
 
 from utils.services_utils import *
@@ -22,6 +22,7 @@ class Robot:
         self._scan_resolution: int = 0
         self._scan_result: int = None
 
+
     def __eq__(self, other):
         return self._id == other._id
 
@@ -33,7 +34,8 @@ class Robot:
         reload.
         """
         return self._rounds_to_wait_for_cannon == 0
-    
+
+
     def cannon(self, degree: int, distance: int):
         """
         This cannon prepares the cannon to shoot. If this method gets called
@@ -55,7 +57,8 @@ class Robot:
             self._scan_direction = direction
         if 0 <= resolution_in_degrees and resolution_in_degrees <= 10:
             self._scan_resolution = resolution_in_degrees
-    
+
+
     def scanned(self):
         """
         Returns the scan result from the previous round: returns the distance to
@@ -81,13 +84,16 @@ class Robot:
     # Status
     def get_direction(self):
         return self._direction
-    
+
+
     def get_velocity(self):
         return self._velocity
 
+
     def get_position(self):
         return self._position
-    
+
+
     def get_damage(self):
         return self._damage
     
@@ -149,6 +155,7 @@ class Robot:
         else:
             self._scan_result = round(min_distance)
 
+
     def _attack(self):
         if self.is_cannon_ready() and self._cannon_distance > 0:
             distance_x = round_up(
@@ -186,7 +193,8 @@ class Robot:
         else:
             self._rounds_to_wait_for_cannon = max(0, self._rounds_to_wait_for_cannon - 1)
             self._missile_final_position = (None,None)
-    
+
+
     def _move(self):
         if (self._req_direction != self._direction) and self._velocity <= 50:
             self._direction = self._req_direction
@@ -219,6 +227,7 @@ class Robot:
             self._damage += 2
 
         self._position = (new_pos_x, new_pos_y)
+
 
     def _increase_damage(self, damage_to_increase: int):
         self._damage += damage_to_increase
