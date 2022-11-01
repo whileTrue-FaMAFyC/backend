@@ -73,7 +73,7 @@ def new_match_validator(creator_username: str, new_match : NewMatch):
     return
 
 @db_session
-def abandon_match_validator(match: MatchId, abandoning_username: str):
+def leave_match_validator(match: MatchId, leaving_username: str):
 
     robots_in_match = match_dao.select_robots_from_match_by_id(match.match_id)
 
@@ -84,13 +84,13 @@ def abandon_match_validator(match: MatchId, abandoning_username: str):
 
     match_creator = match_dao.get_match_creator_by_id(match.match_id).creator_user.username
     
-    if match_creator == abandoning_username:
+    if match_creator == leaving_username:
         raise CREATOR_CANT_ABANDON_EXCEPTION
 
     # Tries to get the robot with which the user joined the match.     
-    abandoning_robot = get_robot_in_match(match.match_id, abandoning_username)
+    leaving_robot = get_robot_in_match(match.match_id, leaving_username)
 
-    if not abandoning_robot:
+    if not leaving_robot:
         raise USER_NOT_JOINED_EXCEPTION
 
     return

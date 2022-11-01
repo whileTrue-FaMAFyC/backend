@@ -9,7 +9,7 @@ from utils.match_utils import *
 client = TestClient(app)
 
 def test_inexistent_match():
-    response = client.delete("/matches/abandon-match",
+    response = client.delete("/matches/leave-match",
                           headers = {"Authorization": MOCK_TOKEN_BENJA},
                           json = {"match_id": 1024})
 
@@ -20,7 +20,7 @@ def test_inexistent_match():
 def test_user_not_joined():
     match_id = get_match_by_name_and_user('jmatch2', 'juliolcese').match_id
 
-    response = client.delete("/matches/abandon-match",
+    response = client.delete("/matches/leave-match",
                           headers = {"Authorization": MOCK_TOKEN_BENJA},
                           json = {"match_id": match_id})
 
@@ -30,7 +30,7 @@ def test_user_not_joined():
 
 def test_invalid_token():
     match_id = get_match_by_name_and_user('match!', 'tonimondejar').match_id
-    response = client.delete("/matches/abandon-match",
+    response = client.delete("/matches/leave-match",
                           headers = {"Authorization": "abc"},
                           json = {"match_id": match_id})
     
@@ -40,7 +40,7 @@ def test_invalid_token():
 def test_creator_cant_abandon():
     match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id
 
-    response = client.delete("/matches/abandon-match",
+    response = client.delete("/matches/leave-match",
                           headers = {"Authorization": MOCK_TOKEN_BENJA},
                           json = {"match_id": match_id})
 

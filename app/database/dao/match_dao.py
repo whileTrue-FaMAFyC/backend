@@ -48,11 +48,11 @@ def select_robots_from_match_by_id(match_id: int):
                   if m.match_id == match_id)
 
 @db_session
-def update_abandoning_user(match: MatchId, abandoning_user: str):
+def update_leaving_user(match: MatchId, leaving_user: str):
     
     match = Match.get(match_id=match.match_id)
 
-    robot = get_robot_in_match(match.match_id, abandoning_user)
+    robot = get_robot_in_match(match.match_id, leaving_user)
     
     try:
         match.robots_joined.remove(robot)

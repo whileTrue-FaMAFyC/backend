@@ -5,7 +5,7 @@ from typing import Union, List, Dict
 from database.dao.match_dao import *
 from utils.match_utils import *
 from utils.user_utils import *
-from validators.match_validators import new_match_validator, abandon_match_validator
+from validators.match_validators import new_match_validator, leave_match_validator
 from validators.user_validators import validate_token, SECRET_KEY
 from view_entities.match_view_entities import NewMatch, MatchId
 
@@ -100,24 +100,20 @@ async def follow_lobby(
         lobbys[match_id].disconnect(websocket)
         print(f"{username} left the lobby")
 
-@match_controller.delete("/abandon-match", status_code=status.HTTP_200_OK)
-async def abandon_match(match: MatchId, authorization: Union[str, None] = Header(None)):
+@match_controller.delete("/leave-match", status_code=status.HTTP_200_OK)
+async def leave_match(match: MatchId, authorization: Union[str, None] = Header(None)):
     
     validate_token(authorization)
 
     token_data = jwt.decode(authorization, SECRET_KEY)
     
-    abandoning_user = token_data['username']
+    leaving_user = token_data['username']
 
-    abandon_match_validator(match, abandoning_user)
+    leave_match_validator(match, leaving_user)
 
-    if not update_abandoning_user(match, abandoning_user):
+    if not update_leaving_user(match, leaving_user):
         raise ERROR_DELETING_USER
-
-    validate_token(authorization)
     
-    info = get_lobby_info(match.match_id)
-
-    lobbys[match.match_id].broadcast(info)
+    ## SEND MESSAGE TO SUSCRIBERS
 
     return True
