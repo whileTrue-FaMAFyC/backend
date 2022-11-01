@@ -55,6 +55,7 @@ def get_lobby_info(match_id: int, username: str):
     results = []
     robots_id = []
     game_results = {}
+    has_password = False
 
     im_in = False
     user_robot = []
@@ -85,6 +86,9 @@ def get_lobby_info(match_id: int, username: str):
     if match.started:
         results = match_winner(robots_id, game_results)
 
+    if match.hashed_password != "":
+        has_password = True
+
     return LobbyInfo(
         requester_username=username,
         name=match.name,
@@ -98,5 +102,6 @@ def get_lobby_info(match_id: int, username: str):
         started=match.started,
         im_in=im_in,
         is_creator=(creator_username==username),
-        results=results
+        results=results,
+        has_password=has_password
     )
