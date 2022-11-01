@@ -94,10 +94,10 @@ async def follow_lobby(
         raise INEXISTENT_MATCH_EXCEPTION
     
     await lobbys[match_id].connect(websocket)
-    print(f"{username} has now joined the lobby")
+    # print(f"{username} has now joined the lobby")
     while True:
         try:
             await websocket.receive_text()
         except WebSocketDisconnect:
-            print(f"{username} web socket connection closed")
+            # print(f"{username} web socket connection closed")
             return

@@ -3,7 +3,10 @@ from fastapi.testclient import TestClient
 from database.dao.match_dao import get_match_by_name_and_user
 from main import app
 from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
+from testing.helpers.match_helpers import create_possible_answer
 from testing.helpers.mock_db import MOCK_AVATAR
+
+
 
 client = TestClient(app)
 
@@ -16,51 +19,44 @@ def test_join_lobby_creator():
     )    
     
     assert response.status_code == 200
-    assert response.json() == {
-        'requester_username': 'bas_benja',
-        'name': 'match1',
-        'creator_username': 'bas_benja',
-        'min_players': 2,
-        'max_players': 4,
-        'num_games': 10,
-        'num_rounds': 1570,
-        'users_joined': 2,
-        'user_robot': {
-            'bas_benja': [MOCK_AVATAR, '0ptimusPrime', MOCK_AVATAR], 
-            'juliolcese': [MOCK_AVATAR, 'astroGirl', MOCK_AVATAR]
-        },
-        'started': False,
-        'im_in': True,
-        'is_creator': True
-    }
+    assert response.json() in create_possible_answer([
+            {
+                "username":'bas_benja',
+                "user_avatar": MOCK_AVATAR,
+                "robot_name": '0ptimusPrime',
+                "robot_avatar": MOCK_AVATAR
+            },
+            {
+                "username":'juliolcese',
+                "user_avatar": MOCK_AVATAR,
+                "robot_name": 'astroGirl',
+                "robot_avatar": MOCK_AVATAR
+            } 
+        ])
 
 
 def test_join_lobby_not_creator_joined():
-    match_id = get_match_by_name_and_user('match!', 'tonimondejar').match_id    
+    match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id    
     response = client.get(
         f'/matches/join-lobby?match_id={match_id}',
         headers = {'Authorization': MOCK_TOKEN_JULI},
     )    
     
     assert response.status_code == 200
-    assert response.json() == {
-        'requester_username': 'juliolcese',
-        'name': 'match!',
-        'creator_username': 'tonimondejar',
-        'min_players': 4,
-        'max_players': 4,
-        'num_games': 200,
-        'num_rounds': 1,
-        'users_joined': 3,
-        'user_robot': {
-            'tonimondejar': ['', '_tron', MOCK_AVATAR],
-            'bas_benja': [MOCK_AVATAR, 'Bumblebee', MOCK_AVATAR], 
-            'juliolcese': [MOCK_AVATAR, 'automatax', MOCK_AVATAR]
-        },
-        'started': False,
-        'im_in': True,
-        'is_creator': False
-    }
+    assert response.json() in create_possible_answer([
+            {
+                "username":'bas_benja',
+                "user_avatar": MOCK_AVATAR,
+                "robot_name": '0ptimusPrime',
+                "robot_avatar": MOCK_AVATAR
+            },
+            {
+                "username":'juliolcese',
+                "user_avatar": MOCK_AVATAR,
+                "robot_name": 'astroGirl',
+                "robot_avatar": MOCK_AVATAR
+            } 
+        ], "juliolcese", True, False)
 
  
 def test_join_lobby_not_creator_not_joined():
@@ -71,20 +67,29 @@ def test_join_lobby_not_creator_not_joined():
     )    
     
     assert response.status_code == 200
-    assert response.json() == {
-        'requester_username': 'tonimondejar',
-        'name': 'match1',
-        'creator_username': 'bas_benja',
-        'min_players': 2,
-        'max_players': 4,
-        'num_games': 10,
-        'num_rounds': 1570,
-        'users_joined': 2,
-        'user_robot': {
-            'bas_benja': [MOCK_AVATAR, '0ptimusPrime', MOCK_AVATAR], 
-            'juliolcese': [MOCK_AVATAR, 'astroGirl', MOCK_AVATAR]
-        },       
-        'started': False,
-        'im_in': False,
-        'is_creator': False
-    }
+    assert response.json() in create_possible_answer([
+            {
+                "username":'bas_benja',
+                "user_avatar": MOCK_AVATAR,
+                "robot_name": '0ptimusPrime',
+                "robot_avatar": MOCK_AVATAR
+            },
+            {
+                "username":'juliolcese',
+                "user_avatar": MOCK_AVATAR,
+                "robot_name": 'astroGirl',
+                "robot_avatar": MOCK_AVATAR
+            } 
+        ], "tonimondejar", False, False)
+
+
+
+def test_join_lobby_with_results():
+    match_id = get_match_by_name_and_user('match!', 'tonimondejar').match_id    
+    response = client.get(
+        f'/matches/join-lobby?match_id={match_id}',
+        headers = {'Authorization': MOCK_TOKEN_JULI},
+    )    
+    
+    assert response.status_code == 200
+    assert response.json()["results"] == [{"username": "tonimondejar", "robot_name": "_tron"}]

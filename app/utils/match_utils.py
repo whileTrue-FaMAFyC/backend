@@ -1,7 +1,9 @@
 from fastapi import HTTPException, status
 from pony.orm import db_session
+from typing import Dict, List
 
 from database.models.models import Match 
+from database.dao.robot_dao import get_name_and_creator_by_id
 from view_entities.match_view_entities import *
 from view_entities.robot_view_entities import *
 
@@ -39,3 +41,32 @@ def match_db_to_view(matches: Match): # No es list[Match] o algo así?
         )
 
     return info_and_robots
+
+
+def match_winner(robots_id: List[int], game_results: Dict[int, Dict[str, int]]):
+    max_won = 0
+    max_tied = 0
+    winners_robots = []
+    tied_robots = []
+    winners = []
+
+    for i in robots_id:
+        if game_results[i]["games_won"] == max_won:
+            winners_robots.append(i)
+        elif game_results[i]["games_won"] > max_won:
+            max_won = game_results[i]["games_won"]
+            winners_robots = [i]
+    
+    if len(winners_robots) > 1:
+        for i in winners_robots:
+            if game_results[i]["games_tied"] == max_tied:
+                tied_robots.append(i)
+            elif game_results[i]["games_tied"] > max_tied:
+                max_tied = game_results[i]["games_tied"]
+                tied_robots = [i]
+        winners_robots = tied_robots
+    
+    for r in winners_robots:
+        winners.append(get_name_and_creator_by_id(r))
+        
+    return winners

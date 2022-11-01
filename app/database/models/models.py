@@ -25,6 +25,7 @@ class Robot(db.Entity):
     owner = Required(User)
     avatar = Optional(str)
     matches_joined = Set('Match')
+    match_results = Set('MatchResult')
     composite_key(name, owner)
 
 
@@ -39,7 +40,18 @@ class Match(db.Entity):
     started = Required(bool)
     hashed_password = Optional(str)
     robots_joined = Set(Robot)
+    match_results = Set('MatchResult')
     composite_key(name, creator_user)
+
+
+class MatchResult(db.Entity):
+    match_result_id = PrimaryKey(int, auto=True)
+    robot = Required(Robot)
+    match = Required(Match)
+    games_won = Required(int, default=0)
+    games_tied = Required(int, default=0)
+    games_lost = Required(int, default=0)
+    composite_key(robot, match)
 
 
 def open_database(filename):
