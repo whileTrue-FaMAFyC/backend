@@ -3,7 +3,7 @@ from pony.orm import db_session, select
 from database.dao.user_dao import get_user_by_username
 from database.models.models import Robot
 from utils.robot_utils import insert_filename_to_file
-from view_entities.robot_view_entities import BotCreate
+from view_entities.robot_view_entities import BotCreate, WinnerRobot
 
 
 @db_session 
@@ -39,5 +39,17 @@ def get_bots_by_owner(owner_username: str):
 #                   r.owner == get_user_by_username(owner_username))
 
 @db_session
+def get_name_and_creator_by_id(robot_id: int):
+    robot = Robot[robot_id]
+    return WinnerRobot(
+        username=robot.owner.username,
+        robot_name=robot.name
+    )
+
+@db_session
 def get_source_code_by_id(robot_id: int):
     return Robot[robot_id].source_code
+
+@db_session
+def get_robot_avatar_by_name_and_owner(owner: str, name: str):
+    return Robot.get(owner=get_user_by_username(owner), name=name).avatar

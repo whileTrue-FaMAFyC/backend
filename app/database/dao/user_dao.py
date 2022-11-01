@@ -55,6 +55,14 @@ def get_usernames():
     return select(u.username for u in User)
 
 @db_session
+def get_user_avatar(username: str):
+    user_avatar = User.get(username=username).avatar
+    if user_avatar == "default":
+        return ""
+    else:
+        return user_avatar
+
+@db_session
 def update_user_avatar(username: str, avatar: str):
     try:
         user_db = User.get(username=username)

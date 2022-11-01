@@ -58,11 +58,17 @@ def insert_filename_to_file(file: str, filename: str):
 #     return query
 
 @db_session
-def get_robot_in_match(match_id: int, abandoning_username: str):
+def get_robot_in_match_by_owner(match_id: int, owner_username: str):
     
-    return left_join(
-        (r)
-        for m in Match for r in m.robots_joined
-        if m.match_id == match_id and
-           r.owner == User.get(username=abandoning_username)
-        )
+    match = Match[match_id]
+    for r in match.robots_joined:
+        if r.owner.username == owner_username:
+            return r
+    
+    return None
+    # return left_join(
+    #     (r)
+    #     for m in Match for r in m.robots_joined
+    #     if m.match_id == match_id and
+    #        r.owner == User.get(username=owner_username)
+    #     )

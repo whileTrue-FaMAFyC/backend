@@ -21,3 +21,7 @@ class ShowRobot(BaseModel):
     
     class Config:
         orm_mode = True
+
+class WinnerRobot(BaseModel):
+    username: str
+    robot_name: str
