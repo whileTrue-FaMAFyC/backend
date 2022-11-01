@@ -13,6 +13,7 @@ def run_before_and_after():
     users()
     robots()
     matches()
+    match_result()
     # A test function will be ran at this point
     yield
     # Code that will run after each test

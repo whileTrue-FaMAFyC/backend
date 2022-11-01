@@ -71,21 +71,21 @@ def new_match_validator(creator_username: str, new_match : NewMatch):
     
     return
 
-def join_match_validator(username: str, match: JoinMatch):
+def join_match_validator(username: str, match: JoinMatch, match_id: int):
     # To check if the user has a robot with the provided name
     joining_robot_in_db = robot_dao.get_bot_by_owner_and_name(username, 
                                                       match.joining_robot)
     # To check if the match exists
-    match_in_db = match_dao.get_match_by_id(match.match_id)
+    match_in_db = match_dao.get_match_by_id(match_id)
 
     if not joining_robot_in_db:
-        raise NOT_EXISTENT_ROBOT
+        raise INEXISTENT_ROBOT
 
     if not match_in_db:
-        raise NOT_EXISTENT_MATCH
+        raise INEXISTENT_MATCH_EXCEPTION
 
     # CHECK IF USER HAS ALREADY JOINED THE MATCH.
-    users_in_match = match_dao.get_users_in_match(match.match_id)
+    users_in_match = match_dao.get_users_in_match(match_id)
     if username in users_in_match:
         raise USER_ALREADY_JOINED
 
