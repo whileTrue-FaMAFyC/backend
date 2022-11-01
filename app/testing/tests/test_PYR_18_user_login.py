@@ -1,6 +1,5 @@
 from fastapi.testclient import TestClient
 from passlib.hash import bcrypt
-from pony.orm import db_session
 
 from main import app
 
