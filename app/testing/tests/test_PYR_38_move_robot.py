@@ -1,3 +1,4 @@
+from utils.services_utils import ROBOT_HALF_SIZE
 from services.Robot import Robot
 
 r1 = Robot(1)
@@ -28,10 +29,10 @@ def test_crash_wall():
     while (r1.get_position()[0] <= 999 and not(crashed)):
         r1.drive(0, 100)
         r1._move()
-        if r1.get_position()[0] == 999 and r1.get_damage() > initial_damage:
+        if r1.get_position()[0] == 999 - ROBOT_HALF_SIZE and r1.get_damage() > initial_damage:
             crashed = True
 
-    assert r1.get_position()[0] == 999
+    assert r1.get_position()[0] == 999 - ROBOT_HALF_SIZE
     assert r1.get_damage() == initial_damage + 2
 
 def test__move_first_quadrant():

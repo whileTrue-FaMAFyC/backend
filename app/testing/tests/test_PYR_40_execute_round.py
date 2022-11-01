@@ -1,33 +1,5 @@
 from services.game import *
-from testing.helpers.services_helpers import RobotTest
-
-class Robot1(RobotTest):
-    def initialize(self):
-        pass
-    
-    def respond(self):
-        self.drive(0, 10)
-
-class Robot2(RobotTest):
-    def initialize(self):
-        pass
-    
-    def respond(self):
-        self.drive(180,10)
-
-class Robot3(RobotTest):
-    def initialize(self):
-        pass
-    
-    def respond(self):
-        self.drive(45,10)
-
-class Robot4(RobotTest):
-    def initialize(self):
-        pass
-    
-    def respond(self):
-        pass
+from testing.helpers.services_helpers import *
 
 
 def test_all_rounds_executed():
@@ -76,8 +48,8 @@ def test_robots_move():
 
 def test_check_collisions():
     robots = [Robot1(1), Robot2(2)]
-    robots[0].set_initial_position(0,0)
-    robots[1].set_initial_position(100,0)
+    robots[0].set_initial_position(100,100)
+    robots[1].set_initial_position(200,100)
 
     game = Game(100, robots)
 
