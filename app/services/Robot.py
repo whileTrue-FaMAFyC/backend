@@ -32,6 +32,14 @@ class Robot:
         return self._id
 
 
+    def initialize(self):
+        pass
+
+
+    def respond(self):
+        pass
+    
+
     # Cannon
     def is_cannon_ready(self):
         """"

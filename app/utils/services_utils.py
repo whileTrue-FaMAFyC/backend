@@ -1,17 +1,19 @@
 import math
+from re import M
 from numpy import add, sign
 from typing import Dict, List, Tuple
 from base64 import b64decode
 
 from database.dao.robot_dao import get_source_code_by_id, get_name_and_creator_by_id
 
-ROBOT_SIZE = 50
+
+ROBOT_SIZE = 32
 
 ROBOT_HALF_SIZE = int(ROBOT_SIZE/2)
 
 COLLISION_DAMAGE = 2
 
-MISSILE_HALF_SIZE = 1
+MISSILE_HALF_SIZE = 10
 
 # Meters advanced when moving at 1% velocity
 M_VELOC_1 = 10
@@ -25,10 +27,14 @@ OUT_OF_BOUNDS = (1500,1500)
 # sqrt(1000^2 + 1000^2) = 1414,21
 MAX_POSSIBLE_DISTANCE = 1415
 
-ROUNDS_TO_RELOAD_CANNON_500_TO_700 = 4
-ROUNDS_TO_RELOAD_CANNON_300_TO_500 = 3
-ROUNDS_TO_RELOAD_CANNON_100_TO_300 = 2
-ROUNDS_TO_RELOAD_CANNON_BELOW_100 = 1
+ROUNDS_TO_RELOAD_CANNON_BELOW_100 = 2
+ROUNDS_TO_RELOAD_CANNON_100_TO_300 = ROUNDS_TO_RELOAD_CANNON_BELOW_100 + 1
+ROUNDS_TO_RELOAD_CANNON_300_TO_500 = ROUNDS_TO_RELOAD_CANNON_100_TO_300 + 1
+ROUNDS_TO_RELOAD_CANNON_500_TO_700 = ROUNDS_TO_RELOAD_CANNON_300_TO_500 + 1
+
+DISTANCE_DAMAGE_10 = 25
+DISTANCE_DAMAGE_5 = 50
+DISTANCE_DAMAGE_3 = 100
 
 IMPORT_ROBOT_CLASS = "from services.Robot import Robot\n"
 
@@ -87,36 +93,3 @@ def is_inside(vertexs: List[Tuple[int, int]], center: Tuple[int, int]):
             break
 
     return is_inside
-
-
-def match_winner(robots_id: List[int], game_results: Dict[int, Dict[str, int]]):
-    max_won = 0
-    max_tied = 0
-    winners_robots = []
-    winners = []
-
-    for i in robots_id:
-        if game_results[i]["games_won"] == max_won:
-            winners_robots.append(i)
-        elif game_results[i]["games_won"] > max_won:
-            max_won = game_results[i]["games_won"]
-            winners_robot = [i]
-
-    for i in robots_id:
-        if game_results[i]["games_won"] == max_won:
-            winners_robots.append(i)
-    
-    if len(winners_robot) > 1:
-        for i in winners_robots:
-            tied_robots = []
-            if game_results[i]["games_tied"] == max_tied:
-                tied_robots.append(i)
-            elif game_results[i]["games_tied"] > max_tied:
-                max_won = game_results[i]["games_tied"]
-                tied_robots = [i]
-        winners_robots = tied_robots
-
-    for r in winners_robots:
-        winners.append(get_name_and_creator_by_id(r))
-        
-    return winners

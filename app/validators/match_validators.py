@@ -75,7 +75,7 @@ def start_match_validator(creator_username: str, match_id: int):
     # Checks if the user trying to start the match is the creator
     match = match_validator_info(match_id)
     if not match_dao.get_match_by_id(match_id):
-        raise INEXISTENT_MATCH
+        raise INEXISTENT_MATCH_EXCEPTION
     
     if match.creator_username != creator_username:
         raise NOT_CREATOR

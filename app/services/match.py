@@ -4,13 +4,14 @@ from utils.match_utils import INTERNAL_ERROR_UPDATING_MATCH_INFO
 from database.dao.match_dao import get_match_info
 from database.dao.match_results_dao import create_match_results
 from services.game import Game
-from utils.services_utils import create_robots_instances, match_winner
+from utils.match_utils import match_winner
+from utils.services_utils import create_robots_instances
 
 def execute_game(game: Game):
     for r in game.robots:
         r.initialize()
 
-    while game.get_robots_alive() > 1 and game.get_rounds_remaining > 0:
+    while game.get_robots_alive() > 1 and game.get_rounds_remaining() > 0:
         game.execute_round()
 
     # Get survivors
@@ -29,17 +30,16 @@ def execute_match(match_id: int):
 
     for r in match_info.robots_joined:
         robots_id.append(r.robot_id)
-        games_results = {r.robot_id: {"games_won": 0, "games_tied": 0}}
+        games_results[r.robot_id] = {"games_won": 0, "games_tied": 0}
 
-    for i in match_info.num_games:
+    for i in range(match_info.num_games):
         robots = create_robots_instances(robots_id)
         game = Game(match_info.num_rounds, robots)
         survivors = execute_game(game)
-
         if len(survivors) > 1:
             for r in survivors:
                 games_results[r]["games_tied"] += 1
-        else:
+        elif len(survivors) == 1:
             games_results[survivors[0]]["games_won"] += 1
     
     for i in robots_id:

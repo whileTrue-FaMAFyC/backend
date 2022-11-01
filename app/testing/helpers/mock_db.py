@@ -1,7 +1,9 @@
 from pony.orm import db_session
 from passlib.hash import bcrypt
+from app.database.dao.match_dao import get_match_by_name_and_user
 
 from database.models.models import *
+from database.dao.match_dao import *
 from database.dao.robot_dao import *
 from database.dao.user_dao import *
 from view_entities.robot_view_entities import RobotInMatch
@@ -29,6 +31,9 @@ TEST_SOURCE_CODE_BENJA = """name:robot_test.py;base64,Y2xhc3MgUm9ib3RUZXN0KFJvYm
                     90KToKICAgIGRlZiBpbml0aWFsaXplKHNlbGYpOgogICAgICAgIHNlbGYudG
                     VzdF92YXJpYWJsZSA9ICJTb3kgZWwgcm9ib3QgZGUgYmVuamEiCiAgICBkZW
                     YgcmVzcG9uZCgpOgogICAgICAgIHBhc3M="""
+
+
+
 @db_session
 def users():
     users = [
@@ -54,6 +59,24 @@ def users():
     return
             
 # Add some robots to the database
+robot_crack_source_code = "name:robot_capo_crack.py;base64,Y2xhc3MgUm9ib3RDYXBvQ3JhY2"\
+                          "soUm9ib3QpOg0KDQogICAgZGVmIGluaXRpYWxpemUoc2VsZik6DQogICAg"\
+                          "ICAgIHNlbGYuZm91bmRfcm9ib3QgPSBGYWxzZQ0KICAgICAgICBzZWxmLm"\
+                          "RlZ3JlZXMgPSAwDQoNCiAgICBkZWYgcmVzcG9uZChzZWxmKToNCiAgICAg"\
+                          "ICAgaWYgbm90IHNlbGYuc2Nhbm5lZCgpOg0KICAgICAgICAgICAgIyBDaG"\
+                          "FuZ2Ugc2NhbiBkZWdyZWVzIHVudGlsIGZpbmRpbmcgc29tZW9uZQ0KICAg"\
+                          "ICAgICAgICAgc2VsZi5kZWdyZWVzICs9IDIwIA0KICAgICAgICAgICAgc2"\
+                          "VsZi5wb2ludF9zY2FubmVyKHNlbGYuZGVncmVlcywgMTApDQogICAgICAg"\
+                          "IGVsc2U6DQogICAgICAgICAgICBpZiBzZWxmLnNjYW5uZWQoKSA+IDcwMD"\
+                          "oNCiAgICAgICAgICAgICAgICBzZWxmLmRyaXZlKHNlbGYuZGVncmVlcywg"\
+                          "MTApDQogICAgICAgICAgICBlbHNlOg0KICAgICAgICAgICAgICAgIHNlbG"\
+                          "YuZHJpdmUoc2VsZi5kZWdyZWVzLCAwKQ0KICAgICAgICAgICAgICAgIHNl"\
+                          "bGYuY2Fubm9uKHNlbGYuZGVncmVlcywgc2VsZi5zY2FubmVkKCkpDQo="
+
+robot_inutil_source_code = "name:robot_inutil.py;base64,Y2xhc3MgUm9ib3RJbnV0aWwoUm9ib"\
+                           "3QpOg0KICAgIGRlZiBpbml0aWFsaXplKHNlbGYpOg0KICAgICAgICBwYX"\
+                           "NzDQogICAgDQogICAgZGVmIHJlc3BvbmQoc2VsZik6DQogICAgICAgIHB"\
+                           "hc3MNCg=="
 @db_session
 def robots():
     robots = [
@@ -69,7 +92,9 @@ def robots():
         ('MegaByte', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('CYborg34', TEST_SOURCE_CODE_TONI, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('automatax', TEST_SOURCE_CODE_JULI, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
-        ('astroGirl', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR)
+        ('astroGirl', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
+        ('RobotCrack', robot_crack_source_code, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
+        ('RobotInutil', robot_inutil_source_code, 'basbenja3@gmail.com', MOCK_AVATAR)
     ]
 
     for robot_name, source_code, owner_email, avatar in robots:
@@ -84,30 +109,30 @@ def robots():
 @db_session
 def matches():
     matches = [
-        ('match1', 'bas_benja', '0ptimusPrime', 2, 4, 10, 1570, "", 
+        ('match1', 'bas_benja', '0ptimusPrime', 2, 4, 10, 1570, "", False,
         [RobotInMatch(owner=UserInMatch(username="bas_benja"), name="0ptimusPrime"), 
          RobotInMatch(owner=UserInMatch(username="juliolcese"), name="astroGirl")]),
         
-        ('match2', 'bas_benja', 'Bumblebee', 3, 3, 200, 100000, "matchPass!", 
+        ('match2', 'bas_benja', 'Bumblebee', 3, 3, 200, 100000, "matchPass!", False, 
         [RobotInMatch(owner=UserInMatch(username="bas_benja"), name="Bumblebee")]),
         
-        ('match1', 'juliolcese', 'astroGirl', 2, 3, 1, 1, "P455W0RD", 
+        ('match1', 'juliolcese', 'astroGirl', 2, 3, 1, 1, "P455W0RD", False,
         [RobotInMatch(owner=UserInMatch(username="juliolcese"), name="astroGirl")]),
         
-        ('jmatch2', 'juliolcese', 'automatax', 2, 3, 1, 1, "P455W0RD", 
+        ('jmatch2', 'juliolcese', 'automatax', 2, 3, 1, 1, "P455W0RD", False,
         [RobotInMatch(owner=UserInMatch(username="juliolcese"), name="automatax")]),
         
-        ('24601', 'tonimondejar', 'MegaByte', 2, 2, 157, 3250, "", 
+        ('24601', 'tonimondejar', 'MegaByte', 2, 2, 157, 3250, "", False,
         [RobotInMatch(owner=UserInMatch(username="tonimondejar"), name="MegaByte")]),
         
-        ('match!', 'tonimondejar', '_tron', 4, 4, 200, 1, "pw", 
+        ('match!', 'tonimondejar', '_tron', 3, 4, 200, 1, "pw", True,
          [RobotInMatch(owner=UserInMatch(username="tonimondejar"), name="_tron"), 
          RobotInMatch(owner=UserInMatch(username="bas_benja"), name="Bumblebee"), 
          RobotInMatch(owner=UserInMatch(username="juliolcese"), name="automatax")])
     ]
 
     for (name, creator_user, creator_robot, min_players, max_players, 
-         num_games, num_rounds, password, robots_joined) in matches:
+         num_games, num_rounds, password, started, robots_joined) in matches:
         set_robots = set()
         for r in robots_joined:
             set_robots.add(get_bot_by_owner_and_name(r.owner.username, r.name))
@@ -119,9 +144,28 @@ def matches():
             max_players=max_players,
             num_games=num_games,
             num_rounds=num_rounds,
-            started=False,
+            started=started,
             hashed_password=bcrypt.hash(password) if password else "",
             robots_joined=set_robots
+        )       
+    
+    return
+
+@db_session
+def match_result():
+    match_result = [("_tron", "tonimondejar", "match!", "tonimondejar", 100, 25, 75),
+                    ("Bumblebee", "bas_benja", "match!", "tonimondejar", 75, 25, 100),
+                    ("automatax", "juliolcese", "match!", "tonimondejar", 0, 0, 200)]
+
+    for (robot_name, robot_owner, match_name, match_owner, 
+         games_won, games_tied, games_lost) in match_result:
+        
+        MatchResult(
+            robot = get_bot_by_owner_and_name(robot_owner, robot_name),
+            match = get_match_by_name_and_user(match_name, match_owner),
+            games_won = games_won,
+            games_tied = games_tied,
+            games_lost = games_lost
         )       
     
     return

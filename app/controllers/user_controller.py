@@ -42,6 +42,7 @@ async def verify_user(username: str, code: UserVerificationCode):
     else:
         raise ERROR_UPDATING_USER_DATA
 
+
 @user_controller.post("/load-avatar/{username}", status_code=status.HTTP_200_OK)
 async def load_avatar(username: str, avatar: UserAvatar):
     load_avatar_validator(username, avatar)
@@ -52,6 +53,7 @@ async def load_avatar(username: str, avatar: UserAvatar):
         return True
     else:
         raise ERROR_UPDATING_USER_DATA
+
 
 # LOGIN
 # Get credentials (username or email and password) and check if they are correct
