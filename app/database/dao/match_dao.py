@@ -39,7 +39,7 @@ def get_match_by_name_and_user(match_name: str, creator_username: str):
 
 @db_session
 def get_match_by_id(match_id: str):
-    return Match[match_id]
+    return Match.get(match_id=match_id)
 
 
 @db_session
@@ -68,21 +68,13 @@ def get_lobby_info(match_id: int, username: str):
         if robot.owner.username == username:
             im_in = True
         
-        if robot.owner.avatar == "default":
-            user_robot.append(UserAndRobotInfo(
-                username=robot.owner.username,
-                user_avatar="",
-                robot_name=robot.name,
-                robot_avatar=robot.avatar
-            ))    
-        else:
-            user_robot.append(UserAndRobotInfo(
-                username=robot.owner.username,
-                user_avatar=robot.owner.avatar,
-                robot_name=robot.name,
-                robot_avatar=robot.avatar
-            ))
-    
+        user_robot.append(UserAndRobotInfo(
+            username=robot.owner.username,
+            user_avatar="" if robot.owner.avatar == "default" else robot.owner.avatar,
+            robot_name=robot.name,
+            robot_avatar=robot.avatar
+        ))
+
     if match.started:
         results = match_winner(robots_id, game_results)
 
