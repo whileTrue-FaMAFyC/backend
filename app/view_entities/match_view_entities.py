@@ -32,12 +32,16 @@ class MatchInfo(BaseModel):
 class ShowMatch(MatchInfo):
     robots_joined: int
 
-#For showing the competitor(user and his robot) details inside the lobby.
+#For showing the competitor(user and his robot) details.
 class UserAndRobotInfo(BaseModel):
     username: str
     user_avatar: str
     robot_name: str
     robot_avatar: str
+
+class JoinMatch(BaseModel):
+    match_password: str = ""
+    joining_robot: str
     
 # For showing the match details inside the lobby
 class LobbyInfo(BaseModel):

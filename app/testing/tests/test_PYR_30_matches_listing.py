@@ -33,7 +33,9 @@ expected_response =  [
   {"match_id": 5, "name": "24601", "creator_user": {"username": "tonimondejar"}, 
   "max_players": 2, "robots_joined": 1},
   {"match_id": 6, "name": "match!", "creator_user": {"username": "tonimondejar"}, 
-  "max_players": 4, "robots_joined": 3}]
+  "max_players": 4, "robots_joined": 3},
+  {"match_id": 7, "name": "partidaza", "creator_user": {"username": "valennegrelli"}, 
+  "max_players": 2, "robots_joined": 2}]
 
 # In this test we first create new matches and then analyze the behavior.
 def test_with_matches():

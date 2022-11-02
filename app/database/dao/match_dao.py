@@ -31,6 +31,10 @@ def create_new_match(creator_username, new_match: NewMatch):
 
 
 @db_session
+def get_match_by_id(match_id: int):
+    return Match[match_id]
+
+@db_session
 def get_match_by_name_and_user(match_name: str, creator_username: str):
     matches = Match.get(creator_user=User.get(username=creator_username), 
                         name=match_name)
@@ -38,7 +42,7 @@ def get_match_by_name_and_user(match_name: str, creator_username: str):
 
 
 @db_session
-def get_match_by_id(match_id: str):
+def get_match_by_id(match_id: int):
     return Match.get(match_id=match_id)
 
 
@@ -47,6 +51,27 @@ def get_all_matches():
     matches = Match.select()
     return matches
 
+@db_session
+def get_users_in_match(match_id: int):
+    match_in_db = Match[match_id]
+    users = []
+    for r in match_in_db.robots_joined:
+        users.append(r.owner.username)
+    return users
+
+@db_session
+def update_joining_user_match(joining_username: str, joining_robot: str, match_id: int):
+    match_in_db = Match[match_id]
+
+    joining_user_in_db = User.get(username=joining_username)
+
+    joining_robot_in_db = Robot.get(name=joining_robot, owner=joining_user_in_db)
+
+    try:
+        match_in_db.robots_joined.add(joining_robot_in_db)
+        return True
+    except:
+        return False
 
 @db_session
 def get_lobby_info(match_id: int, username: str):

@@ -1,6 +1,6 @@
 import math
 from numpy import add, sign
-from typing import List
+from typing import List, Tuple
 from base64 import b64decode
 
 from database.dao.robot_dao import get_source_code_by_id
@@ -69,14 +69,14 @@ def round_up(x):
     return sign(x)*(math.ceil(abs(x)))
 
 
-def get_vertex(center: tuple[int, int]):
+def get_vertex(center: Tuple[int, int]):
     return [tuple(add(center, (-ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))), 
             tuple(add(center, (ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))),
             tuple(add(center, (ROBOT_HALF_SIZE, ROBOT_HALF_SIZE))),
             tuple(add(center, (-ROBOT_HALF_SIZE, ROBOT_HALF_SIZE)))]
 
 
-def is_inside(vertexs: List[tuple[int, int]], center: tuple[int, int]):
+def is_inside(vertexs: List[Tuple[int, int]], center: Tuple[int, int]):
     is_inside = False
     
     for v in vertexs:
