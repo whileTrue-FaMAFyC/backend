@@ -56,6 +56,24 @@ def users():
     return
             
 # Add some robots to the database
+robot_crack_source_code = "name:robot_capo_crack.py;base64,Y2xhc3MgUm9ib3RDYXBvQ3JhY2"\
+                          "soUm9ib3QpOg0KDQogICAgZGVmIGluaXRpYWxpemUoc2VsZik6DQogICAg"\
+                          "ICAgIHNlbGYuZm91bmRfcm9ib3QgPSBGYWxzZQ0KICAgICAgICBzZWxmLm"\
+                          "RlZ3JlZXMgPSAwDQoNCiAgICBkZWYgcmVzcG9uZChzZWxmKToNCiAgICAg"\
+                          "ICAgaWYgbm90IHNlbGYuc2Nhbm5lZCgpOg0KICAgICAgICAgICAgIyBDaG"\
+                          "FuZ2Ugc2NhbiBkZWdyZWVzIHVudGlsIGZpbmRpbmcgc29tZW9uZQ0KICAg"\
+                          "ICAgICAgICAgc2VsZi5kZWdyZWVzICs9IDIwIA0KICAgICAgICAgICAgc2"\
+                          "VsZi5wb2ludF9zY2FubmVyKHNlbGYuZGVncmVlcywgMTApDQogICAgICAg"\
+                          "IGVsc2U6DQogICAgICAgICAgICBpZiBzZWxmLnNjYW5uZWQoKSA+IDcwMD"\
+                          "oNCiAgICAgICAgICAgICAgICBzZWxmLmRyaXZlKHNlbGYuZGVncmVlcywg"\
+                          "MTApDQogICAgICAgICAgICBlbHNlOg0KICAgICAgICAgICAgICAgIHNlbG"\
+                          "YuZHJpdmUoc2VsZi5kZWdyZWVzLCAwKQ0KICAgICAgICAgICAgICAgIHNl"\
+                          "bGYuY2Fubm9uKHNlbGYuZGVncmVlcywgc2VsZi5zY2FubmVkKCkpDQo="
+
+robot_inutil_source_code = "name:robot_inutil.py;base64,Y2xhc3MgUm9ib3RJbnV0aWwoUm9ib"\
+                           "3QpOg0KICAgIGRlZiBpbml0aWFsaXplKHNlbGYpOg0KICAgICAgICBwYX"\
+                           "NzDQogICAgDQogICAgZGVmIHJlc3BvbmQoc2VsZik6DQogICAgICAgIHB"\
+                           "hc3MNCg=="
 @db_session
 def robots():
     robots = [
@@ -65,8 +83,8 @@ def robots():
         ('R2D2', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
         ('WALL-E', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', ""),
         ('jarvis22', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
-        ('0ptimusPrime', MOCK_SOURCE_CODE, 'basbenja3@gmail.com', MOCK_AVATAR),
-        ('Bumblebee', TEST_SOURCE_CODE_BENJA, 'basbenja3@gmail.com', MOCK_AVATAR),
+        ('0ptimusPrime', robot_inutil_source_code, 'basbenja3@gmail.com', MOCK_AVATAR),
+        ('Bumblebee', robot_crack_source_code, 'basbenja3@gmail.com', MOCK_AVATAR),
         ('_tron', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('MegaByte', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('CYborg34', TEST_SOURCE_CODE_TONI, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
