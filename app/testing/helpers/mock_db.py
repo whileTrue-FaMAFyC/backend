@@ -12,6 +12,10 @@ from view_entities.user_view_entities import UserInMatch
 MOCK_SOURCE_CODE = """aW1wb3J0IHV2aWNvcm4KCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgog
                     ICAgdXZpY29ybi5ydW4oImFwcC5hcGk6YXBwIiwgaG9zdD0iMC4wLjAuMCIs
                     IHBvcnQ9ODAwMCwgcmVsb2FkPVRydWUp"""
+
+def mock_avatar(username: str):
+    return f'../assets/users/{username}/avatar.png'
+
 MOCK_AVATAR = """iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQ
                 DwAEhQGAhKmMIQAAAABJRU5ErkJggg=="""
 
@@ -34,13 +38,13 @@ TEST_SOURCE_CODE_BENJA = """name:robot_test.py;base64,Y2xhc3MgUm9ib3RUZXN0KFJvYm
 @db_session
 def users():
     users = [
-        ('bas_benja', 'basbenja3@gmail.com', MOCK_AVATAR, 'Compuamigos2', 555888, True, datetime.now()),
-        ('juliolcese', 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR, '1whileTrue1', 889654, True, MOCK_CREATED_TIME),
-        ('tonimondejar', 'mondejarantonio@hotmail.com', "", 'FAMAFyC2022', 123456, False, MOCK_CREATED_TIME),
+        ('bas_benja', 'basbenja3@gmail.com', mock_avatar('bas_benja'), 'Compuamigos2', 555888, True, datetime.now()),
+        ('juliolcese', 'juliolcese@mi.unc.edu.ar', mock_avatar('juliolcese'), '1whileTrue1', 889654, True, MOCK_CREATED_TIME),
+        ('tonimondejar', 'mondejarantonio@hotmail.com', 'default', 'FAMAFyC2022', 123456, False, MOCK_CREATED_TIME),
         ('valennegrelli', 'valen57negrelli@yahoo.com.ar', "", 'piXies18', 852436, False, MOCK_CREATED_TIME),
-        ('sebagiraudo', 'sebagir4udo@unc.edu.ar', MOCK_AVATAR, 'B_1kerfuliate', 785364, True, datetime.now()),
-        ('lucasca22ina', 'cassinalucas@gmail.com', "", 'chicosSSS1456', 152347, True, datetime.now()),
-        ('israangulo4', 'isra1234@hotmail.com', MOCK_AVATAR, 'Argentiña222', 853314, False, datetime.now())
+        ('sebagiraudo', 'sebagir4udo@unc.edu.ar', mock_avatar('sebagiraudo'), 'B_1kerfuliate', 785364, True, datetime.now()),
+        ('lucasca22ina', 'cassinalucas@gmail.com', 'default', 'chicosSSS1456', 152347, True, datetime.now()),
+        ('israangulo4', 'isra1234@hotmail.com', mock_avatar('israangulo4'), 'Argentiña222', 853314, False, datetime.now())
     ]
     
     for username, email, avatar, password, verification_code, verified, created_time in users:

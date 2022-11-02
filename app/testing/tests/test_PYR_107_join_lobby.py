@@ -4,7 +4,7 @@ from database.dao.match_dao import get_match_by_name_and_user
 from main import app
 from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
 from testing.helpers.match_helpers import create_possible_answer
-from testing.helpers.mock_db import MOCK_AVATAR
+from testing.helpers.mock_db import MOCK_AVATAR, mock_avatar
 
 
 
@@ -22,13 +22,13 @@ def test_join_lobby_creator():
     assert response.json() in create_possible_answer([
             {
                 "username":'bas_benja',
-                "user_avatar": MOCK_AVATAR,
+                "user_avatar": mock_avatar('bas_benja'),
                 "robot_name": '0ptimusPrime',
                 "robot_avatar": MOCK_AVATAR
             },
             {
                 "username":'juliolcese',
-                "user_avatar": MOCK_AVATAR,
+                "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
                 "robot_avatar": MOCK_AVATAR
             } 
@@ -46,13 +46,13 @@ def test_join_lobby_not_creator_joined():
     assert response.json() in create_possible_answer([
             {
                 "username":'bas_benja',
-                "user_avatar": MOCK_AVATAR,
+                "user_avatar": mock_avatar('bas_benja'),
                 "robot_name": '0ptimusPrime',
                 "robot_avatar": MOCK_AVATAR
             },
             {
                 "username":'juliolcese',
-                "user_avatar": MOCK_AVATAR,
+                "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
                 "robot_avatar": MOCK_AVATAR
             } 
@@ -70,13 +70,13 @@ def test_join_lobby_not_creator_not_joined():
     assert response.json() in create_possible_answer([
             {
                 "username":'bas_benja',
-                "user_avatar": MOCK_AVATAR,
+                "user_avatar": mock_avatar('bas_benja'),
                 "robot_name": '0ptimusPrime',
                 "robot_avatar": MOCK_AVATAR
             },
             {
                 "username":'juliolcese',
-                "user_avatar": MOCK_AVATAR,
+                "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
                 "robot_avatar": MOCK_AVATAR
             } 

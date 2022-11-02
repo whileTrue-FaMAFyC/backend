@@ -62,7 +62,7 @@ def load_avatar_validator(username: str, content_type: str):
         raise NOT_VERIFIED_EXCEPTION
 
     # Checks that the link is not being used for a second time.
-    if user_in_db.avatar != "":
+    if user_in_db.avatar != 'default':
         raise AVATAR_ALREADY_LOADED
 
     # if not avatar.avatar.startswith("data:image/") and avatar.avatar != "":
