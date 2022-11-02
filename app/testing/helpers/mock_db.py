@@ -85,6 +85,7 @@ def robots():
         ('jarvis22', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
         ('0ptimusPrime', robot_inutil_source_code, 'basbenja3@gmail.com', MOCK_AVATAR),
         ('Bumblebee', robot_crack_source_code, 'basbenja3@gmail.com', MOCK_AVATAR),
+        ('pichon', TEST_SOURCE_CODE_BENJA, 'basbenja3@gmail.com', MOCK_AVATAR),
         ('_tron', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('MegaByte', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('CYborg34', TEST_SOURCE_CODE_TONI, 'mondejarantonio@hotmail.com', MOCK_AVATAR),

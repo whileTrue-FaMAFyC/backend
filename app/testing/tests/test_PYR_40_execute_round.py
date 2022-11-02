@@ -4,7 +4,7 @@ from testing.helpers.services_helpers import *
 
 def test_all_rounds_executed():
     # The Robot4 does not move
-    robots = [Robot1(1), Robot2(2), Robot3(3), Robot4(4)]
+    robots = [Robot1(1,0), Robot2(2,0), Robot3(3,0), Robot4(4,0)]
     game = Game(100, robots)
     for i in range(100):
         game.execute_round()
@@ -16,7 +16,7 @@ def test_all_rounds_executed():
     
 
 def test_all_robots_dead():
-    robots = [Robot1(1), Robot2(2), Robot3(3)]
+    robots = [Robot1(1,0), Robot2(2,0), Robot3(3,0)]
     for r in robots:
         r.set_damage(100)
 
@@ -31,7 +31,7 @@ def test_all_robots_dead():
 
 def test_robots_move():
     # The Robot4 does not move
-    robots = [Robot1(1), Robot2(2), Robot3(3), Robot4(4)]
+    robots = [Robot1(1,0), Robot2(2,0), Robot3(3,0), Robot4(4,0)]
     for r in robots:
         r.set_initial_position(499,499)
 
@@ -47,8 +47,8 @@ def test_robots_move():
 
 
 def test_check_collisions():
-    robots = [Robot1(1), Robot2(2)]
-    robots[0].set_initial_position(100,100)
+    robots = [Robot1(1,0), Robot2(2,0)]
+    robots[0].set_initial_position(150,100)
     robots[1].set_initial_position(200,100)
 
     game = Game(100, robots)
@@ -66,10 +66,10 @@ def test_check_collisions():
 
 def test_dead_robots_go_out_of_bounds():
     # The Robot4 does not move
-    robots = [Robot1(1), Robot2(2),Robot4(4)]
+    robots = [Robot1(1,0), Robot2(2,0),Robot4(4,0)]
     # INITIAL POSITIONS
-    robots[0].set_initial_position(0,0)
-    robots[1].set_initial_position(100,0)
+    robots[0].set_initial_position(ROBOT_HALF_SIZE,ROBOT_HALF_SIZE)
+    robots[1].set_initial_position(50+ROBOT_HALF_SIZE,ROBOT_HALF_SIZE)
     # INITIAL DAMAGE
     robots[0].set_damage(98)
     robots[1].set_damage(98)
