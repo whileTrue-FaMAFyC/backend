@@ -3,7 +3,7 @@ from pydantic import BaseModel
 class UserBase(BaseModel):
     username: str
     email: str
-    avatar: str = ""
+    avatar: str = 'default'
 
 # To parse the parameters of the post request
 class UserSignUpData(UserBase):

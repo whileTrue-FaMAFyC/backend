@@ -1,6 +1,6 @@
 from pony.orm import db_session
 from passlib.hash import bcrypt
-from app.database.dao.match_dao import get_match_by_name_and_user
+from database.dao.match_dao import get_match_by_name_and_user
 
 from database.models.models import *
 from database.dao.match_dao import *

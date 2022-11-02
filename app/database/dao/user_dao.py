@@ -4,7 +4,7 @@ from pony.orm import db_session, select, delete
 import schedule, time
 
 from database.models.models import User, RUNNING_ENVIRONMENT
-from utils.user_utils import send_cleanup_email
+from utils.user_utils import send_cleanup_email,  save_user_avatar
 from view_entities.user_view_entities import NewUserToDb
 
 #
@@ -23,9 +23,13 @@ from view_entities.user_view_entities import NewUserToDb
 def create_user(user: NewUserToDb):
     try:
         # Inserts parameter user in to the 'User' table
-        User(username=user.username, email=user.email, avatar=user.avatar,
-             hashed_password=user.hashed_password, verification_code=user.verification_code,
-             verified=user.verified)
+        User(
+            username=user.username, 
+            email=user.email, avatar=user.avatar,
+            hashed_password=user.hashed_password, 
+            verification_code=user.verification_code,
+            verified=user.verified
+        )
         return True
     except:
         return False
@@ -55,10 +59,9 @@ def get_usernames():
     return select(u.username for u in User)
 
 @db_session
-def update_user_avatar(username: str, avatar: str):
+def update_user_avatar(username: str, avatar_path: str):
     try:
-        user_db = User.get(username=username)
-        user_db.set(avatar=avatar)
+        User.get(username=username).set(avatar=avatar_path)
         return True
     except:
         return False

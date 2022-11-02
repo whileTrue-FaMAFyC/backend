@@ -1,7 +1,8 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, UploadFile
 from fastapi.responses import JSONResponse
 from passlib.hash import bcrypt
 from random import randint
+from typing import Union
 
 from database.dao.user_dao import *
 from utils.user_utils import generate_token, TokenData
@@ -18,9 +19,14 @@ async def sign_up_post(user: UserSignUpData):
 
     verification_code = randint(100000,999999)
 
-    user_to_db = NewUserToDb(username=user.username, email=user.email,
-                            hashed_password=encrypted_password, verification_code=verification_code,
-                            verified=False)
+    # NOTE: at first, use default avatar, which is ""
+    user_to_db = NewUserToDb(
+        username=user.username,
+        email=user.email,
+        hashed_password=encrypted_password, 
+        verification_code=verification_code,
+        verified=False
+    )
 
     # Sends the email with the verification code.
     if not send_verification_email(user.email, verification_code):
@@ -37,22 +43,32 @@ async def sign_up_post(user: UserSignUpData):
 async def verify_user(username: str, code: UserVerificationCode):
     user_verification_validator(username, code.verification_code)
 
-    if update_user_verification(username): # Check if updating the verified attribute had any problems.
+    # Check if updating the verified attribute had any problems.
+    if update_user_verification(username): 
         return True
     else:
         raise ERROR_UPDATING_USER_DATA
 
 
 @user_controller.post("/load-avatar/{username}", status_code=status.HTTP_200_OK)
-async def load_avatar(username: str, avatar: UserAvatar):
-    load_avatar_validator(username, avatar)
+async def load_avatar(username: str, avatar: Union[UploadFile, None] = None):
+    # User uploaded an avatar
+    if avatar:
+        load_avatar_validator(username, avatar.content_type)
 
-    avatar_file = get_avatar_file(avatar.avatar)
+        contents = await avatar.read()
+        file_extension = avatar.filename.split('.')[1].lower()
+        # Saves the file in disk and returns its path
+        avatar_path = save_user_avatar(username, contents, file_extension)
+        
+        if update_user_avatar(username, avatar_path):
+            return True
+        else:
+            raise ERROR_UPDATING_USER_DATA
+    
+    # If user didn´t upload any avatar, don't change the db
+    return
 
-    if update_user_avatar(username, avatar_file):
-        return True
-    else:
-        raise ERROR_UPDATING_USER_DATA
 
 
 # LOGIN

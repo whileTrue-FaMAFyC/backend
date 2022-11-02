@@ -1,3 +1,4 @@
+from base64 import b64decode
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
 from jose import jwt
@@ -181,3 +182,11 @@ def get_avatar_file(avatar: str):
         return "default"
     else:
         return avatar
+
+# Save avatar in assests directory and return the url
+def save_user_avatar(username: str, contents: bytes, file_extension: str):
+    # If the file exsists, it will override it. If not, it will create a new one
+    f = open(f'../../assets/users/{username}/avatar.{file_extension}', 'wb')
+    f.write(contents)
+    f.close()
+    return (f'../../assets/users/{username}/avatar.{file_extension}')
