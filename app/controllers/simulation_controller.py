@@ -23,15 +23,8 @@ async def create_simulation(simulation_info: Simulation,
     creator_username = token_data['username']
     
     simulation_validator(creator_username, simulation_info)  
-    
-    robots = []
 
-    for r_name in simulation_info.robots:
-        r_id =  get_bot_by_owner_and_name(creator_username, r_name).robot_id
-        robots.append(RobotInSimulation(name=r_name, id=r_id))
-
-    frames = execute_simulation(creator_username, simulation_info)
-    
+    frames, robots = execute_simulation(creator_username, simulation_info)
 
     return {
         "names": robots,

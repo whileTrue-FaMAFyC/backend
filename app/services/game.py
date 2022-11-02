@@ -124,6 +124,7 @@ class Game():
 
         for r in self.robots:
             if r.get_damage() >= 100:
+                r._final_position = r.get_position()
                 r._position = OUT_OF_BOUNDS
 
         for r in self.robots:

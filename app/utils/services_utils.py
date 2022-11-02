@@ -61,13 +61,15 @@ def extract_class_name(filename):
 
 def create_robots_instances(robots_id):
     robots = []
+    r_id_in_game = 0
     for r in robots_id:
         source_code_in_db = get_source_code_by_id(r)
         filename, source_code_b64 = extract_filename_from_file(source_code_in_db)
         class_name = extract_class_name(filename)
         source_code = IMPORT_ROBOT_CLASS + b64decode(source_code_b64).decode("utf-8") 
         exec(source_code)
-        exec(f"\nrobot = {class_name}(robot_id={r})\nrobots.append(robot)")
+        exec(f"\nrobot = {class_name}(robot_id={r}, id_in_game={r_id_in_game})\nrobots.append(robot)")
+        r_id_in_game += 1
     return robots
 
 

@@ -1,24 +1,26 @@
 from math import  atan2, ceil, cos, degrees, radians, sin, sqrt
 from random import randint
+from typing import Tuple
 
 from utils.services_utils import *
 
 class Robot:   
-    def __init__(self, robot_id: int):
+    def __init__(self, robot_id: int, id_in_game: int):
         self._id = robot_id
+        self._id_in_game: int = id_in_game
         self._direction: int = 0
         self._req_direction: int = 0
         self._velocity: int = 0
         self._previous_req_velocity: int = 0
         self._req_velocity: int = 0
-        self._position: tuple[int, int] = (randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE), 
+        self._position: Tuple[int, int] = (randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE), 
                                            randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE))
+        self._final_position: Tuple[int, int] = (0,0)
         self._damage: int = 0
         self._cannon_direction = 0
         self._cannon_distance = 0
         self._rounds_to_wait_for_cannon = 0
         self._missile_final_position = (None,None)
-        self._damage: int = 0        
         self._scan_direction: int = 0
         self._scan_resolution: int = 0
         self._scan_result: int = None

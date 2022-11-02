@@ -44,3 +44,7 @@ def get_name_and_creator_by_id(robot_id: int):
 @db_session
 def get_source_code_by_id(robot_id: int):
     return Robot[robot_id].source_code
+
+@db_session
+def get_bot_by_id(robot_id: int):
+    return Robot.get(robot_id=robot_id)

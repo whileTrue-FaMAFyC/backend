@@ -56,12 +56,27 @@ def test_successful_creation():
         }
     )
 
-    id_bumblebee = get_bot_by_owner_and_name("bas_benja", "Bumblebee").robot_id
-    id_optimus = get_bot_by_owner_and_name("bas_benja", "0ptimusPrime").robot_id
+    assert response.status_code == 201
+    assert response.json()["names"] == [{"name": "Bumblebee",
+                                         "id": 0},
+                                        {"name": "0ptimusPrime",
+                                         "id": 1}
+    ]
+
+
+def test_repeated_robot():
+    response = client.post(
+        "/new-simulation",
+        headers = {"authorization": MOCK_TOKEN_BENJA},
+        json = {
+            "num_rounds": 100,
+            "robots": ["Bumblebee", "Bumblebee"]
+        }
+    )
 
     assert response.status_code == 201
     assert response.json()["names"] == [{"name": "Bumblebee",
-                                         "id": id_bumblebee},
-                                        {"name": "0ptimusPrime",
-                                         "id": id_optimus}
+                                         "id": 0},
+                                        {"name": "Bumblebee",
+                                         "id": 1}
     ]
