@@ -1,5 +1,6 @@
 from itertools import permutations
 
+from testing.helpers.mock_db import MOCK_AVATAR
 
 def create_possible_answer(possible_users, requester_username="bas_benja", im_in=True, is_creator=True):
     possible_answers = []
@@ -18,7 +19,30 @@ def create_possible_answer(possible_users, requester_username="bas_benja", im_in
         'started': False,
         'im_in': im_in,
         'is_creator': is_creator,
-        'results':[]
+        'results':[],
+        'has_password': False
     })
     
     return possible_answers
+
+expected_response_with_password = {
+        'requester_username': 'juliolcese',
+        'name': 'match2',
+        'creator_username': 'bas_benja',
+        'min_players': 3,
+        'max_players': 3,
+        'num_games': 200,
+        'num_rounds': 100000,
+        'users_joined': 1,
+        'user_robot': [{
+                "username":'bas_benja',
+                "user_avatar": MOCK_AVATAR,
+                "robot_name": 'Bumblebee',
+                "robot_avatar": MOCK_AVATAR
+            }],
+        'started': False,
+        'im_in': False,
+        'is_creator': False,
+        'results':[],
+        'has_password': True
+    }

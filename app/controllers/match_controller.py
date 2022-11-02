@@ -90,9 +90,18 @@ async def follow_lobby(
     token_data = jwt.decode(authorization, SECRET_KEY) 
     username = token_data['username']
     
-    if get_match_by_id(match_id) is None:
-        raise INEXISTENT_MATCH_EXCEPTION
+    match = get_match_by_id(match_id)
+    if match is None:
+       websocket.close()
+       return
     
+    if match.started:
+       websocket.close()
+       return
+ 
+    if not match_id in lobbys:
+        lobbys[match_id] = LobbyManager()
+
     await lobbys[match_id].connect(websocket)
     # print(f"{username} has now joined the lobby")
     while True:
