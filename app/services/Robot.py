@@ -12,9 +12,9 @@ class Robot:
         self._req_direction: int = 0
         self._velocity: int = 0
         self._req_velocity: int = 0
-        self._position: Tuple[int, int] = (randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE), 
+        self._position: tuple[int, int] = (randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE), 
                                            randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE))
-        self._final_position: Tuple[int, int] = (0,0)
+        self._final_position: tuple[int, int] = (0,0)
         self._damage: int = 0
         self._cannon_direction = 0
         self._cannon_distance = 0
@@ -169,7 +169,6 @@ class Robot:
             self._scan_result = None
         else:
             self._scan_result = round(min_distance)
-
 
     def _attack(self):
         if self.is_cannon_ready() and self._cannon_distance > 0:

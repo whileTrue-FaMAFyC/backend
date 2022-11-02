@@ -8,9 +8,9 @@ from view_entities.simulation_view_entities import Simulation
 def execute_game_simulation(game: Game):
     frames = []
     robots = []
+    frames.append({"robots": {}, "status": {}})
     for r in game.robots:
         r.initialize()
-        frames.append({"robots": {}, "status": {}})
         frames[0]["robots"][r._id_in_game] = {"x": r.get_position()[0],
                                               "y": r.get_position()[1],
                                               "harmed": False,
@@ -25,7 +25,6 @@ def execute_game_simulation(game: Game):
     while game.get_robots_alive() > 1 and game.get_rounds_remaining() > 0:
         game.execute_round()
         round = game._num_rounds_executed
-        
         frames.append({"robots": {}, "status": {}, "missiles": {}})
       
         for r in game.robots:
@@ -36,12 +35,13 @@ def execute_game_simulation(game: Game):
                 "harmed": frames[round-1]["status"][r._id_in_game] != r.get_damage(),
                 "died": r.get_damage() >= 100
             }
-
             frames[round]["status"][r._id_in_game] = r.get_damage()
 
         for m in game._missiles:
             new = m.id in frames[round-1]["missiles"]
             frames[round]["missiles"][m.id] = {
+                "initial_x": m.initial_position[0],
+                "initial_y": m.initial_position[1],
                 "x": m.current_position[0],
                 "y": m.current_position[1],
                 "exploded": m.current_position == m.final_position,

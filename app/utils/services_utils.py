@@ -16,7 +16,7 @@ COLLISION_DAMAGE = 2
 MISSILE_HALF_SIZE = 10
 
 # Meters advanced when moving at 1% velocity
-M_VELOC_1 = 10
+M_VELOC_1 = 5
 
 # Meters a missile advances in a round
 MISSILE_ADVANCE = 100

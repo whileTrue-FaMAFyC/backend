@@ -1,7 +1,7 @@
 from testing.helpers.services_helpers import RobotTest
 from utils.services_utils import MAX_POSSIBLE_DISTANCE
 
-r1 = RobotTest(1)
+r1 = RobotTest(1,0)
 
 def test_point_scanner():
     assert r1.get_scanner_details() == (0,0)

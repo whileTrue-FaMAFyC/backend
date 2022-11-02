@@ -10,6 +10,7 @@ class Missile():
 
     def __init__(self, current_position, final_position, direction, remaining_distance):
         self.id = self.id_accumulator
+        self.initial_position = current_position
         self.current_position: Tuple(int, int) = current_position
         self.final_position: Tuple(int, int) = final_position
         self.direction: int = direction
@@ -83,7 +84,7 @@ class Game():
             raise GameException(detail="All robots dead")
 
         for m in self._missiles:
-            if m.current_position != m.final_position:
+            if m.current_position == m.final_position:
                 self._missiles.remove(m)
 
         for r in self.robots:
@@ -95,7 +96,8 @@ class Game():
 
             for other_r in self.robots:
                 if not other_r == r and other_r.get_damage() < 100:
-                    others_positions.append(other_r.get_position())
+                    if other_r.get_position() != OUT_OF_BOUNDS:
+                        others_positions.append(other_r.get_position())
             
             if r.get_damage() < 100:
                 r._scan(others_positions)
