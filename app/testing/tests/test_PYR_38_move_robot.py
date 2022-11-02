@@ -17,11 +17,21 @@ def test_decrease_velocity():
     r1._move()
     assert r1.get_velocity() == 30
 
-def test_request_same_velocity():
-    assert r1.get_velocity() == 30
-    r1.drive(0, 20)
+def test_stop_motor():
+    while r1.get_velocity() > 10:
+        r1.drive(0, 7)
+        r1._move()
+    r1.drive(0, 0)
     r1._move()
-    assert r1.get_velocity() == 20
+    assert r1.get_velocity() == 0
+
+def test_max_velocity():
+    while r1.get_velocity() < 90:
+        r1.drive(0, 95)
+        r1._move()
+    r1.drive(0, 100)
+    r1._move()
+    assert r1.get_velocity() == 100
 
 def test_crash_wall():
     initial_damage = r1.get_damage()
