@@ -16,6 +16,9 @@ MOCK_SOURCE_CODE = """aW1wb3J0IHV2aWNvcm4KCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOg
 def mock_avatar(username: str):
     return f'../assets/users/{username}/avatar.png'
 
+def mock_bot_avatar(username: str, bot_name: str):
+    return f'../assets/users/{username}/avatar_{bot_name}.png'
+
 MOCK_AVATAR = """iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQ
                 DwAEhQGAhKmMIQAAAABJRU5ErkJggg=="""
 
@@ -63,19 +66,19 @@ def users():
 @db_session
 def robots():
     robots = [
-        ('robot_cool', MOCK_SOURCE_CODE, 'isra1234@hotmail.com', MOCK_AVATAR),
-        ('world_destroyer_29', MOCK_SOURCE_CODE, 'cassinalucas@gmail.com', MOCK_AVATAR),
-        ('_theTERMINATOR', MOCK_SOURCE_CODE, 'cassinalucas@gmail.com', MOCK_AVATAR),
-        ('R2D2', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
-        ('WALL-E', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', ""),
-        ('jarvis22', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
-        ('0ptimusPrime', MOCK_SOURCE_CODE, 'basbenja3@gmail.com', MOCK_AVATAR),
-        ('Bumblebee', TEST_SOURCE_CODE_BENJA, 'basbenja3@gmail.com', MOCK_AVATAR),
-        ('_tron', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
-        ('MegaByte', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
-        ('CYborg34', TEST_SOURCE_CODE_TONI, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
-        ('automatax', TEST_SOURCE_CODE_JULI, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
-        ('astroGirl', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR)
+        ('robot_cool', MOCK_SOURCE_CODE, 'isra1234@hotmail.com', mock_bot_avatar('israangulo4', 'robot_cool')),
+        ('world_destroyer_29', MOCK_SOURCE_CODE, 'cassinalucas@gmail.com', mock_bot_avatar('israangulo', 'world_destroyer_29')),
+        ('_theTERMINATOR', MOCK_SOURCE_CODE, 'cassinalucas@gmail.com', mock_bot_avatar('lucasca22ina', '_theTERMINATOR')),
+        ('R2D2', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', mock_bot_avatar('valennegrelli', 'R2D2')),
+        ('WALL-E', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', 'default'),
+        ('jarvis22', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', mock_bot_avatar('valennegrelli', 'jarvis22')),
+        ('0ptimusPrime', MOCK_SOURCE_CODE, 'basbenja3@gmail.com', mock_bot_avatar('bas_benja', '0ptimusPrime')),
+        ('Bumblebee', TEST_SOURCE_CODE_BENJA, 'basbenja3@gmail.com', mock_bot_avatar('bas_benja', 'Bumblebee')),
+        ('_tron', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', 'default'),
+        ('MegaByte', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', mock_bot_avatar('tonimondejar', 'MegaByte')),
+        ('CYborg34', TEST_SOURCE_CODE_TONI, 'mondejarantonio@hotmail.com', mock_bot_avatar('tonimondejar', 'CYborg34')),
+        ('automatax', TEST_SOURCE_CODE_JULI, 'juliolcese@mi.unc.edu.ar', mock_bot_avatar('juliolcese', 'automatax')),
+        ('astroGirl', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', mock_bot_avatar('juliolcese', 'astroGirl'))
     ]
 
     for robot_name, source_code, owner_email, avatar in robots:

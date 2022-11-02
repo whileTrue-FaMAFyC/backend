@@ -13,7 +13,7 @@ def get_bot_by_owner_and_name(owner_username: str, bot_name: str):
 # The exsitance and validation of the username was previously validated,
 # i.e. for this function we can assume that the user exists and is verified
 @db_session
-def create_new_bot(owner_username: str, bot_data: BotCreate):
+def create_new_bot(owner_username: str, bot_data: BotCreate, avatar_path: str):
     try:
         Robot(
             name=bot_data.name,
@@ -22,7 +22,7 @@ def create_new_bot(owner_username: str, bot_data: BotCreate):
                 bot_data.bot_filename
             ),
             owner=get_user_by_username(owner_username),
-            avatar=bot_data.avatar
+            avatar=avatar_path
         )
         return True
     except:

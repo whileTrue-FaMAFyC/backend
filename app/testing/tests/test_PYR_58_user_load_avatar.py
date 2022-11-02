@@ -1,16 +1,17 @@
+from fastapi.testclient import TestClient
 import requests
 import os
 
+from main import app
 from database.dao.user_dao import *
-from testing.helpers.mock_db import MOCK_AVATAR
 
 
-URL = 'http://localhost:8000/load-avatar/'
+client = TestClient(app)
 
 
 def test_successful_load_not_default_avatar():
-    response = requests.post(
-        f"{URL}lucasca22ina",
+    response = client.post(
+        f"/load-avatar/lucasca22ina",
         files = {
             'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
         }
@@ -24,8 +25,8 @@ def test_successful_load_not_default_avatar():
 
 
 def test_successful_load_default_avatar():
-    response = requests.post(
-        f"{URL}lucasca22ina",
+    response = client.post(
+        f"/load-avatar/lucasca22ina",
     )
 
     assert response.status_code == 200
@@ -33,8 +34,8 @@ def test_successful_load_default_avatar():
 
 
 def test_user_not_registered():
-    response = requests.post(
-        f"{URL}totomondejar",
+    response = client.post(
+        f"/load-avatar/totomondejar",
         files = {
             'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
         }
@@ -45,8 +46,8 @@ def test_user_not_registered():
 
 
 def test_user_not_verified():
-    response = requests.post(
-        f"{URL}tonimondejar",
+    response = client.post(
+        f"/load-avatar/tonimondejar",
         files = {
             'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
         }
@@ -56,8 +57,8 @@ def test_user_not_verified():
     assert response.json()["detail"] == "Not verified user."
 
 def test_avatar_already_loaded():
-    response = requests.post(
-        f"{URL}bas_benja",
+    response = client.post(
+        f"/load-avatar/bas_benja",
         files = {
             'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
         }
@@ -71,8 +72,8 @@ def test_avatar_already_loaded():
 
 
 def test_avatar_format_not_valid():
-    response = requests.post(
-        f"{URL}lucasca22ina",
+    response = client.post(
+        f"/load-avatar/lucasca22ina",
         files = {
             'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'video/png' )
         }
