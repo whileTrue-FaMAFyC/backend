@@ -80,6 +80,7 @@ def get_lobby_info(match_id: int, username: str):
     results = []
     robots_id = []
     game_results = {}
+    has_password = False
 
     im_in = False
     user_robot = []
@@ -92,23 +93,18 @@ def get_lobby_info(match_id: int, username: str):
         if robot.owner.username == username:
             im_in = True
         
-        if robot.owner.avatar == "default":
-            user_robot.append(UserAndRobotInfo(
-                username=robot.owner.username,
-                user_avatar="",
-                robot_name=robot.name,
-                robot_avatar=robot.avatar
-            ))    
-        else:
-            user_robot.append(UserAndRobotInfo(
-                username=robot.owner.username,
-                user_avatar=robot.owner.avatar,
-                robot_name=robot.name,
-                robot_avatar=robot.avatar
-            ))
-    
+        user_robot.append(UserAndRobotInfo(
+            username=robot.owner.username,
+            user_avatar="" if robot.owner.avatar == "default" else robot.owner.avatar,
+            robot_name=robot.name,
+            robot_avatar=robot.avatar
+        ))
+
     if match.started:
         results = match_winner(robots_id, game_results)
+
+    if match.hashed_password != "":
+        has_password = True
 
     return LobbyInfo(
         requester_username=username,
@@ -123,5 +119,6 @@ def get_lobby_info(match_id: int, username: str):
         started=match.started,
         im_in=im_in,
         is_creator=(creator_username==username),
-        results=results
+        results=results,
+        has_password=has_password
     )
