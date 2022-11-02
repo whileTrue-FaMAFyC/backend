@@ -1,7 +1,6 @@
 from passlib.hash import bcrypt
-from pony.orm import db_session, select, delete
+from pony.orm import db_session, select
 
-from database.dao import robot_dao
 from database.dao.match_results_dao import get_results_by_robot_and_match
 from database.models.models import Match, Robot, User
 from utils.match_utils import match_winner 
@@ -40,8 +39,8 @@ def get_match_by_name_and_user(match_name: str, creator_username: str):
 
 
 @db_session
-def get_match_by_id(match_id: str):
-    return Match[match_id]
+def get_match_by_id(match_id: int):
+    return Match.get(match_id=match_id)
 
 
 @db_session
@@ -63,12 +62,36 @@ def update_leaving_user(match_id: int, leaving_user: str):
         return False
 
 @db_session
+def get_users_in_match(match_id: int):
+    match_in_db = Match[match_id]
+    users = []
+    for r in match_in_db.robots_joined:
+        users.append(r.owner.username)
+    return users
+
+@db_session
+def update_joining_user_match(joining_username: str, joining_robot: str, match_id: int):
+    match_in_db = Match[match_id]
+
+    joining_user_in_db = User.get(username=joining_username)
+
+    joining_robot_in_db = Robot.get(name=joining_robot, owner=joining_user_in_db)
+
+    try:
+        match_in_db.robots_joined.add(joining_robot_in_db)
+        return True
+    except:
+        return False
+
+
+@db_session
 def get_lobby_info(match_id: int, username: str):
     match: Match = Match[match_id]
     creator_username = match.creator_user.username
     results = []
     robots_id = []
     game_results = {}
+    has_password = False
 
     im_in = False
     user_robot = []
@@ -81,23 +104,18 @@ def get_lobby_info(match_id: int, username: str):
         if robot.owner.username == username:
             im_in = True
         
-        if robot.owner.avatar == "default":
-            user_robot.append(UserAndRobotInfo(
-                username=robot.owner.username,
-                user_avatar="",
-                robot_name=robot.name,
-                robot_avatar=robot.avatar
-            ))    
-        else:
-            user_robot.append(UserAndRobotInfo(
-                username=robot.owner.username,
-                user_avatar=robot.owner.avatar,
-                robot_name=robot.name,
-                robot_avatar=robot.avatar
-            ))
-    
+        user_robot.append(UserAndRobotInfo(
+            username=robot.owner.username,
+            user_avatar="" if robot.owner.avatar == "default" else robot.owner.avatar,
+            robot_name=robot.name,
+            robot_avatar=robot.avatar
+        ))
+
     if match.started:
         results = match_winner(robots_id, game_results)
+
+    if match.hashed_password != "":
+        has_password = True
 
     return LobbyInfo(
         requester_username=username,
@@ -112,7 +130,8 @@ def get_lobby_info(match_id: int, username: str):
         started=match.started,
         im_in=im_in,
         is_creator=(creator_username==username),
-        results=results
+        results=results,
+        has_password=has_password
     )
 
 @db_session

@@ -4,7 +4,8 @@ from pony.orm import db_session
 from database.dao import match_dao, robot_dao
 from utils.match_utils import *
 from utils.robot_utils import get_robot_in_match_by_owner
-from view_entities.match_view_entities import NewMatch
+from utils.user_utils import verify_password
+from view_entities.match_view_entities import JoinMatch, NewMatch
 
 def new_match_validator(creator_username: str, new_match : NewMatch):
     # To check if the user has a robot with the provided name
@@ -94,3 +95,35 @@ def leave_match_validator(match_id: int, leaving_username: str):
         raise USER_NOT_JOINED_EXCEPTION
 
     return
+
+
+def join_match_validator(username: str, match: JoinMatch, match_id: int):
+    # To check if the user has a robot with the provided name
+    joining_robot_in_db = robot_dao.get_bot_by_owner_and_name(username, 
+                                                      match.joining_robot)
+    # To check if the match exists
+    match_in_db = match_dao.get_match_by_id(match_id)
+
+    if not joining_robot_in_db:
+        raise INEXISTENT_ROBOT
+
+    if not match_in_db:
+        raise INEXISTENT_MATCH_EXCEPTION
+
+    # CHECK IF USER HAS ALREADY JOINED THE MATCH.
+    users_in_match = match_dao.get_users_in_match(match_id)
+    if username in users_in_match:
+        raise USER_ALREADY_JOINED
+
+    if match.match_password == "":
+        if match_in_db.hashed_password != "":
+            raise INCORRECT_PASSWORD
+    else:
+        if not verify_password(match.match_password, match_in_db.hashed_password):
+            raise INCORRECT_PASSWORD
+
+    if len(users_in_match) == match_in_db.max_players:
+        raise MAX_PLAYERS_REACHED
+
+    if match_in_db.started:
+        raise MATCH_ALREADY_STARTED

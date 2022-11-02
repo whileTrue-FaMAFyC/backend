@@ -33,11 +33,6 @@ def create_new_bot(owner_username: str, bot_data: BotCreate):
 def get_bots_by_owner(owner_username: str):
     return Robot.select(owner=get_user_by_username(owner_username))
 
-# @db_session 
-# def get_bots_id_by_owner(owner_username: str):
-#     return select(r.robot_id for r in Robot if
-#                   r.owner == get_user_by_username(owner_username))
-
 @db_session
 def get_name_and_creator_by_id(robot_id: int):
     robot = Robot[robot_id]
@@ -45,6 +40,10 @@ def get_name_and_creator_by_id(robot_id: int):
         username=robot.owner.username,
         robot_name=robot.name
     )
+
+@db_session
+def get_robot_avatar_by_name_and_owner(owner: str, name: str):
+    return Robot.get(owner=get_user_by_username(owner), name=name).avatar
 
 @db_session
 def get_source_code_by_id(robot_id: int):

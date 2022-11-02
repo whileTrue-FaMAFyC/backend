@@ -1,16 +1,16 @@
-from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect, status, Header
+from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect, status, Header
 from jose import jwt
 from typing import Union, List, Dict
 
 from database.dao.match_dao import *
-from database.dao.user_dao import get_user_avatar
-from database.dao.robot_dao import get_robot_avatar_by_name_and_owner
+from database.dao.robot_dao import *
+from database.dao.user_dao import *
 from utils.match_utils import *
-from utils.robot_utils import get_robot_in_match_by_owner
 from utils.user_utils import *
-from validators.match_validators import new_match_validator, leave_match_validator
+from validators.match_validators import *
 from validators.user_validators import validate_token, SECRET_KEY
-from view_entities.match_view_entities import NewMatch
+from view_entities.match_view_entities import NewMatch, JoinMatch
+
 
 
 match_controller = APIRouter(prefix="/matches")
@@ -36,8 +36,7 @@ class LobbyManager:
             except WebSocketDisconnect:
                 self.disconnect(connection)
 
-lobbys: Dict[str, LobbyManager] = {}
-
+lobbys: Dict[int, LobbyManager] = {}
 
 @match_controller.post("/new-match", status_code=status.HTTP_201_CREATED)
 async def create_match(new_match: NewMatch, authorization: Union[str, None] = Header(None)):
@@ -72,6 +71,36 @@ async def get_matches(authorization: Union[str, None] = Header(None)):
    
    return matches_view
 
+
+@match_controller.post("/join-match/{match_id}", status_code=status.HTTP_200_OK)
+async def join_match(match_id: int, match: JoinMatch, authorization: Union[str, None] = Header(None)):
+    validate_token(authorization)
+
+    token_data = jwt.decode(authorization, SECRET_KEY)
+    
+    joining_user = token_data['username']
+
+    join_match_validator(joining_user, match, match_id)
+
+    if not update_joining_user_match(joining_user, match.joining_robot, match_id):
+        raise INTERNAL_ERROR_UPDATING_MATCH_INFO
+
+    ## SEND MESSAGE TO SUSCRIBERS. CANNOT SEND PYDANTIC MODELS, WE USE A DICT.
+    message_to_broadcast = {
+        "action": "join",
+        "data": {
+            "username": joining_user,
+            "user_avatar": get_user_avatar(joining_user),
+            "robot_name": match.joining_robot,
+            "robot_avatar": get_robot_avatar_by_name_and_owner(joining_user, match.joining_robot)
+        }
+    }
+
+    await lobbys[match_id].broadcast(message_to_broadcast)
+
+    return True
+
+
 @match_controller.get("/join-lobby", status_code=status.HTTP_200_OK)
 async def get_lobby(match_id: int, authorization: Union[str, None] = Header(None)):
     validate_token(authorization)
@@ -94,9 +123,18 @@ async def follow_lobby(
     token_data = jwt.decode(authorization, SECRET_KEY) 
     username = token_data['username']
     
-    if get_match_by_id(match_id) is None:
-        raise INEXISTENT_MATCH_EXCEPTION
+    match = get_match_by_id(match_id)
+    if match is None:
+       websocket.close()
+       return
     
+    if match.started:
+       websocket.close()
+       return
+ 
+    if not match_id in lobbys:
+        lobbys[match_id] = LobbyManager()
+
     await lobbys[match_id].connect(websocket)
     # print(f"{username} has now joined the lobby")
     while True:
@@ -106,7 +144,6 @@ async def follow_lobby(
             # print(f"{username} web socket connection closed")
             return
 
-    
 @match_controller.delete("/leave-match/{match_id}", status_code=status.HTTP_200_OK)
 async def leave_match(match_id: int, authorization: Union[str, None] = Header(None)):
     
