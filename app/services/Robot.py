@@ -11,7 +11,6 @@ class Robot:
         self._direction: int = 0
         self._req_direction: int = 0
         self._velocity: int = 0
-        self._previous_req_velocity: int = 0
         self._req_velocity: int = 0
         self._position: Tuple[int, int] = (randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE), 
                                            randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE))
@@ -215,12 +214,12 @@ class Robot:
         if (self._req_direction != self._direction) and self._velocity <= 50:
             self._direction = self._req_direction
         
-        if self._previous_req_velocity == self._req_velocity:
+        if self._velocity <= 10 and self._req_velocity == 0:
+            self._velocity = self._req_velocity
+        elif self._velocity >= 90 and self._req_velocity == 100:
             self._velocity = self._req_velocity
         else:
             self._velocity = ceil((self._velocity + self._req_velocity)/2)
-        
-        self._previous_req_velocity = self._req_velocity
 
         distance_x = round_up((round(cos(radians(self._direction)), 5)*self._velocity)*M_VELOC_1)
         distance_y = round_up((round(sin(radians(self._direction)), 5)*self._velocity)*M_VELOC_1)
