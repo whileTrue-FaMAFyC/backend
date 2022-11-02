@@ -25,7 +25,8 @@ def create_user(user: NewUserToDb):
         # Inserts parameter user in to the 'User' table
         User(
             username=user.username, 
-            email=user.email, avatar=user.avatar,
+            email=user.email, 
+            avatar=user.avatar,
             hashed_password=user.hashed_password, 
             verification_code=user.verification_code,
             verified=user.verified

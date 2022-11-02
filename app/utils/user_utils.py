@@ -5,7 +5,7 @@ from jose import jwt
 from passlib.hash import bcrypt
 from pydantic import BaseModel
 import smtplib
-
+import os
 
 SECRET_KEY = "2c329a8eca7d0c2ff68d261ad0b2e3efa66cc2603183fe6d0b4b219a11138c84"
 ALGORITHM = "HS256"
@@ -183,10 +183,15 @@ def get_avatar_file(avatar: str):
     else:
         return avatar
 
+
 # Save avatar in assests directory and return the url
 def save_user_avatar(username: str, contents: bytes, file_extension: str):
     # If the file exsists, it will override it. If not, it will create a new one
-    f = open(f'../../assets/users/{username}/avatar.{file_extension}', 'wb')
+    if os.path.exists(f'../assets/users/{username}'):
+        pass
+    else:
+        os.mkdir(f'../assets/users/{username}')
+    f = open(f'../assets/users/{username}/avatar.{file_extension}', 'wb')
     f.write(contents)
     f.close()
-    return (f'../../assets/users/{username}/avatar.{file_extension}')
+    return (f'../assets/users/{username}/avatar.{file_extension}')

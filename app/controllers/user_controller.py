@@ -19,7 +19,7 @@ async def sign_up_post(user: UserSignUpData):
 
     verification_code = randint(100000,999999)
 
-    # NOTE: at first, use default avatar, which is ""
+    # NOTE: at first, use default avatar, which is ''
     user_to_db = NewUserToDb(
         username=user.username,
         email=user.email,

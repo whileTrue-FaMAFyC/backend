@@ -4,55 +4,56 @@ import os
 from database.dao.user_dao import *
 from testing.helpers.mock_db import MOCK_AVATAR
 
+
 URL = 'http://localhost:8000/load-avatar/'
+
 
 def test_successful_load_not_default_avatar():
     response = requests.post(
         f"{URL}lucasca22ina",
         files = {
-            'avatar': ('avatar2.png', open('../../../avatar2.png', 'rb'), 'image/png' )
+            'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
         }
     )
 
     assert response.status_code == 200
-    assert os.path.exists('../../assets/users/lucasca22ina/avatar2.png')
-
-    assert get_user_by_username("lucasca22ina").avatar == "data:image/png;not_default"
-
-
-# def test_successful_load_default_avatar():
-#     response = client.post(
-#         "/load-avatar/lucasca22ina",
-#         json={"avatar": ""}
-#     )
-
-#     assert response.status_code == 200
-
-#     assert get_user_by_username("lucasca22ina").avatar == "default"
+    assert os.path.exists('../assets/users/lucasca22ina/avatar.png') == True
+    assert get_user_by_username("lucasca22ina").avatar == '../assets/users/lucasca22ina/avatar.png'
+    os.remove('../assets/users/lucasca22ina/avatar.png')
+    os.rmdir('../assets/users/lucasca22ina/')
 
 
-# def test_user_not_registered():
-#     response = client.post(
-#         "/load-avatar/totomondejar",
-#         json={"avatar": "fake_default"}
-#     )
+def test_successful_load_default_avatar():
+    response = requests.post(
+        f"{URL}lucasca22ina",
+    )
 
-#     assert response.status_code == 401
-
-#     # Must fail because the username does not exist in the database
-#     assert response.json()["detail"] == "User not registered."
+    assert response.status_code == 200
+    assert get_user_by_username("lucasca22ina").avatar == ''
 
 
-# def test_user_not_verified():
-#     response = client.post(
-#         "/load-avatar/tonimondejar",
-#         json={"avatar": "fake_default"}
-#     )
+def test_user_not_registered():
+    response = requests.post(
+        f"{URL}totomondejar",
+        files = {
+            'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
+        }
+    )
 
-#     assert response.status_code == 401
+    assert response.status_code == 401
+    assert response.json()["detail"] == "User not registered."
 
-#     # Must fail because the user is not verified.
-#     assert response.json()["detail"] == "Not verified user."
+
+def test_user_not_verified():
+    response = requests.post(
+        f"{URL}tonimondejar",
+        files = {
+            'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
+        }
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Not verified user."
 
 # def test_avatar_already_loaded():
 #     response = client.post(
