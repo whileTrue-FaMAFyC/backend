@@ -4,7 +4,7 @@ from numpy import add, sign
 from typing import Dict, List, Tuple
 from base64 import b64decode
 
-from database.dao.robot_dao import get_source_code_by_id, get_name_and_creator_by_id
+from database.dao.robot_dao import get_source_code_by_id
 
 
 ROBOT_SIZE = 32
