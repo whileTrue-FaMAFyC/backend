@@ -73,6 +73,24 @@ def new_match_validator(creator_username: str, new_match : NewMatch):
     
     return
 
+
+def start_match_validator(creator_username: str, match_id: int):
+    # Checks if the user trying to start the match is the creator
+    match = match_validator_info(match_id)
+    if not match_dao.get_match_by_id(match_id):
+        raise INEXISTENT_MATCH_EXCEPTION
+    
+    if match.creator_username != creator_username:
+        raise NOT_CREATOR
+    
+    # Checks if the match hasn't started yet
+    if match.started:
+        raise MATCH_ALREADY_STARTED
+
+    # Checks if the minimum amount of players has been reached
+    if match.robots_joined < match.min_players:
+        raise NOT_ENOUGH_PLAYERS
+
 @db_session
 def leave_match_validator(match_id: int, leaving_username: str):
 

@@ -31,6 +31,9 @@ TEST_SOURCE_CODE_BENJA = """name:robot_test.py;base64,Y2xhc3MgUm9ib3RUZXN0KFJvYm
                     90KToKICAgIGRlZiBpbml0aWFsaXplKHNlbGYpOgogICAgICAgIHNlbGYudG
                     VzdF92YXJpYWJsZSA9ICJTb3kgZWwgcm9ib3QgZGUgYmVuamEiCiAgICBkZW
                     YgcmVzcG9uZCgpOgogICAgICAgIHBhc3M="""
+
+
+
 @db_session
 def users():
     users = [
@@ -56,6 +59,24 @@ def users():
     return
             
 # Add some robots to the database
+robot_crack_source_code = "name:robot_capo_crack.py;base64,Y2xhc3MgUm9ib3RDYXBvQ3JhY2"\
+                          "soUm9ib3QpOg0KDQogICAgZGVmIGluaXRpYWxpemUoc2VsZik6DQogICAg"\
+                          "ICAgIHNlbGYuZm91bmRfcm9ib3QgPSBGYWxzZQ0KICAgICAgICBzZWxmLm"\
+                          "RlZ3JlZXMgPSAwDQoNCiAgICBkZWYgcmVzcG9uZChzZWxmKToNCiAgICAg"\
+                          "ICAgaWYgbm90IHNlbGYuc2Nhbm5lZCgpOg0KICAgICAgICAgICAgIyBDaG"\
+                          "FuZ2Ugc2NhbiBkZWdyZWVzIHVudGlsIGZpbmRpbmcgc29tZW9uZQ0KICAg"\
+                          "ICAgICAgICAgc2VsZi5kZWdyZWVzICs9IDIwIA0KICAgICAgICAgICAgc2"\
+                          "VsZi5wb2ludF9zY2FubmVyKHNlbGYuZGVncmVlcywgMTApDQogICAgICAg"\
+                          "IGVsc2U6DQogICAgICAgICAgICBpZiBzZWxmLnNjYW5uZWQoKSA+IDcwMD"\
+                          "oNCiAgICAgICAgICAgICAgICBzZWxmLmRyaXZlKHNlbGYuZGVncmVlcywg"\
+                          "MTApDQogICAgICAgICAgICBlbHNlOg0KICAgICAgICAgICAgICAgIHNlbG"\
+                          "YuZHJpdmUoc2VsZi5kZWdyZWVzLCAwKQ0KICAgICAgICAgICAgICAgIHNl"\
+                          "bGYuY2Fubm9uKHNlbGYuZGVncmVlcywgc2VsZi5zY2FubmVkKCkpDQo="
+
+robot_inutil_source_code = "name:robot_inutil.py;base64,Y2xhc3MgUm9ib3RJbnV0aWwoUm9ib"\
+                           "3QpOg0KICAgIGRlZiBpbml0aWFsaXplKHNlbGYpOg0KICAgICAgICBwYX"\
+                           "NzDQogICAgDQogICAgZGVmIHJlc3BvbmQoc2VsZik6DQogICAgICAgIHB"\
+                           "hc3MNCg=="
 @db_session
 def robots():
     robots = [
@@ -71,7 +92,9 @@ def robots():
         ('MegaByte', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('CYborg34', TEST_SOURCE_CODE_TONI, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('automatax', TEST_SOURCE_CODE_JULI, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
-        ('astroGirl', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR)
+        ('astroGirl', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
+        ('RobotCrack', robot_crack_source_code, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
+        ('RobotInutil', robot_inutil_source_code, 'basbenja3@gmail.com', MOCK_AVATAR)
     ]
 
     for robot_name, source_code, owner_email, avatar in robots:

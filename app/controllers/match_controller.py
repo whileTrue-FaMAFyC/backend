@@ -5,6 +5,7 @@ from typing import Union, List, Dict
 from database.dao.match_dao import *
 from database.dao.robot_dao import *
 from database.dao.user_dao import *
+from services.match import execute_match
 from utils.match_utils import *
 from utils.user_utils import *
 from validators.match_validators import *
@@ -38,7 +39,11 @@ class LobbyManager:
             try:
                 await connection.send_json(message)
             except:
-                await self.disconnect(connection)                
+                await self.disconnect(connection)
+
+    async def close_lobby(self):
+        for connection in self.active_connections:
+            await self.disconnect(connection)
 
 lobbys: Dict[int, LobbyManager] = {}
 
@@ -75,6 +80,42 @@ async def get_matches(authorization: Union[str, None] = Header(None)):
    
    return matches_view
 
+@match_controller.put("/start-match/{match_id}", status_code=status.HTTP_200_OK)
+async def start_match(match_id: int, authorization: Union[str, None] = Header(None)):
+    validate_token(authorization)
+
+    token_data = jwt.decode(authorization, SECRET_KEY)
+
+    creator_username = token_data['username']
+
+    start_match_validator(creator_username, match_id)
+
+    ## SEND MESSAGE TO SUSCRIBERS, MATCH STARTED.
+
+    await lobbys[match_id].broadcast({
+        "action": "start",
+        "data": ""
+    })
+
+    winners = execute_match(match_id)
+
+    ## SEND WINNERS TO SUSCRIBERS.
+    await lobbys[match_id].broadcast({
+        "action": "results",
+        "data": {
+            "winners" : winners
+        }
+    })
+
+    ## DELETE CONECTION MANAGER.
+    await lobbys[match_id].close_lobby()
+    lobbys.pop(match_id)
+
+    ## UPDATE BD
+    if not update_executed_match(match_id):
+        raise INTERNAL_ERROR_UPDATING_MATCH_INFO
+
+    return True
 
 @match_controller.post("/join-match/{match_id}", status_code=status.HTTP_200_OK)
 async def join_match(match_id: int, match: JoinMatch, authorization: Union[str, None] = Header(None)):

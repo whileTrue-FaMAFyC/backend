@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import List
 
 from view_entities.user_view_entities import UserInMatch
-from view_entities.robot_view_entities import WinnerRobot
+from view_entities.robot_view_entities import WinnerRobot, RobotPlayer
 
 # To add a new match to the database
 class NewMatch(BaseModel):
@@ -30,6 +30,17 @@ class MatchInfo(BaseModel):
 
 # For listing matches with amount of robots joined
 class ShowMatch(MatchInfo):
+    robots_joined: int
+
+class StartMatch(BaseModel):
+    num_games: int
+    num_rounds: int
+    robots_joined: List[RobotPlayer]
+
+class StartMatchValidator(BaseModel):
+    creator_username: str
+    min_players: int
+    started: bool
     robots_joined: int
 
 #For showing the competitor(user and his robot) details inside the lobby.

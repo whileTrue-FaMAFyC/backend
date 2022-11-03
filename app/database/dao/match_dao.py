@@ -5,7 +5,9 @@ from database.dao.match_results_dao import get_results_by_robot_and_match
 from database.models.models import Match, Robot, User
 from utils.match_utils import match_winner 
 from utils.robot_utils import get_robot_in_match_by_owner
+from view_entities.robot_view_entities import *
 from view_entities.match_view_entities import *
+from utils.match_utils import match_winner
 
 @db_session
 def create_new_match(creator_username, new_match: NewMatch):
@@ -47,6 +49,28 @@ def get_match_by_id(match_id: int):
 def get_all_matches():
     matches = Match.select()
     return matches
+
+@db_session
+def get_match_info(match_id: int):
+    match_details = Match[match_id]
+    robots = []
+    for r in match_details.robots_joined:
+        robots.append(RobotPlayer.from_orm(r))
+
+    return StartMatch(
+        num_games=match_details.num_games, 
+        num_rounds=match_details.num_rounds, 
+        robots_joined=robots
+    )
+
+@db_session
+def update_executed_match(match_id: int):
+    try:
+        match = Match[match_id]
+        match.set(started=True)
+        return True
+    except:
+        return False
 
 @db_session
 def update_leaving_user(match_id: int, leaving_user: str):
@@ -105,12 +129,12 @@ def get_lobby_info(match_id: int, username: str):
             im_in = True
         
         user_robot.append(UserAndRobotInfo(
-            username=robot.owner.username,
-            user_avatar="" if robot.owner.avatar == "default" else robot.owner.avatar,
-            robot_name=robot.name,
-            robot_avatar=robot.avatar
+                username=robot.owner.username,
+                user_avatar= "" if (robot.owner.avatar == "default") else robot.owner.avatar,
+                robot_name=robot.name,
+                robot_avatar=robot.avatar
         ))
-
+    
     if match.started:
         results = match_winner(robots_id, game_results)
 
