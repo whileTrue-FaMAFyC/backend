@@ -25,7 +25,7 @@ def new_match_post():
 
 
 def test_inexistent_match():
-    response = client.post(
+    response = client.put(
         "/matches/start-match/1024",
         headers = {'authorization': MOCK_TOKEN_BENJA}
     )
@@ -36,7 +36,7 @@ def test_inexistent_match():
 
 def test_not_creator():
     match_id = get_match_by_name_and_user("match1", "bas_benja").match_id
-    response = client.post(
+    response = client.put(
         f"/matches/start-match/{match_id}",
         headers = {'Authorization': MOCK_TOKEN_TONI}   
     )
@@ -47,7 +47,7 @@ def test_not_creator():
 
 def test_already_started():
     match_id = get_match_by_name_and_user("match!", "tonimondejar").match_id
-    response = client.post(
+    response = client.put(
         f"/matches/start-match/{match_id}",
         headers = {'Authorization': MOCK_TOKEN_TONI}   
     )
@@ -58,7 +58,7 @@ def test_already_started():
 
 def test_not_enough_players():
     match_id = get_match_by_name_and_user("match1", "juliolcese").match_id
-    response = client.post(
+    response = client.put(
         f"/matches/start-match/{match_id}",
         headers = {'Authorization': MOCK_TOKEN_JULI}
     )
@@ -77,7 +77,7 @@ def test_successful_start():
     with client.websocket_connect(
         f"/matches/ws/follow-lobby/{match_id}?authorization={MOCK_TOKEN_BENJA}"
     ) as websocket:
-        response = client.post(
+        response = client.put(
             f'matches/start-match/{match_id}',
             headers={"Authorization": MOCK_TOKEN_JULI},
         )

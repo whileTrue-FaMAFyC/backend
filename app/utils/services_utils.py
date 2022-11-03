@@ -4,7 +4,7 @@ from numpy import add, sign
 from typing import Dict, List, Tuple
 from base64 import b64decode
 
-from database.dao.robot_dao import get_source_code_by_id, get_name_and_creator_by_id
+from database.dao.robot_dao import get_source_code_by_id
 
 
 ROBOT_SIZE = 32
@@ -16,7 +16,7 @@ COLLISION_DAMAGE = 2
 MISSILE_HALF_SIZE = 10
 
 # Meters advanced when moving at 1% velocity
-M_VELOC_1 = 10
+M_VELOC_1 = 5
 
 # Meters a missile advances in a round
 MISSILE_ADVANCE = 100

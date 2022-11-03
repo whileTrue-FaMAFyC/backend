@@ -1,9 +1,11 @@
 from passlib.hash import bcrypt
-from pony.orm import db_session
+from pony.orm import db_session, select
 
 from database.dao.match_results_dao import get_results_by_robot_and_match
-from database.models.models import Match, Robot, User 
-from view_entities import robot_view_entities
+from database.models.models import Match, Robot, User
+from utils.match_utils import match_winner 
+from utils.robot_utils import get_robot_in_match_by_owner
+from view_entities.robot_view_entities import *
 from view_entities.match_view_entities import *
 from utils.match_utils import match_winner
 
@@ -39,7 +41,7 @@ def get_match_by_name_and_user(match_name: str, creator_username: str):
 
 
 @db_session
-def get_match_by_id(match_id: str):
+def get_match_by_id(match_id: int):
     return Match.get(match_id=match_id)
 
 
@@ -53,7 +55,7 @@ def get_match_info(match_id: int):
     match_details = Match[match_id]
     robots = []
     for r in match_details.robots_joined:
-        robots.append(robot_view_entities.RobotPlayer.from_orm(r))
+        robots.append(RobotPlayer.from_orm(r))
 
     return StartMatch(
         num_games=match_details.num_games, 
@@ -71,12 +73,49 @@ def update_executed_match(match_id: int):
         return False
 
 @db_session
+def update_leaving_user(match_id: int, leaving_user: str):
+    
+    match = Match.get(match_id=match_id)
+
+    robot = get_robot_in_match_by_owner(match_id, leaving_user)
+    
+    try:
+        match.robots_joined.remove(robot)
+        return True
+    except:
+        return False
+
+@db_session
+def get_users_in_match(match_id: int):
+    match_in_db = Match[match_id]
+    users = []
+    for r in match_in_db.robots_joined:
+        users.append(r.owner.username)
+    return users
+
+@db_session
+def update_joining_user_match(joining_username: str, joining_robot: str, match_id: int):
+    match_in_db = Match[match_id]
+
+    joining_user_in_db = User.get(username=joining_username)
+
+    joining_robot_in_db = Robot.get(name=joining_robot, owner=joining_user_in_db)
+
+    try:
+        match_in_db.robots_joined.add(joining_robot_in_db)
+        return True
+    except:
+        return False
+
+
+@db_session
 def get_lobby_info(match_id: int, username: str):
     match: Match = Match[match_id]
     creator_username = match.creator_user.username
     results = []
     robots_id = []
     game_results = {}
+    has_password = False
 
     im_in = False
     user_robot = []
@@ -99,6 +138,9 @@ def get_lobby_info(match_id: int, username: str):
     if match.started:
         results = match_winner(robots_id, game_results)
 
+    if match.hashed_password != "":
+        has_password = True
+
     return LobbyInfo(
         requester_username=username,
         name=match.name,
@@ -112,8 +154,20 @@ def get_lobby_info(match_id: int, username: str):
         started=match.started,
         im_in=im_in,
         is_creator=(creator_username==username),
-        results=results
+        results=results,
+        has_password=has_password
     )
+
+@db_session
+def get_match_creator_by_id(match_id: int):
+
+    return Match.get(match_id=match_id)
+
+@db_session
+def select_robots_from_match_by_id(match_id: int):
+    
+    return select(m.robots_joined for m in Match 
+                  if m.match_id == match_id)
 
 @db_session
 def update_joining_user_match(joining_username: str, joining_robot: str, match_id: int):

@@ -33,9 +33,54 @@ INTERNAL_ERROR_UPDATING_MATCH_INFO = HTTPException(
     detail="Internal error when updating the match info."
 )
 
+INEXISTENT_ROBOT = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Robot selected is not in the user's library."
+)
+
+USER_ALREADY_JOINED = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The user has already joined."
+)
+
+INCORRECT_PASSWORD = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Incorrect password."
+)
+
+MAX_PLAYERS_REACHED = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Max players reached. Cannot join the match."
+)
+
+MATCH_ALREADY_STARTED = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The match has already started."
+)
+
+INTERNAL_ERROR_UPDATING_MATCH_INFO = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error when updating the match info."
+)
+
 INEXISTENT_MATCH_EXCEPTION = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
     detail="The match doesn't exist."
+)
+
+ERROR_DELETING_USER = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error removing the user from the match."
+)
+
+USER_NOT_JOINED_EXCEPTION = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The user isn't in the match."
+)
+
+CREATOR_CANT_ABANDON_EXCEPTION = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The creator can't abandon the match."
 )
 
 # Transforms the matches selected from the database to the format that will be

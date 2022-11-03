@@ -49,6 +49,10 @@ class UserAndRobotInfo(BaseModel):
     user_avatar: str
     robot_name: str
     robot_avatar: str
+
+class JoinMatch(BaseModel):
+    match_password: str = ""
+    joining_robot: str
     
 # For showing the match details inside the lobby
 class LobbyInfo(BaseModel):
@@ -65,4 +69,9 @@ class LobbyInfo(BaseModel):
     im_in: bool
     is_creator: bool
     results: List[WinnerRobot]
+    has_password: bool
 
+
+class JoinMatch(BaseModel):
+    match_password: str = ""
+    joining_robot: str

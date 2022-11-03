@@ -128,7 +128,13 @@ def matches():
         ('match!', 'tonimondejar', '_tron', 3, 4, 200, 1, "pw", True,
          [RobotInMatch(owner=UserInMatch(username="tonimondejar"), name="_tron"), 
          RobotInMatch(owner=UserInMatch(username="bas_benja"), name="Bumblebee"), 
-         RobotInMatch(owner=UserInMatch(username="juliolcese"), name="automatax")])
+         RobotInMatch(owner=UserInMatch(username="juliolcese"), name="automatax")]),
+
+        ('partidaza', 'valennegrelli', 'R2D2', 2, 2, 200, 1, "", False,
+         [RobotInMatch(owner=UserInMatch(username="valennegrelli"), name="R2D2"), 
+         RobotInMatch(owner=UserInMatch(username="bas_benja"), name="Bumblebee")])
+
+    
     ]
 
     for (name, creator_user, creator_robot, min_players, max_players, 
