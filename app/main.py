@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from controllers import user_controller, robot_controller, match_controller
+from controllers import user_controller, robot_controller, match_controller, simulation_controller
 
 def include_controllers(app):
     app.include_router(user_controller.user_controller)
     app.include_router(robot_controller.robot_controller)
     app.include_router(match_controller.match_controller)
+    app.include_router(simulation_controller.simulation_controller)
 
 def start_application():
 	app = FastAPI()

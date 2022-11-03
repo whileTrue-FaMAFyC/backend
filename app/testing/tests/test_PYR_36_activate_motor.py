@@ -2,7 +2,7 @@ from random import randint
 
 from testing.helpers.services_helpers import RobotTest
 
-test_robot = RobotTest(36)
+test_robot = RobotTest(36,0)
 
 
 # Test with parameters OK

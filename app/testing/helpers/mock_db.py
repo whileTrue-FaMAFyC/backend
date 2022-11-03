@@ -1,6 +1,5 @@
 from pony.orm import db_session
 from passlib.hash import bcrypt
-from app.database.dao.match_dao import get_match_by_name_and_user
 
 from database.models.models import *
 from database.dao.match_dao import *
@@ -86,8 +85,9 @@ def robots():
         ('R2D2', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
         ('WALL-E', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', ""),
         ('jarvis22', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
-        ('0ptimusPrime', MOCK_SOURCE_CODE, 'basbenja3@gmail.com', MOCK_AVATAR),
-        ('Bumblebee', TEST_SOURCE_CODE_BENJA, 'basbenja3@gmail.com', MOCK_AVATAR),
+        ('0ptimusPrime', robot_inutil_source_code, 'basbenja3@gmail.com', MOCK_AVATAR),
+        ('Bumblebee', robot_crack_source_code, 'basbenja3@gmail.com', MOCK_AVATAR),
+        ('pichon', TEST_SOURCE_CODE_BENJA, 'basbenja3@gmail.com', MOCK_AVATAR),
         ('_tron', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('MegaByte', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('CYborg34', TEST_SOURCE_CODE_TONI, 'mondejarantonio@hotmail.com', MOCK_AVATAR),

@@ -8,8 +8,7 @@ from testing.helpers.mock_db import MOCK_AVATAR
 
 client = TestClient(app)
 
-
-def test_join_lobby_creator():    
+def test_join_lobby_creator():
     match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id    
     response = client.get(
         f'/matches/join-lobby?match_id={match_id}',

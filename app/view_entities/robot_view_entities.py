@@ -37,3 +37,7 @@ class RobotPlayer(BaseModel):
 class WinnerRobot(BaseModel):
     username: str
     robot_name: str
+
+class RobotInSimulation(BaseModel):
+    name: str
+    id: int

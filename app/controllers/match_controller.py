@@ -170,11 +170,11 @@ async def follow_lobby(
     
     match = get_match_by_id(match_id)
     if match is None:
-       websocket.close()
+       await websocket.close()
        return
     
     if match.started:
-       websocket.close()
+       await websocket.close()
        return
 
     if not match_id in lobbys:
