@@ -1,4 +1,4 @@
-from pony.orm import db_session
+from pony.orm import db_session, select
 
 from database.dao.user_dao import get_user_by_username
 from database.models.models import Robot
@@ -48,3 +48,7 @@ def get_robot_avatar_by_name_and_owner(owner: str, name: str):
 @db_session
 def get_source_code_by_id(robot_id: int):
     return Robot[robot_id].source_code
+
+@db_session
+def get_robot_avatar_by_name_and_owner(owner: str, name: str):
+    return Robot.get(owner=get_user_by_username(owner), name=name).avatar

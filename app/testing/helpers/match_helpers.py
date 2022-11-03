@@ -36,6 +36,8 @@ def user_and_robot_in_match(match_id: int, joining_user:str, joining_robot: str)
         if r.name == joining_robot and r.owner.username == joining_user:
             is_in_match = True
     return is_in_match
+
+
 expected_response_with_password = {
         'requester_username': 'juliolcese',
         'name': 'match2',
