@@ -1,6 +1,5 @@
 from pony.orm import db_session
 from passlib.hash import bcrypt
-from app.database.dao.match_dao import get_match_by_name_and_user
 
 from database.models.models import *
 from database.dao.match_dao import *
@@ -31,6 +30,9 @@ TEST_SOURCE_CODE_BENJA = """name:robot_test.py;base64,Y2xhc3MgUm9ib3RUZXN0KFJvYm
                     90KToKICAgIGRlZiBpbml0aWFsaXplKHNlbGYpOgogICAgICAgIHNlbGYudG
                     VzdF92YXJpYWJsZSA9ICJTb3kgZWwgcm9ib3QgZGUgYmVuamEiCiAgICBkZW
                     YgcmVzcG9uZCgpOgogICAgICAgIHBhc3M="""
+
+
+
 @db_session
 def users():
     users = [
@@ -90,7 +92,9 @@ def robots():
         ('MegaByte', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('CYborg34', TEST_SOURCE_CODE_TONI, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
         ('automatax', TEST_SOURCE_CODE_JULI, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
-        ('astroGirl', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR)
+        ('astroGirl', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
+        ('RobotCrack', robot_crack_source_code, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
+        ('RobotInutil', robot_inutil_source_code, 'basbenja3@gmail.com', MOCK_AVATAR)
     ]
 
     for robot_name, source_code, owner_email, avatar in robots:
@@ -124,7 +128,13 @@ def matches():
         ('match!', 'tonimondejar', '_tron', 3, 4, 200, 1, "pw", True,
          [RobotInMatch(owner=UserInMatch(username="tonimondejar"), name="_tron"), 
          RobotInMatch(owner=UserInMatch(username="bas_benja"), name="Bumblebee"), 
-         RobotInMatch(owner=UserInMatch(username="juliolcese"), name="automatax")])
+         RobotInMatch(owner=UserInMatch(username="juliolcese"), name="automatax")]),
+
+        ('partidaza', 'valennegrelli', 'R2D2', 2, 2, 200, 1, "", False,
+         [RobotInMatch(owner=UserInMatch(username="valennegrelli"), name="R2D2"), 
+         RobotInMatch(owner=UserInMatch(username="bas_benja"), name="Bumblebee")])
+
+    
     ]
 
     for (name, creator_user, creator_robot, min_players, max_players, 

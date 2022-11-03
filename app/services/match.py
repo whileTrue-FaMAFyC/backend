@@ -7,7 +7,7 @@ from services.game import Game
 from utils.match_utils import match_winner
 from utils.services_utils import create_robots_instances
 
-def execute_game(game: Game):
+def execute_game_match(game: Game):
     for r in game.robots:
         r.initialize()
 
@@ -35,7 +35,7 @@ def execute_match(match_id: int):
     for i in range(match_info.num_games):
         robots = create_robots_instances(robots_id)
         game = Game(match_info.num_rounds, robots)
-        survivors = execute_game(game)
+        survivors = execute_game_match(game)
         if len(survivors) > 1:
             for r in survivors:
                 games_results[r]["games_tied"] += 1

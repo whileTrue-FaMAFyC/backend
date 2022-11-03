@@ -43,3 +43,7 @@ class UserInMatch(BaseModel):
 # To parse user avatar
 class UserAvatar(BaseModel):
     avatar: str
+
+class JoinMatchUser(BaseModel):
+    username: str
+    avatar: str

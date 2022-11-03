@@ -91,6 +91,7 @@ def test_join_lobby_with_results():
     assert response.status_code == 200
     assert response.json()["results"] == [{"username": "tonimondejar", "robot_name": "_tron"}]
 
+
 def test_join_lobby_with_password():
     match_id = get_match_by_name_and_user('match2', 'bas_benja').match_id    
     response = client.get(
