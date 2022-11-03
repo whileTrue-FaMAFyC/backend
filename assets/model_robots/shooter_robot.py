@@ -6,3 +6,5 @@ class ShooterRobot(Robot):
     def response(self):
         self.cannon(self.degrees, 105)
         self.degrees += 10
+        if self.degrees == 360:
+            self.degrees = 0
