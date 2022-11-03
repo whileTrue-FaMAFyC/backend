@@ -13,4 +13,4 @@ class RandomRobot(Robot):
 
         self.drive(self.rand_direction, self.rand_velocity)
 
-        self.cannon(self.rand_shoot_direction, self.rand_shoot_direction)
+        self.cannon(self.rand_shoot_direction, self.rand_shoot_distance)
