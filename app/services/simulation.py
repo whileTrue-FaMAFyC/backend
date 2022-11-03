@@ -8,16 +8,15 @@ from view_entities.simulation_view_entities import Simulation
 def execute_game_simulation(game: Game):
     frames = []
     robots = []
-    frames.append({"robots": {}, "status": {}})
+    frames.append({"robots": {}})
     for r in game.robots:
         r.initialize()
         frames[0]["robots"][r._id_in_game] = {"x": r.get_position()[0],
                                               "y": r.get_position()[1],
                                               "harmed": False,
-                                              "died": False
+                                              "died": False, 
+                                              "status": 0
                                              }
-
-        frames[0]["status"][r._id_in_game] = 0
         frames[0]["missiles"] = {}
         name = get_bot_by_id(r._id).name
         robots.append(RobotInSimulation(name=name, id=r._id_in_game))
@@ -25,17 +24,17 @@ def execute_game_simulation(game: Game):
     while game.get_robots_alive() > 1 and game.get_rounds_remaining() > 0:
         game.execute_round()
         round = game._num_rounds_executed
-        frames.append({"robots": {}, "status": {}, "missiles": {}})
+        frames.append({"robots": {}, "missiles": {}})
       
         for r in game.robots:
             position = r.get_position() if r.get_position() != OUT_OF_BOUNDS else r._final_position
             frames[round]["robots"][r._id_in_game] = {
                 "x": position[0],
                 "y": position[1],
-                "harmed": frames[round-1]["status"][r._id_in_game] != r.get_damage(),
-                "died": r.get_damage() >= 100
+                "harmed": frames[round-1]["robots"][r._id_in_game]["status"] != r.get_damage(),
+                "died": r.get_damage() >= 100,
+                "status": r.get_damage()
             }
-            frames[round]["status"][r._id_in_game] = r.get_damage()
 
         for m in game._missiles:
             new = m.id in frames[round-1]["missiles"]
