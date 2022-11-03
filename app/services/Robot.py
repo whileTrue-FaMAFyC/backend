@@ -1,4 +1,4 @@
-from math import  atan2, ceil, cos, degrees, radians, sin, sqrt
+from math import  atan2, ceil, cos, degrees, radians, sin, sqrt, dist
 from random import randint
 from typing import Tuple
 
@@ -12,9 +12,9 @@ class Robot:
         self._req_direction: int = 0
         self._velocity: int = 0
         self._req_velocity: int = 0
-        self._position: tuple[int, int] = (randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE), 
+        self._position: Tuple[int, int] = (randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE), 
                                            randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE))
-        self._final_position: tuple[int, int] = (0,0)
+        self._final_position: Tuple[int, int] = (0,0)
         self._damage: int = 0
         self._cannon_direction = 0
         self._cannon_distance = 0
@@ -173,26 +173,37 @@ class Robot:
     def _attack(self):
         if self.is_cannon_ready() and self._cannon_distance > 0:
             distance_x = round_up(
-                round(cos(radians(self._direction)), 5)*self._cannon_distance
+                round(cos(radians(self._cannon_direction)), 5)*self._cannon_distance
             )
             distance_y = round_up(
-                round(sin(radians(self._direction)), 5)*self._cannon_distance
+                round(sin(radians(self._cannon_direction)), 5)*self._cannon_distance
             )
 
             missile_final_position_x = self._position[0] + distance_x
             missile_final_position_y = self._position[1] + distance_y
 
+            crashed_to_a_wall = False
             # Check if the missile hit a wall
             if (missile_final_position_x > 999-MISSILE_HALF_SIZE):
                 missile_final_position_x = 999-MISSILE_HALF_SIZE
+                crashed_to_a_wall = True
             if (missile_final_position_x < MISSILE_HALF_SIZE):
                 missile_final_position_x = MISSILE_HALF_SIZE
+                crashed_to_a_wall = True
             if (missile_final_position_y > 999-MISSILE_HALF_SIZE):
                 missile_final_position_y = 999-MISSILE_HALF_SIZE
+                crashed_to_a_wall = True
             if (missile_final_position_y < MISSILE_HALF_SIZE):
                 missile_final_position_y = MISSILE_HALF_SIZE
-
+                crashed_to_a_wall = True
+            
             self._missile_final_position = (missile_final_position_x, missile_final_position_y)
+            if crashed_to_a_wall:
+                self._cannon_distance = dist(self._missile_final_position, self._position)
+                x_distance = self._missile_final_position[0]-self._position[0]
+                y_distance = self._missile_final_position[1]-self._position[1]
+                angle_diff = 360+degrees(atan2(y_distance, x_distance)) if degrees(atan2(y_distance, x_distance)) < 0 else degrees(atan2(y_distance, x_distance))
+                self._cannon_direction = angle_diff
 
             # Set number of rounds that the user needs to wait for the cannon to reload.
             if self._cannon_distance in range(500,701):
