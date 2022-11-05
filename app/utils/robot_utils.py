@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from pony.orm import db_session
 import os
 
-from database.models.models import Robot
+from database.models.models import Robot, Match, User
 from view_entities.robot_view_entities import *
 
 
@@ -43,6 +43,38 @@ def insert_filename_to_file(file: str, filename: str):
     if file == "":
         return ""
     return "name:" + filename + ";" + file
+
+
+# @db_session
+# def get_player_in_match(match: AbandonMatch, abandoning_username: str):
+    
+#     query = left_join(
+#         (r.owner)
+#         for m in Match for r in m.robots_joined
+#         if m.name == match.name and
+#            m.creator_user == User.get(username=match.creator_user) and
+#            r.owner == User.get(username=abandoning_username)
+#     )
+#     print("\n")
+#     query.show()
+#     return query
+
+@db_session
+def get_robot_in_match_by_owner(match_id: int, owner_username: str):
+    
+    match = Match[match_id]
+    for r in match.robots_joined:
+        if r.owner.username == owner_username:
+            return r
+    
+    return None
+    # return left_join(
+    #     (r)
+    #     for m in Match for r in m.robots_joined
+    #     if m.match_id == match_id and
+    #        r.owner == User.get(username=owner_username)
+    #     )
+
 
 # Save avatar in assests directory and return the url
 def save_bot_avatar(username: str, bot_filename: str, contents: bytes, file_extension: str):

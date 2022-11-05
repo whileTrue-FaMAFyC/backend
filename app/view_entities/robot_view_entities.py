@@ -2,10 +2,6 @@ from pydantic import BaseModel
 
 from view_entities.user_view_entities import UserInMatch
 
-class BotCreate(BaseModel):
-    name: str
-    source_code: str
-    bot_filename: str
 
 class RobotInMatch(BaseModel):
     owner: UserInMatch
@@ -14,6 +10,7 @@ class RobotInMatch(BaseModel):
     class Config:
         orm_mode = True
 
+
 class ShowRobot(BaseModel):
     name: str
     avatar: str
@@ -21,6 +18,20 @@ class ShowRobot(BaseModel):
     class Config:
         orm_mode = True
 
+
+class RobotPlayer(BaseModel):
+    name: str
+    robot_id: int
+
+    class Config:
+        orm_mode = True
+
+
 class WinnerRobot(BaseModel):
     username: str
     robot_name: str
+
+
+class RobotInSimulation(BaseModel):
+    name: str
+    id: int

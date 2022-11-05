@@ -6,12 +6,10 @@ from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MO
 from testing.helpers.match_helpers import create_possible_answer
 from testing.helpers.mock_db import mock_avatar, mock_bot_avatar
 
-
-
 client = TestClient(app)
 
 
-def test_join_lobby_creator():    
+def test_join_lobby_creator():
     match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id    
     response = client.get(
         f'/matches/join-lobby?match_id={match_id}',
@@ -30,7 +28,7 @@ def test_join_lobby_creator():
                 "username":'juliolcese',
                 "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
-                "robot_avatar": mock_bot_avatar('astroGirl', 'cool_robot.py')
+                "robot_avatar": mock_bot_avatar('juliolcese', 'cool_robot.py')
             } 
         ])
 
@@ -54,7 +52,7 @@ def test_join_lobby_not_creator_joined():
                 "username":'juliolcese',
                 "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
-                "robot_avatar": mock_bot_avatar('astroGirl', 'cool_robot.py')
+                "robot_avatar": mock_bot_avatar('juliolcese', 'cool_robot.py')
             }  
         ], "juliolcese", True, False)
 
@@ -78,7 +76,7 @@ def test_join_lobby_not_creator_not_joined():
                 "username":'juliolcese',
                 "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
-                "robot_avatar": mock_bot_avatar('astroGirl', 'cool_robot.py')
+                "robot_avatar": mock_bot_avatar('juliolcese', 'cool_robot.py')
             } 
         ], "tonimondejar", False, False)
 

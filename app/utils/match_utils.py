@@ -10,12 +10,77 @@ from view_entities.robot_view_entities import *
 
 ERROR_CREATING_MATCH = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    detail="Internal error creating the match. "
+    detail="Internal error creating the match."
+)
+
+NOT_CREATOR = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Only the creator can start the match."
+)
+
+MATCH_ALREADY_STARTED = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The match has already started."
+)
+
+NOT_ENOUGH_PLAYERS = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The minimum amount of players hasn't been reached."
+)
+
+INTERNAL_ERROR_UPDATING_MATCH_INFO = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error when updating the match info."
+)
+
+INEXISTENT_ROBOT = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Robot selected is not in the user's library."
+)
+
+USER_ALREADY_JOINED = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The user has already joined."
+)
+
+INCORRECT_PASSWORD = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Incorrect password."
+)
+
+MAX_PLAYERS_REACHED = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Max players reached. Cannot join the match."
+)
+
+MATCH_ALREADY_STARTED = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The match has already started."
+)
+
+INTERNAL_ERROR_UPDATING_MATCH_INFO = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error when updating the match info."
 )
 
 INEXISTENT_MATCH_EXCEPTION = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
     detail="The match doesn't exist."
+)
+
+ERROR_DELETING_USER = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error removing the user from the match."
+)
+
+USER_NOT_JOINED_EXCEPTION = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The user isn't in the match."
+)
+
+CREATOR_CANT_ABANDON_EXCEPTION = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The creator can't abandon the match."
 )
 
 # Transforms the matches selected from the database to the format that will be
@@ -42,6 +107,19 @@ def match_db_to_view(matches: Match): # No es list[Match] o algo así?
 
     return info_and_robots
 
+@db_session
+def match_validator_info(match_id: int):
+    match_info = Match.get(match_id=match_id)
+    if not match_info:
+        return None
+    else:
+        return StartMatchValidator(
+            min_players=match_info.min_players,
+            started=match_info.started,
+            robots_joined=len(match_info.robots_joined),
+            creator_username=match_info.creator_user.username
+        )
+
 
 def match_winner(robots_id: List[int], game_results: Dict[int, Dict[str, int]]):
     max_won = 0
@@ -50,13 +128,14 @@ def match_winner(robots_id: List[int], game_results: Dict[int, Dict[str, int]]):
     tied_robots = []
     winners = []
 
+
     for i in robots_id:
         if game_results[i]["games_won"] == max_won:
             winners_robots.append(i)
         elif game_results[i]["games_won"] > max_won:
             max_won = game_results[i]["games_won"]
             winners_robots = [i]
-    
+
     if len(winners_robots) > 1:
         for i in winners_robots:
             if game_results[i]["games_tied"] == max_tied:

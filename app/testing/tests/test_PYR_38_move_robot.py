@@ -1,9 +1,10 @@
 from utils.services_utils import ROBOT_HALF_SIZE
-from services.Robot import Robot
+from testing.helpers.services_helpers import RobotTest
 
-r1 = Robot(1)
-r2 = Robot(2)
-r3 = Robot(3)
+r1 = RobotTest(1,0)
+r2 = RobotTest(2,0)
+r3 = RobotTest(3,0)
+r4 = RobotTest(4,0)
 
 def test_increase_velocity():
     assert r1.get_velocity() == 0
@@ -17,11 +18,21 @@ def test_decrease_velocity():
     r1._move()
     assert r1.get_velocity() == 30
 
-def test_request_same_velocity():
-    assert r1.get_velocity() == 30
-    r1.drive(0, 20)
+def test_stop_motor():
+    while r1.get_velocity() > 10:
+        r1.drive(0, 7)
+        r1._move()
+    r1.drive(0, 0)
     r1._move()
-    assert r1.get_velocity() == 20
+    assert r1.get_velocity() == 0
+
+def test_max_velocity():
+    while r1.get_velocity() < 90:
+        r1.drive(0, 95)
+        r1._move()
+    r1.drive(0, 100)
+    r1._move()
+    assert r1.get_velocity() == 100
 
 def test_crash_wall():
     initial_damage = r1.get_damage()
@@ -35,7 +46,16 @@ def test_crash_wall():
     assert r1.get_position()[0] == 999 - ROBOT_HALF_SIZE
     assert r1.get_damage() == initial_damage + 2
 
-def test__move_first_quadrant():
+def test_180_degrees():
+    r4.set_initial_position(983, 983)
+    while r4.get_position() != (16, 983):
+        r4.drive(180,50)
+        r4._move()
+        assert r4.get_position()[1] == 983
+    
+    assert r4.get_position() == (16, 983)
+
+def test_move_first_quadrant():
     initial_damage = r2.get_damage()
     initial_x = r2.get_position()[0]
     initial_y = r2.get_position()[1]
@@ -44,7 +64,7 @@ def test__move_first_quadrant():
     assert r2.get_position()[0] > initial_x or r2.get_damage() > initial_damage
     assert r2.get_position()[1] > initial_y or r2.get_damage() > initial_damage
 
-def test__move_second_quadrant():
+def test_move_second_quadrant():
     initial_damage = r2.get_damage()
     initial_x = r2.get_position()[0]
     initial_y = r2.get_position()[1]
@@ -53,7 +73,7 @@ def test__move_second_quadrant():
     assert r2.get_position()[0] < initial_x or r2.get_damage() > initial_damage
     assert r2.get_position()[1] > initial_y or r2.get_damage() > initial_damage
 
-def test__move_third_quadrant():
+def test_move_third_quadrant():
     initial_damage = r2.get_damage()
     initial_x = r2.get_position()[0]
     initial_y = r2.get_position()[1]
@@ -62,7 +82,7 @@ def test__move_third_quadrant():
     assert r2.get_position()[0] < initial_x or r2.get_damage() > initial_damage
     assert r2.get_position()[1] < initial_y or r2.get_damage() > initial_damage
 
-def test__move_fourth_quadrant():
+def test_move_fourth_quadrant():
     initial_damage = r2.get_damage()
     initial_x = r2.get_position()[0]
     initial_y = r2.get_position()[1]

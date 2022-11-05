@@ -1,14 +1,16 @@
 from math import cos, sin, radians, dist
-from typing import List
+from typing import List, Tuple
 
 from services.Robot import Robot
 from utils.services_utils import *
 
 
 class Missile():
-    def __init__(self, current_position, final_position, direction, remaining_distance):
-        self.current_position: tuple(int, int) = current_position
-        self.final_position: tuple(int, int) = final_position
+    def __init__(self, id,  current_position, final_position, direction, remaining_distance):
+        self.id = id
+        self.initial_position = current_position
+        self.current_position: Tuple(int, int) = current_position
+        self.final_position: Tuple(int, int) = final_position
         self.direction: int = direction
         self.remaining_distance: int = remaining_distance
 
@@ -19,10 +21,10 @@ class Game():
         self.robots = robots
         self._num_rounds_executed = 0
         self._missiles = []
-
+        self._missile_id = 0
 
     def get_rounds_remaining(self):
-        return self.num_rounds - self.num_rounds_executed
+        return self.num_rounds - self._num_rounds_executed
 
 
     def get_robots_alive(self):
@@ -41,18 +43,16 @@ class Game():
 
 
     def _advance_missile(self, missile: Missile):
-        if missile.remaining_distance <= MISSILE_ADVANCE:
+        if missile.remaining_distance <= MISSILE_ADVANCE+5:
             missile.current_position = missile.final_position
 
         else:
-            missile.current_position = (
-                missile.current_position[0] + 
-                round_up(round(cos(radians(missile.direction)), 5)*MISSILE_ADVANCE), 
-                missile.current_position[1] + 
-                round_up(round(sin(radians(missile.direction)), 5)*MISSILE_ADVANCE)
-            )
-
-        missile.remaining_distance -= MISSILE_ADVANCE
+            missile.current_position = tuple((
+                missile.current_position[0] + round_up(round(cos(radians(missile.direction)),5)*MISSILE_ADVANCE), 
+                missile.current_position[1] + round_up(round(sin(radians(missile.direction)),5)*MISSILE_ADVANCE)
+            ))
+        # print(missile.current_position, missile.id, missile.direction)
+        missile.remaining_distance = max(0,missile.remaining_distance-MISSILE_ADVANCE)
 
 
     def _inflict_damage(self, missile: Missile):
@@ -61,11 +61,11 @@ class Game():
             # Check if there is any robot nearby
             for r in self.robots:
                 distance = dist(r.get_position(), missile.current_position)
-                if distance < 5*5:
+                if distance < DISTANCE_DAMAGE_10:
                     r._increase_damage(10)
-                elif distance < 20*5:
+                elif distance < DISTANCE_DAMAGE_5:
                     r._increase_damage(5)
-                elif distance < 40*5:
+                elif distance < DISTANCE_DAMAGE_3:
                     r._increase_damage(3)
     
     
@@ -77,28 +77,38 @@ class Game():
         if self.get_robots_alive() == 0:
         # You can´t execute another round. All robots dead.
             raise GameException(detail="All robots dead")
+        
+        for m in self._missiles:
+            if m.current_position == m.final_position:
+                self._missiles.remove(m)
 
         for r in self.robots:
-            r.respond()
+            if r.get_damage() < 100:
+                r.respond()
 
         for r in self.robots:
             others_positions = []
 
             for other_r in self.robots:
-                if not other_r == r:
-                    others_positions.append(other_r.get_position())
-
-            r._scan(others_positions)
+                if not other_r == r and other_r.get_damage() < 100:
+                    if other_r.get_position() != OUT_OF_BOUNDS:
+                        others_positions.append(other_r.get_position())
+            
+            if r.get_damage() < 100:
+                r._scan(others_positions)
             
         for r in self.robots:
-            r._attack()
-            if r._missile_final_position != (None, None):
-                self._missiles.append(Missile(
-                    current_position=r.get_position(),
-                    final_position=r._missile_final_position,
-                    direction=r._cannon_direction,
-                    remaining_distance=r._cannon_distance
-                ))
+            if r.get_damage() < 100:
+                r._attack()
+                if r._missile_final_position != (None, None):
+                    self._missiles.append(Missile(
+                        id=self._missile_id,
+                        current_position=r.get_position(),
+                        final_position=r._missile_final_position,
+                        direction=r._cannon_direction,
+                        remaining_distance=r._cannon_distance
+                    ))
+                    self._missile_id += 1
         
         for m in self._missiles:
             self._advance_missile(m)
@@ -113,6 +123,7 @@ class Game():
 
         for r in self.robots:
             if r.get_damage() >= 100:
+                r._final_position = r.get_position()
                 r._position = OUT_OF_BOUNDS
 
         for r in self.robots:
@@ -120,5 +131,5 @@ class Game():
         # (collision with the walls damage)
             if r.get_damage() < 100:
                 self._check_collisions(r)
-        
+
         self._num_rounds_executed += 1

@@ -9,11 +9,11 @@ class CoolRobot(Robot):
         self.test_variable = "I'm CoolRobot responding"
         if not self.scanned():
             # Change scan degrees until finding someone
-            self.degrees += 20 
+            self.degrees = (self.degrees + 25) % 360
             self.point_scanner(self.degrees, 10)
         else:
-            if self.scanned() > 700:
-                self.drive(self.degrees, 10)
+            if self.scanned() > 350:
+                self.drive(self.degrees, 30)
             else:
                 self.drive(self.degrees, 0)
                 self.cannon(self.degrees, self.scanned())

@@ -1,20 +1,22 @@
 import math
+from re import M
 from numpy import add, sign
-from typing import List
+from typing import Dict, List, Tuple
 from base64 import b64decode
 
 from database.dao.robot_dao import get_source_code_by_id
 
-ROBOT_SIZE = 50
+
+ROBOT_SIZE = 32
 
 ROBOT_HALF_SIZE = int(ROBOT_SIZE/2)
 
 COLLISION_DAMAGE = 2
 
-MISSILE_HALF_SIZE = 1
+MISSILE_HALF_SIZE = 10
 
 # Meters advanced when moving at 1% velocity
-M_VELOC_1 = 10
+M_VELOC_1 = 3
 
 # Meters a missile advances in a round
 MISSILE_ADVANCE = 100
@@ -25,10 +27,14 @@ OUT_OF_BOUNDS = (1500,1500)
 # sqrt(1000^2 + 1000^2) = 1414,21
 MAX_POSSIBLE_DISTANCE = 1415
 
-ROUNDS_TO_RELOAD_CANNON_500_TO_700 = 4
-ROUNDS_TO_RELOAD_CANNON_300_TO_500 = 3
-ROUNDS_TO_RELOAD_CANNON_100_TO_300 = 2
-ROUNDS_TO_RELOAD_CANNON_BELOW_100 = 1
+ROUNDS_TO_RELOAD_CANNON_BELOW_100 = 2
+ROUNDS_TO_RELOAD_CANNON_100_TO_300 = ROUNDS_TO_RELOAD_CANNON_BELOW_100 + 1
+ROUNDS_TO_RELOAD_CANNON_300_TO_500 = ROUNDS_TO_RELOAD_CANNON_100_TO_300 + 1
+ROUNDS_TO_RELOAD_CANNON_500_TO_700 = ROUNDS_TO_RELOAD_CANNON_300_TO_500 + 1
+
+DISTANCE_DAMAGE_10 = 25
+DISTANCE_DAMAGE_5 = 50
+DISTANCE_DAMAGE_3 = 100
 
 IMPORT_ROBOT_CLASS = "from services.Robot import Robot\n"
 
@@ -51,8 +57,9 @@ def get_class_name(filename):
     return class_name[:len(class_name)-3]
 
 
-def create_robots_instances(robots_id: List[int]):
+def create_robots_instances(robots_id):
     robots = []
+    r_id_in_game = 0
     for r in robots_id:
         source_code_path = get_source_code_by_id(r)
         
@@ -64,7 +71,8 @@ def create_robots_instances(robots_id: List[int]):
         class_name = get_class_name(filename)
         
         exec(source_code)
-        exec(f"\nrobot = {class_name}(robot_id={r})\nrobots.append(robot)")
+        exec(f"\nrobot = {class_name}(robot_id={r}, id_in_game={r_id_in_game})\nrobots.append(robot)")
+        r_id_in_game += 1
     return robots
 
 
@@ -72,14 +80,14 @@ def round_up(x):
     return sign(x)*(math.ceil(abs(x)))
 
 
-def get_vertex(center: tuple[int, int]):
+def get_vertex(center: Tuple[int, int]):
     return [tuple(add(center, (-ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))), 
             tuple(add(center, (ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))),
             tuple(add(center, (ROBOT_HALF_SIZE, ROBOT_HALF_SIZE))),
             tuple(add(center, (-ROBOT_HALF_SIZE, ROBOT_HALF_SIZE)))]
 
 
-def is_inside(vertexs: List[tuple[int, int]], center: tuple[int, int]):
+def is_inside(vertexs: List[Tuple[int, int]], center: Tuple[int, int]):
     is_inside = False
     
     for v in vertexs:

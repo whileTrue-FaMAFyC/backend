@@ -35,18 +35,31 @@ def create_user(user: NewUserToDb):
     except:
         return False
 
+
 @db_session
 def get_unverified_users():
     return select(u for u in User if (u.verified == False and
                     datetime.now()-u.created_time >= timedelta(hours=4)))
 
+
+@db_session
+def get_user_avatar(username: str):
+    user_avatar = User.get(username=username).avatar
+    if user_avatar == "default":
+        return ""
+    else:
+        return user_avatar
+
+
 @db_session
 def get_user_by_email(email: str):
     return User.get(email=email)
 
+
 @db_session
 def get_user_by_username(username: str):
     return User.get(username=username) # Select from table User where column username=username.
+
 
 @db_session
 def get_user_by_username_or_email(username_or_email: str):
@@ -55,9 +68,11 @@ def get_user_by_username_or_email(username_or_email: str):
         user = get_user_by_email(username_or_email)
     return user
 
+
 @db_session
 def get_usernames():
     return select(u.username for u in User)
+
 
 @db_session
 def update_user_avatar(username: str, avatar_path: str):
@@ -66,6 +81,7 @@ def update_user_avatar(username: str, avatar_path: str):
         return True
     except:
         return False
+
 
 @db_session
 def update_user_verification(username: str):
@@ -76,6 +92,7 @@ def update_user_verification(username: str):
     except:
         return False
 
+
 @db_session
 def delete_unverified_users():
     try:
@@ -84,6 +101,7 @@ def delete_unverified_users():
         return True
     except:
         return False
+
 
 @db_session
 def unverified_users_cleanup():

@@ -1,24 +1,25 @@
-from math import  atan2, ceil, cos, degrees, radians, sin, sqrt
+from math import  atan2, ceil, cos, degrees, radians, sin, sqrt, dist
 from random import randint
+from typing import Tuple
 
 from utils.services_utils import *
 
 class Robot:   
-    def __init__(self, robot_id: int):
+    def __init__(self, robot_id: int, id_in_game: int):
         self._id = robot_id
+        self._id_in_game: int = id_in_game
         self._direction: int = 0
         self._req_direction: int = 0
         self._velocity: int = 0
-        self._previous_req_velocity: int = 0
         self._req_velocity: int = 0
-        self._position: tuple[int, int] = (randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE), 
+        self._position: Tuple[int, int] = (randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE), 
                                            randint(ROBOT_HALF_SIZE, 999-ROBOT_HALF_SIZE))
+        self._final_position: Tuple[int, int] = (0,0)
         self._damage: int = 0
         self._cannon_direction = 0
         self._cannon_distance = 0
         self._rounds_to_wait_for_cannon = 0
         self._missile_final_position = (None,None)
-        self._damage: int = 0        
         self._scan_direction: int = 0
         self._scan_resolution: int = 0
         self._scan_result: int = None
@@ -26,6 +27,19 @@ class Robot:
 
     def __eq__(self, other):
         return self._id == other._id
+
+
+    def get_robot_id(self):
+        return self._id
+
+
+    def initialize(self):
+        pass
+
+
+    def respond(self):
+        pass
+    
 
     # Cannon
     def is_cannon_ready(self):
@@ -156,30 +170,40 @@ class Robot:
         else:
             self._scan_result = round(min_distance)
 
-
     def _attack(self):
         if self.is_cannon_ready() and self._cannon_distance > 0:
             distance_x = round_up(
-                round(cos(radians(self._direction)), 5)*self._cannon_distance
+                round(cos(radians(self._cannon_direction)), 5)*self._cannon_distance
             )
             distance_y = round_up(
-                round(sin(radians(self._direction)), 5)*self._cannon_distance
+                round(sin(radians(self._cannon_direction)), 5)*self._cannon_distance
             )
 
             missile_final_position_x = self._position[0] + distance_x
             missile_final_position_y = self._position[1] + distance_y
 
+            crashed_to_a_wall = False
             # Check if the missile hit a wall
             if (missile_final_position_x > 999-MISSILE_HALF_SIZE):
                 missile_final_position_x = 999-MISSILE_HALF_SIZE
+                crashed_to_a_wall = True
             if (missile_final_position_x < MISSILE_HALF_SIZE):
                 missile_final_position_x = MISSILE_HALF_SIZE
+                crashed_to_a_wall = True
             if (missile_final_position_y > 999-MISSILE_HALF_SIZE):
                 missile_final_position_y = 999-MISSILE_HALF_SIZE
+                crashed_to_a_wall = True
             if (missile_final_position_y < MISSILE_HALF_SIZE):
                 missile_final_position_y = MISSILE_HALF_SIZE
-
+                crashed_to_a_wall = True
+            
             self._missile_final_position = (missile_final_position_x, missile_final_position_y)
+            if crashed_to_a_wall:
+                self._cannon_distance = dist(self._missile_final_position, self._position)
+                x_distance = self._missile_final_position[0]-self._position[0]
+                y_distance = self._missile_final_position[1]-self._position[1]
+                angle_diff = 360+degrees(atan2(y_distance, x_distance)) if degrees(atan2(y_distance, x_distance)) < 0 else degrees(atan2(y_distance, x_distance))
+                self._cannon_direction = angle_diff
 
             # Set number of rounds that the user needs to wait for the cannon to reload.
             if self._cannon_distance in range(500,701):
@@ -200,12 +224,12 @@ class Robot:
         if (self._req_direction != self._direction) and self._velocity <= 50:
             self._direction = self._req_direction
         
-        if self._previous_req_velocity == self._req_velocity:
+        if self._velocity <= 10 and self._req_velocity == 0:
+            self._velocity = self._req_velocity
+        elif self._velocity >= 90 and self._req_velocity == 100:
             self._velocity = self._req_velocity
         else:
             self._velocity = ceil((self._velocity + self._req_velocity)/2)
-        
-        self._previous_req_velocity = self._req_velocity
 
         distance_x = round_up((round(cos(radians(self._direction)), 5)*self._velocity)*M_VELOC_1)
         distance_y = round_up((round(sin(radians(self._direction)), 5)*self._velocity)*M_VELOC_1)
