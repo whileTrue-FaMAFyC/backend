@@ -1,10 +1,13 @@
 from fastapi.testclient import TestClient
-import requests
 import os
+from PIL import Image
+import io
 
 from main import app
 from database.dao.user_dao import *
 
+def mock_avatar():
+    return ('avatar2.png', open('./testing/helpers/avatar2.png', 'rb'), 'image/png' )
 
 client = TestClient(app)
 
@@ -13,13 +16,21 @@ def test_successful_load_not_default_avatar():
     response = client.post(
         f"/load-avatar/lucasca22ina",
         files = {
-            'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
+            'avatar': mock_avatar()
         }
     )
 
     assert response.status_code == 200
     assert os.path.exists('../assets/users/lucasca22ina/avatar.png') == True
     assert get_user_by_username("lucasca22ina").avatar == '../assets/users/lucasca22ina/avatar.png'
+    
+    response = client.get(
+        f'/assets/users/lucasca22ina/avatar.png'
+    )
+    
+    image = Image.open(io.BytesIO(response.content))
+    image.show()
+
     os.remove('../assets/users/lucasca22ina/avatar.png')
     os.rmdir('../assets/users/lucasca22ina/')
 
@@ -37,7 +48,7 @@ def test_user_not_registered():
     response = client.post(
         f"/load-avatar/totomondejar",
         files = {
-            'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
+            'avatar': mock_avatar()
         }
     )
 
@@ -49,7 +60,7 @@ def test_user_not_verified():
     response = client.post(
         f"/load-avatar/tonimondejar",
         files = {
-            'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
+            'avatar': mock_avatar()
         }
     )
 
@@ -60,7 +71,7 @@ def test_avatar_already_loaded():
     response = client.post(
         f"/load-avatar/bas_benja",
         files = {
-            'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
+            'avatar': mock_avatar()
         }
     )
 
@@ -75,7 +86,7 @@ def test_avatar_format_not_valid():
     response = client.post(
         f"/load-avatar/lucasca22ina",
         files = {
-            'avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'video/png' )
+            'avatar': ('avatar2.png', open('./testing/helpers/avatar2.png', 'rb'), 'video/png' )
         }
     )
 

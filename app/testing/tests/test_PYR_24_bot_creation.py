@@ -1,11 +1,17 @@
-from fastapi.testclient import TestClient
-from testing.helpers.generate_token import MOCK_TOKEN_VALEN, MOCK_TOKEN_JULI
-from testing.helpers.mock_db import MOCK_SOURCE_CODE, MOCK_AVATAR
+import os
 
+from fastapi.testclient import TestClient
+from testing.helpers.generate_token import MOCK_TOKEN_VALEN, MOCK_TOKEN_JULI, MOCK_TOKEN_BENJA
 from main import app
 
-
 client = TestClient(app)
+
+def mock_source_code():
+    return ('cool_robot.py', open('./testing/helpers/cool_robot.py'), 'application/x-python-code')
+
+def mock_avatar():
+    return ('avatar2.png', open('./testing/helpers/avatar2.png', 'rb'), 'image/png' )
+
 
 
 # Try creating a bot that already exists in the database
@@ -13,54 +19,59 @@ def test_create_existent_bot():
     response = client.post(
         '/create-bot',
         headers={'Authorization': MOCK_TOKEN_VALEN},
+        data={
+            'bot_name': 'jarvis22',
+        },
         files={
-            'name': 'jarvis22',
-            'source_code': MOCK_SOURCE_CODE, 
-            'bot_filename':'mybot.py',
-            'bot_avatar': ('avatar2.png', open('../avatar2.png', 'rb'), 'image/png' )
-        }
-            
+            'bot_source_code': mock_source_code(),
+            'bot_avatar': mock_avatar()
+        }       
     )
-
-    print(response.status_code)
     
-#     assert response.status_code == 409
-#     assert response.json() == {
-#         'detail': "User already has a bot with this name."
-#     }
+    assert response.status_code == 409
+    assert response.json() == {
+        'detail': "User already has a bot with this name."
+    }
+
 
 
 # # Invalid token
-# def test_invalid_token():
-#     response = client.post(
-#         '/create-bot',
-#         headers={'Authorization': 'dsafaerafasf.sfaserfasf'},
-#         json = {
-#             'name': 'jarvis22',
-#             'source_code': MOCK_SOURCE_CODE,
-#             'bot_filename': 'mybot.py',
-#             'avatar': MOCK_AVATAR
-#         }
-#     )
+def test_invalid_token():
+    response = client.post(
+        '/create-bot',
+        headers={'Authorization': 'dsafaerafasf.sfaserfasf'},
+        data={
+            'bot_name': 'jarvis22',
+        },
+        files={
+            'bot_source_code': mock_source_code(),
+            'bot_avatar': mock_avatar()
+        } 
+    )
     
-#     assert response.status_code == 401
-#     assert response.json() == {
-#         'detail': "Invalid token. Not authorized."
-#     }
+    assert response.status_code == 401
+    assert response.json() == {
+        'detail': "Invalid token. Not authorized."
+    }
 
 
-# # Create new bot succesfully
-# def test_create_bot():
-#     response = client.post(
-#         '/create-bot',
-#         headers={'Authorization': MOCK_TOKEN_JULI},
-#         json = {            
-#             'name': 'R2D2',
-#             'source_code': MOCK_SOURCE_CODE,
-#             'bot_filename': 'mybot.py',
-#             'avatar': MOCK_AVATAR
-#         }
-#     )
+# Create new bot succesfully
+def test_create_bot():
+    response = client.post(
+        '/create-bot',
+        headers={'Authorization': MOCK_TOKEN_JULI},
+        data={
+            'bot_name': 'R2D2',
+        },
+        files={
+            'bot_source_code':mock_source_code(),
+            'bot_avatar': mock_avatar()
+        }
+    )
     
-#     assert response.status_code == 200
-#     assert response.json() == True
+    assert response.status_code == 200
+    assert os.path.exists('../assets/users/juliolcese/avatar_cool_robot.png') == True
+    assert os.path.exists('../assets/users/juliolcese/cool_robot.py')
+    os.remove('../assets/users/juliolcese/avatar_cool_robot.png')
+    os.remove('../assets/users/juliolcese/cool_robot.py')
+    os.rmdir('../assets/users/juliolcese/')

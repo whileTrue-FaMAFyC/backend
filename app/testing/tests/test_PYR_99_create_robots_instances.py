@@ -13,6 +13,13 @@ def test_create_robots_instances():
     for r in robots:
         r.initialize()
 
-    assert robots[0].test_variable == "Soy el robot de toni"
-    assert robots[1].test_variable == "Soy el robot de benja"
-    assert robots[2].test_variable == "Soy el robot de juli"
+    assert robots[0].test_variable == "I'm " + type(robots[0]).__name__
+    assert robots[1].test_variable == "I'm " + type(robots[1]).__name__
+    assert robots[2].test_variable == "I'm " + type(robots[2]).__name__
+    
+    for r in robots:
+        r.respond()
+        
+    assert robots[0].test_variable == "I'm " + type(robots[0]).__name__ + " responding"
+    assert robots[1].test_variable == "I'm " + type(robots[1]).__name__ + " responding"
+    assert robots[2].test_variable == "I'm " + type(robots[2]).__name__ + " responding"

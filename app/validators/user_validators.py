@@ -52,7 +52,7 @@ def authenticate_user(username_or_email: str, password: str):
     if not user.verified:
         raise NOT_VERIFIED_EXCEPTION
 
-def load_avatar_validator(username: str, content_type: str):
+def load_avatar_validator(username: str, avatar_content_type: str):
     user_in_db = get_user_by_username(username)
     if user_in_db is None:
         raise USER_NOT_REGISTERED
@@ -72,5 +72,5 @@ def load_avatar_validator(username: str, content_type: str):
     #       - avatar.avatar != "" already checked in controller by checking that the avatar is not None
     #       - avatar.avatar.startswith("data:image/") can be checked by accessing the content-type of the
     #       UploadFile type-content attribute in the controller
-    if not content_type.startswith('image'):
+    if not avatar_content_type.startswith('image'):
         raise AVATAR_FORMAT_NOT_VALID

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from controllers import user_controller, robot_controller, match_controller
 
@@ -21,4 +22,10 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
+)
+
+app.mount(
+    "/assets/users",
+    StaticFiles(directory="../assets/users"),
+    name="assets"
 )

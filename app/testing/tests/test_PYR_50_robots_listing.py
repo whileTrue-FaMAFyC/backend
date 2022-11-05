@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from main import app
 from database.models.models import db, Robot
 from testing.helpers.generate_token import MOCK_TOKEN_VALEN
-from testing.helpers.mock_db import MOCK_AVATAR
+from testing.helpers.mock_db import mock_bot_avatar
 from utils.user_utils import INVALID_TOKEN_EXCEPTION
 
 
@@ -24,9 +24,9 @@ def test_no_robots():
     assert response.json() == []
     return
 
-expected_response =  [{"name": "R2D2", "avatar": MOCK_AVATAR}, 
-                      {"name": "WALL-E", "avatar": ""}, 
-                      {"name": "jarvis22", "avatar": MOCK_AVATAR}]
+expected_response =  [{"name": "R2D2", "avatar": mock_bot_avatar("valennegrelli", "dumb_robot.py")}, 
+                      {"name": "WALL-E", "avatar": 'default'}, 
+                      {"name": "jarvis22", "avatar": mock_bot_avatar("valennegrelli", "running_robot.py")}]
 
 def test_with_robots():
     response = client.get(

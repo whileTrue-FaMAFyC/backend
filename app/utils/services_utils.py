@@ -39,13 +39,11 @@ class GameException(Exception):
         super().__init__(self.message)
 
 
-def extract_filename_from_file(source_code_in_db):
-    filename = source_code_in_db.split(";")[0].replace("name:", "")
-    source_code = source_code_in_db.split("base64,")[1]
-    return filename, source_code
+def get_filename_from_path(path: str):
+    return path.split('/')[-1]
 
 
-def extract_class_name(filename):
+def get_class_name(filename):
     without_ = filename.split("_")
     for i in range(len(without_)):
         without_[i] = without_[i].capitalize()
@@ -56,10 +54,15 @@ def extract_class_name(filename):
 def create_robots_instances(robots_id: List[int]):
     robots = []
     for r in robots_id:
-        source_code_in_db = get_source_code_by_id(r)
-        filename, source_code_b64 = extract_filename_from_file(source_code_in_db)
-        class_name = extract_class_name(filename)
-        source_code = IMPORT_ROBOT_CLASS + b64decode(source_code_b64).decode("utf-8") 
+        source_code_path = get_source_code_by_id(r)
+        
+        f = open(source_code_path, 'r')
+        source_code = IMPORT_ROBOT_CLASS +  f.read()
+        f.close()
+        
+        filename = get_filename_from_path(source_code_path)
+        class_name = get_class_name(filename)
+        
         exec(source_code)
         exec(f"\nrobot = {class_name}(robot_id={r})\nrobots.append(robot)")
     return robots

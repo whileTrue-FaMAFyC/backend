@@ -4,7 +4,7 @@ from database.dao.match_dao import get_match_by_name_and_user
 from main import app
 from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI
 from testing.helpers.match_helpers import create_possible_answer
-from testing.helpers.mock_db import MOCK_AVATAR, mock_avatar
+from testing.helpers.mock_db import mock_avatar, mock_bot_avatar
 
 
 
@@ -24,13 +24,13 @@ def test_join_lobby_creator():
                 "username":'bas_benja',
                 "user_avatar": mock_avatar('bas_benja'),
                 "robot_name": '0ptimusPrime',
-                "robot_avatar": MOCK_AVATAR
+                "robot_avatar": mock_bot_avatar('bas_benja', 'shooter_robot.py')
             },
             {
                 "username":'juliolcese',
                 "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
-                "robot_avatar": MOCK_AVATAR
+                "robot_avatar": mock_bot_avatar('astroGirl', 'cool_robot.py')
             } 
         ])
 
@@ -48,14 +48,14 @@ def test_join_lobby_not_creator_joined():
                 "username":'bas_benja',
                 "user_avatar": mock_avatar('bas_benja'),
                 "robot_name": '0ptimusPrime',
-                "robot_avatar": MOCK_AVATAR
+                "robot_avatar": mock_bot_avatar('bas_benja', 'shooter_robot.py')
             },
             {
                 "username":'juliolcese',
                 "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
-                "robot_avatar": MOCK_AVATAR
-            } 
+                "robot_avatar": mock_bot_avatar('astroGirl', 'cool_robot.py')
+            }  
         ], "juliolcese", True, False)
 
  
@@ -72,13 +72,13 @@ def test_join_lobby_not_creator_not_joined():
                 "username":'bas_benja',
                 "user_avatar": mock_avatar('bas_benja'),
                 "robot_name": '0ptimusPrime',
-                "robot_avatar": MOCK_AVATAR
+                "robot_avatar": mock_bot_avatar('bas_benja', 'shooter_robot.py')
             },
             {
                 "username":'juliolcese',
                 "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
-                "robot_avatar": MOCK_AVATAR
+                "robot_avatar": mock_bot_avatar('astroGirl', 'cool_robot.py')
             } 
         ], "tonimondejar", False, False)
 
@@ -92,4 +92,9 @@ def test_join_lobby_with_results():
     )    
     
     assert response.status_code == 200
-    assert response.json()["results"] == [{"username": "tonimondejar", "robot_name": "_tron"}]
+    assert response.json()["results"] == [
+        {
+            "username": "tonimondejar", 
+            "robot_name": "_tron"
+        }
+    ]

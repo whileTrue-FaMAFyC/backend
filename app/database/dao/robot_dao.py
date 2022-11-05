@@ -13,14 +13,16 @@ def get_bot_by_owner_and_name(owner_username: str, bot_name: str):
 # The exsitance and validation of the username was previously validated,
 # i.e. for this function we can assume that the user exists and is verified
 @db_session
-def create_new_bot(owner_username: str, bot_data: BotCreate, avatar_path: str):
+def create_new_bot(
+    owner_username: str, 
+    bot_name: str, 
+    source_code_path: str,
+    avatar_path: str
+):
     try:
         Robot(
-            name=bot_data.name,
-            source_code=insert_filename_to_file(
-                bot_data.source_code, 
-                bot_data.bot_filename
-            ),
+            name=bot_name,
+            source_code=source_code_path,
             owner=get_user_by_username(owner_username),
             avatar=avatar_path
         )

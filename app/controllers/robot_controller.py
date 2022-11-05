@@ -4,9 +4,8 @@ from typing import Union
 
 from database.dao.robot_dao import *
 from utils.robot_utils import *
-from validators.robot_validators import validate_new_bot
+from validators.robot_validators import *
 from validators.user_validators import validate_token, SECRET_KEY
-from view_entities.robot_view_entities import BotCreate
 
 
 robot_controller = APIRouter()
@@ -16,26 +15,43 @@ robot_controller = APIRouter()
 @robot_controller.post("/create-bot", status_code=status.HTTP_200_OK)
 async def create_bot(
     authorization: Union[str, None] = Header(None), 
-    bot_data: BotCreate = Form(),
+    bot_name: str = Form(),
+    bot_source_code:  Union[UploadFile, None] = File(),
     bot_avatar: Union[UploadFile, None] = File()
 ):
-    validate_token(authorization)
-    
+    validate_token(authorization)    
     # Token is valid, now decode it to get payload
-    token_data = jwt.decode(authorization, SECRET_KEY)
-    
+    token_data = jwt.decode(authorization, SECRET_KEY)    
     owner_username = token_data['username']
     
-    validate_new_bot(owner_username, bot_data.name)
-    print(bot_avatar == None)
+    new_bot_validator(owner_username, bot_name) 
+    bot_source_code_validator(bot_source_code.content_type)
+    
     if bot_avatar:
-        print(bot_avatar.content_type)
+        bot_avatar_validator(bot_avatar.content_type)
         contents = await bot_avatar.read()
         file_extension = bot_avatar.filename.split('.')[1].lower()
         # Saves the file in disk and returns its path
-        avatar_path = save_bot_avatar(owner_username, bot_data.name, contents, file_extension)
-
-    if not create_new_bot(owner_username, bot_data, avatar_path if bot_avatar else 'default'):
+        avatar_path = save_bot_avatar(
+            owner_username, 
+            bot_source_code.filename.split('.')[0], 
+            contents, 
+            file_extension
+        )
+    
+    contents = await bot_source_code.read()
+    source_code_path = save_bot_source_code(
+        owner_username, 
+        bot_source_code.filename, 
+        contents 
+    )
+    
+    if not create_new_bot(
+        owner_username, 
+        bot_name,
+        source_code_path, 
+        avatar_path if bot_avatar else 'default'
+    ):
         raise ROBOT_DB_EXCEPTION
     
     return True
