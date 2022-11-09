@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Union
 
 from view_entities.user_view_entities import UserInMatch
 from view_entities.robot_view_entities import WinnerRobot, RobotPlayer
@@ -75,3 +75,8 @@ class LobbyInfo(BaseModel):
 class JoinMatch(BaseModel):
     match_password: str = ""
     joining_robot: str
+
+class MatchesFilters(BaseModel):
+    is_owner: Union[bool, None] = None
+    is_joined: Union[bool, None] = None
+    started: Union[bool, None] = None
