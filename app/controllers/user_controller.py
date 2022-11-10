@@ -1,10 +1,11 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, UploadFile, Header
 from fastapi.responses import JSONResponse
 from passlib.hash import bcrypt
 from random import randint
+from typing import Union
 
 from database.dao.user_dao import *
-from utils.user_utils import generate_token, TokenData
+from utils.user_utils import *
 from validators.user_validators import *
 from view_entities.user_view_entities import *
 
@@ -71,3 +72,29 @@ async def login_for_access_token(login_data: UserLogin):
     )
     
     return JSONResponse(content={"Authorization": access_token})
+
+
+@user_controller.put("/change-avatar", status_code=status.HTTP_200_OK)
+async def change_avatar(avatar: UploadFile = None, authorization: Union[str, None] = Header(None)):
+    validate_token(authorization)
+
+    token_data = jwt.decode(authorization, SECRET_KEY)
+
+    username = token_data['username']
+
+    if avatar:
+        change_avatar_validator(avatar.content_type)
+
+        contents = await avatar.read()
+        file_extension = avatar.filename.split('.')[1].lower()
+        # Saves the file in disk and returns its path
+        avatar_path = save_user_avatar(username, contents, file_extension)
+        
+        if update_user_avatar(username, avatar_path):
+            return True
+        else:
+            raise ERROR_UPDATING_USER_DATA
+    
+    # If user didn´t upload any avatar, don't change the db
+    else:
+        raise AVATAR_NOT_INSERTED

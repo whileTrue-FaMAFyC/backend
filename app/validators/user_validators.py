@@ -67,3 +67,9 @@ def load_avatar_validator(username: str, avatar: UserAvatar):
 
     if not avatar.avatar.startswith("data:image/") and avatar.avatar != "":
         raise AVATAR_FORMAT_NOT_VALID
+
+
+def change_avatar_validator(avatar_content_type: str):
+    # UploadFile type-content attribute in the controller
+    if not avatar_content_type.startswith('image'):
+        raise AVATAR_FORMAT_NOT_VALID

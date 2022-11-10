@@ -4,6 +4,9 @@ from jose import jwt
 from passlib.hash import bcrypt
 from pydantic import BaseModel
 import smtplib
+import os
+
+USERS_ASSETS = 'assets/users'
 
 
 SECRET_KEY = "2c329a8eca7d0c2ff68d261ad0b2e3efa66cc2603183fe6d0b4b219a11138c84"
@@ -94,6 +97,11 @@ AVATAR_ALREADY_LOADED = HTTPException(
     detail="Avatar already loaded."
 )
 
+AVATAR_NOT_INSERTED = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="Avatar not inserted."
+)
+
 def is_valid_password(password):
     l, u, d = 0, 0, 0
     for i in password:
@@ -181,3 +189,16 @@ def get_avatar_file(avatar: str):
         return "default"
     else:
         return avatar
+
+# Save avatar in assests directory and return the url
+def save_user_avatar(username: str, contents: bytes, file_extension: str):
+    # If the file exsists, it will override it. If not, it will create a new one
+    if os.path.exists(f'{USERS_ASSETS}/{username}'):
+        pass
+    else:
+        os.mkdir(f'{USERS_ASSETS}/{username}')
+    f = open(f'{USERS_ASSETS}/{username}/avatar.{file_extension}', 'wb')
+    f.write(contents)
+    f.close()
+    return (f'{USERS_ASSETS}/{username}/avatar.{file_extension}')
+
