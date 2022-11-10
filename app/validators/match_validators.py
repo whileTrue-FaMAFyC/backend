@@ -136,8 +136,9 @@ def join_match_validator(username: str, match: JoinMatch, match_id: int):
     if match.match_password == "":
         if match_in_db.hashed_password != "":
             raise INCORRECT_PASSWORD
-    else:
-        if not verify_password(match.match_password, match_in_db.hashed_password):
+    elif match_in_db.hashed_password == "":
+        raise MATCH_DOES_NOT_HAVE_PASSWORD
+    elif not verify_password(match.match_password, match_in_db.hashed_password):
             raise INCORRECT_PASSWORD
 
     if len(users_in_match) == match_in_db.max_players:
