@@ -71,8 +71,9 @@ def test_create_bot():
     )
     
     assert response.status_code == 200
-    assert os.path.exists(f'{USERS_ASSETS}/juliolcese/avatar_cool_robot.png') == True
-    assert os.path.exists(f'{USERS_ASSETS}/juliolcese/cool_robot.py')
-    os.remove(f'{USERS_ASSETS}/juliolcese/avatar_cool_robot.png')
-    os.remove(f'{USERS_ASSETS}/juliolcese/cool_robot.py')
+    assert os.path.exists(f'{USERS_ASSETS}/juliolcese/R2D2/R2D2.png') == True
+    assert os.path.exists(f'{USERS_ASSETS}/juliolcese/R2D2/cool_robot.py')
+    os.remove(f'{USERS_ASSETS}/juliolcese/R2D2/R2D2.png')
+    os.remove(f'{USERS_ASSETS}/juliolcese/R2D2/cool_robot.py')
+    os.rmdir(f'{USERS_ASSETS}/juliolcese/R2D2')
     os.rmdir(f'{USERS_ASSETS}/juliolcese/')

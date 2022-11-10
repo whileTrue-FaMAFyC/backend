@@ -22,13 +22,13 @@ def test_join_lobby_creator():
                 "username":'bas_benja',
                 "user_avatar": mock_avatar('bas_benja'),
                 "robot_name": '0ptimusPrime',
-                "robot_avatar": mock_bot_avatar('bas_benja', 'shooter_robot.py')
+                "robot_avatar": mock_bot_avatar('bas_benja', '0ptimusPrime')
             },
             {
                 "username":'juliolcese',
                 "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
-                "robot_avatar": mock_bot_avatar('juliolcese', 'cool_robot.py')
+                "robot_avatar": mock_bot_avatar('juliolcese', 'astroGirl')
             } 
         ])
 
@@ -46,13 +46,13 @@ def test_join_lobby_not_creator_joined():
                 "username":'bas_benja',
                 "user_avatar": mock_avatar('bas_benja'),
                 "robot_name": '0ptimusPrime',
-                "robot_avatar": mock_bot_avatar('bas_benja', 'shooter_robot.py')
+                "robot_avatar": mock_bot_avatar('bas_benja', '0ptimusPrime')
             },
             {
                 "username":'juliolcese',
                 "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
-                "robot_avatar": mock_bot_avatar('juliolcese', 'cool_robot.py')
+                "robot_avatar": mock_bot_avatar('juliolcese', 'astroGirl')
             }  
         ], "juliolcese", True, False)
 
@@ -70,13 +70,13 @@ def test_join_lobby_not_creator_not_joined():
                 "username":'bas_benja',
                 "user_avatar": mock_avatar('bas_benja'),
                 "robot_name": '0ptimusPrime',
-                "robot_avatar": mock_bot_avatar('bas_benja', 'shooter_robot.py')
+                "robot_avatar": mock_bot_avatar('bas_benja', '0ptimusPrime')
             },
             {
                 "username":'juliolcese',
                 "user_avatar": mock_avatar('juliolcese'),
                 "robot_name": 'astroGirl',
-                "robot_avatar": mock_bot_avatar('juliolcese', 'cool_robot.py')
+                "robot_avatar": mock_bot_avatar('juliolcese', 'astroGirl')
             } 
         ], "tonimondejar", False, False)
 

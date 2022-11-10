@@ -1,9 +1,9 @@
 from fastapi.testclient import TestClient
 import os
-from PIL import Image
-import io
+# from PIL import Image
+# import io
 
-from app import USERS_ASSETS
+from app import MOCK_USERS_ASSETS, USERS_ASSETS
 from database.dao.user_dao import *
 from main import app
 
@@ -80,7 +80,7 @@ def test_avatar_already_loaded():
     # Must fail because the avatar was already loaded (it is "fake_avatar(username")
     assert response.json()["detail"] == "Avatar already loaded."
 
-    assert get_user_by_username("bas_benja").avatar == f'{USERS_ASSETS}/bas_benja/avatar.png'
+    assert get_user_by_username("bas_benja").avatar == f'{MOCK_USERS_ASSETS}/bas_benja/avatar.png'
 
 
 def test_avatar_format_not_valid():

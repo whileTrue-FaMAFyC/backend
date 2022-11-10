@@ -7,8 +7,9 @@ from main import app
 from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI
 from testing.helpers.match_helpers import user_and_robot_in_match
 from testing.helpers.mock_db import mock_avatar, mock_bot_avatar
-from utils.user_utils import INVALID_TOKEN_EXCEPTION
 from utils.match_utils import *
+from utils.robot_utils import get_b64_from_path
+from utils.user_utils import INVALID_TOKEN_EXCEPTION
 
 client = TestClient(app)
 
@@ -87,9 +88,9 @@ async def test_successful_leaving():
                 "action": "leave",
                 "data": {
                     "username": "juliolcese",
-                    "user_avatar": mock_avatar("juliolcese"),
+                    "user_avatar": get_b64_from_path(mock_avatar("juliolcese")),
                     "robot_name": "astroGirl",
-                    "robot_avatar": mock_bot_avatar("juliolcese", "cool_robot.py")
+                    "robot_avatar": get_b64_from_path(mock_bot_avatar("juliolcese", "astroGirl"))
                 }
             }
             websocket.close()

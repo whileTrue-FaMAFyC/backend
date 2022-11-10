@@ -4,6 +4,7 @@ from main import app
 from database.models.models import db, Robot
 from testing.helpers.generate_token import MOCK_TOKEN_VALEN
 from testing.helpers.mock_db import mock_bot_avatar
+from utils.robot_utils import get_b64_from_path
 from utils.user_utils import INVALID_TOKEN_EXCEPTION
 
 
@@ -24,9 +25,13 @@ def test_no_robots():
     assert response.json() == []
     return
 
-expected_response =  [{"name": "R2D2", "avatar": mock_bot_avatar("valennegrelli", "dumb_robot.py")}, 
-                      {"name": "WALL-E", "avatar": 'default'}, 
-                      {"name": "jarvis22", "avatar": mock_bot_avatar("valennegrelli", "running_robot.py")}]
+expected_response =  [
+    {"name": "R2D2", 
+     "avatar": get_b64_from_path(mock_bot_avatar("valennegrelli", "R2D2"))}, 
+    {"name": "WALL-E", "avatar": 'default'}, 
+    {"name": "jarvis22", 
+     "avatar": get_b64_from_path(mock_bot_avatar("valennegrelli", "jarvis22"))}
+]
 
 def test_with_robots():
     response = client.get(

@@ -2,7 +2,6 @@ from fastapi import APIRouter, status, Header
 from jose import jwt
 from typing import Union
 
-from database.dao.robot_dao import get_bot_by_owner_and_name
 from services.simulation import execute_simulation
 from validators.user_validators import validate_token, SECRET_KEY
 from validators.simulation_validators import simulation_validator

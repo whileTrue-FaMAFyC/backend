@@ -1,3 +1,4 @@
+from base64 import b64encode
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
 from jose import jwt
@@ -187,12 +188,19 @@ def get_avatar_file(avatar: str):
 
 # Save avatar in assests directory and return the url
 def save_user_avatar(username: str, contents: bytes, file_extension: str):
+    user_assets = USERS_ASSETS + f'/{username}'
     # If the file exsists, it will override it. If not, it will create a new one
-    if os.path.exists(f'{USERS_ASSETS}/{username}'):
+    if os.path.exists(user_assets):
         pass
     else:
-        os.mkdir(f'{USERS_ASSETS}/{username}')
-    f = open(f'{USERS_ASSETS}/{username}/avatar.{file_extension}', 'wb')
+        os.mkdir(user_assets)
+    f = open(f'{user_assets}/avatar.{file_extension}', 'wb')
     f.write(contents)
     f.close()
-    return (f'{USERS_ASSETS}/{username}/avatar.{file_extension}')
+    return (f'{user_assets}/avatar.{file_extension}')
+
+
+def get_b64_from_path(path: str):
+    f = open(path, 'rb')
+    contents = f.read()
+    return b64encode(contents).decode()

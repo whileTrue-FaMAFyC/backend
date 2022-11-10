@@ -30,18 +30,20 @@ async def create_bot(
     if bot_avatar:
         bot_avatar_validator(bot_avatar.content_type)
         contents = await bot_avatar.read()
-        file_extension = bot_avatar.filename.split('.')[1].lower()
+        avatar_file_extension = bot_avatar.filename.split('.')[1].lower()
+        avatar_filename = bot_name + '.' + avatar_file_extension
         # Saves the file in disk and returns its path
-        avatar_path = save_bot_avatar(
+        avatar_path = save_bot_data(
             owner_username, 
-            bot_source_code.filename.split('.')[0], 
-            contents, 
-            file_extension
+            bot_name,
+            avatar_filename, 
+            contents
         )
     
     contents = await bot_source_code.read()
-    source_code_path = save_bot_source_code(
+    source_code_path = save_bot_data(
         owner_username, 
+        bot_name,
         bot_source_code.filename, 
         contents 
     )

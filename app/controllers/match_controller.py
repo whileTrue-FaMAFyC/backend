@@ -31,9 +31,6 @@ class LobbyManager:
         except:
             pass
 
-    # async def send_personal_message(self, message: str, websocket: WebSocket):
-    #     await websocket.send_text(message)
-
     async def broadcast(self, message: Dict):
         for connection in self.active_connections:
             try:
@@ -46,6 +43,7 @@ class LobbyManager:
             await self.disconnect(connection)
 
 lobbys: Dict[int, LobbyManager] = {}
+
 
 @match_controller.post("/new-match", status_code=status.HTTP_201_CREATED)
 async def create_match(new_match: NewMatch, authorization: Union[str, None] = Header(None)):
@@ -79,6 +77,7 @@ async def get_matches(authorization: Union[str, None] = Header(None)):
    matches_view = match_db_to_view(matches_db)
    
    return matches_view
+
 
 @match_controller.put("/start-match/{match_id}", status_code=status.HTTP_200_OK)
 async def start_match(match_id: int, authorization: Union[str, None] = Header(None)):
@@ -116,6 +115,7 @@ async def start_match(match_id: int, authorization: Union[str, None] = Header(No
         raise INTERNAL_ERROR_UPDATING_MATCH_INFO
 
     return True
+
 
 @match_controller.post("/join-match/{match_id}", status_code=status.HTTP_200_OK)
 async def join_match(match_id: int, match: JoinMatch, authorization: Union[str, None] = Header(None)):
@@ -188,6 +188,7 @@ async def follow_lobby(
         except WebSocketDisconnect:
             # print(f"{username} web socket connection closed")
             return
+
 
 @match_controller.delete("/leave-match/{match_id}", status_code=status.HTTP_200_OK)
 async def leave_match(match_id: int, authorization: Union[str, None] = Header(None)):

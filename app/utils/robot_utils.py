@@ -1,9 +1,10 @@
+from base64 import b64encode
 from fastapi import HTTPException, status
 from pony.orm import db_session
 import os
 
 from app import USERS_ASSETS
-from database.models.models import Robot, Match, User
+from database.models.models import Robot, Match
 from view_entities.robot_view_entities import *
 
 
@@ -33,11 +34,24 @@ NOT_SOURCE_CODE = HTTPException(
 )
 
 
+def get_b64_from_path(path: str):
+    f = open(path, 'rb')
+    contents = f.read()
+    return b64encode(contents).decode()
+
+
 # Transforms the robots selected from the database to the format that will be
 # sent to the frontend.
 @db_session
 def robot_db_to_view(robots: Robot):
-    return [ShowRobot.from_orm(r) for r in robots]
+    show_robots = []
+    for r in robots:
+        show_robots.append(ShowRobot(
+            name=r.name,
+            avatar=get_b64_from_path(r.avatar) if (r.avatar != 'default') else r.avatar
+        ))
+    return show_robots
+        
 
 
 def insert_filename_to_file(file: str, filename: str):
@@ -78,29 +92,18 @@ def get_robot_in_match_by_owner(match_id: int, owner_username: str):
 
 
 # Save avatar in assests directory and return the url
-def save_bot_avatar(username: str, bot_filename: str, contents: bytes, file_extension: str):
-    if os.path.exists(f'{USERS_ASSETS}/{username}'):
+def save_bot_data(username: str, robot_name: str, filename: str, contents: bytes):
+    user_assets = USERS_ASSETS + f'/{username}'
+    robot_assets = user_assets + f'/{robot_name}'
+    if os.path.exists(user_assets):
         pass
     # Here, the else will execute only if the username didn't upload an avatar
     else:
-        os.mkdir(f'{USERS_ASSETS}/{username}')
+        os.mkdir(user_assets)
+        os.mkdir(robot_assets)
 
     # If the file exsists, it will override it. If not, it will create a new one
-    f = open(f'{USERS_ASSETS}/{username}/avatar_{bot_filename}.{file_extension}', 'wb')
+    f = open(f'{robot_assets}/{filename}', 'wb')
     f.write(contents)
     f.close()
-    return (f'{USERS_ASSETS}/{username}/avatar_{bot_filename}.{file_extension}')
-
-
-def save_bot_source_code(username: str, bot_filename: str, contents: bytes):
-    if os.path.exists(f'{USERS_ASSETS}/{username}'):
-        pass
-    # Here, the else will execute only if the username didn't upload an avatar
-    else:
-        os.mkdir(f'{USERS_ASSETS}/{username}')
-
-    # If the file exsists, it will override it. If not, it will create a new one
-    f = open(f'{USERS_ASSETS}/{username}/{bot_filename}', 'wb')
-    f.write(contents)
-    f.close()
-    return (f'{USERS_ASSETS}/users/{username}/{bot_filename}')
+    return (f'{robot_assets}/{filename}')

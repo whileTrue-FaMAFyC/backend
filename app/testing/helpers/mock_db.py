@@ -6,16 +6,16 @@ from database.models.models import *
 from database.dao.match_dao import *
 from database.dao.robot_dao import *
 from database.dao.user_dao import *
-from app import USERS_ASSETS, MODEL_ROBOTS_ASSETS
+from app import MOCK_USERS_ASSETS, MODEL_ROBOTS_ASSETS
 from view_entities.robot_view_entities import RobotInMatch
 from view_entities.user_view_entities import UserInMatch
 
 
 def mock_avatar(username: str):
-    return f'{USERS_ASSETS}/{username}/avatar.png'
+    return f'{MOCK_USERS_ASSETS}/{username}/avatar.png'
 
-def mock_bot_avatar(username: str, bot_filename: str):
-    return f'{USERS_ASSETS}/{username}/avatar_{bot_filename}.png'
+def mock_bot_avatar(username: str, bot_name: str):
+    return f'{MOCK_USERS_ASSETS}/{username}/{bot_name}/{bot_name}.png'
 
 def mock_source_code(filename: str):
     return f'{MODEL_ROBOTS_ASSETS}/{filename}'
@@ -56,18 +56,18 @@ def robots():
         ('robot_cool', '', 'israangulo4', ''),
         ('world_destroyer_29', '', 'lucasca22ina', ''),
         ('_theTERMINATOR', '', 'lucasca22ina', ''),
-        ('R2D2', '', 'valennegrelli', mock_bot_avatar('valennegrelli', 'dumb_robot.py')),
+        ('R2D2', '', 'valennegrelli', mock_bot_avatar('valennegrelli', 'R2D2')),
         ('WALL-E', '', 'valennegrelli', 'default'),
-        ('jarvis22', '', 'valennegrelli', mock_bot_avatar('valennegrelli', 'running_robot.py')),
-        ('0ptimusPrime', '', 'bas_benja', mock_bot_avatar('bas_benja', 'shooter_robot.py')),
-        ('Bumblebee', '', 'bas_benja', mock_bot_avatar('bas_benja', 'dumb_robot.py')),
+        ('jarvis22', '', 'valennegrelli', mock_bot_avatar('valennegrelli', 'jarvis22')),
+        ('0ptimusPrime', '', 'bas_benja', mock_bot_avatar('bas_benja', '0ptimusPrime')),
+        ('Bumblebee', '', 'bas_benja', mock_bot_avatar('bas_benja', 'Bumblebee')),
         ('_tron', '', 'tonimondejar', 'default'),
         ('MegaByte', '', 'tonimondejar', ''),
         ('CYborg34', '', 'tonimondejar', ''),
         ('automatax', '', 'juliolcese', ''),
-        ('astroGirl', '', 'juliolcese', mock_bot_avatar('juliolcese', 'cool_robot.py')),
-        ('RobotCrack', 'dumb_robot.py', 'juliolcese', mock_bot_avatar('juliolcese', 'dumb_robot.py')),
-        ('RobotInutil', 'pro_robot.py', 'bas_benja', mock_bot_avatar('bas_benja', 'pro_robot.py'))
+        ('astroGirl', '', 'juliolcese', mock_bot_avatar('juliolcese', 'astroGirl')),
+        ('RobotCrack', 'dumb_robot.py', 'juliolcese', mock_bot_avatar('juliolcese', 'RobotCrack')),
+        ('RobotInutil', 'pro_robot.py', 'bas_benja', mock_bot_avatar('bas_benja', 'RobotInutil'))
     ]
 
     for robot_name, source_code, owner_username, avatar in robots:

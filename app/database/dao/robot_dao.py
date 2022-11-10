@@ -1,7 +1,8 @@
-from pony.orm import db_session, select
+from pony.orm import db_session
 
 from database.dao.user_dao import get_user_by_username
 from database.models.models import Robot
+from utils.robot_utils import get_b64_from_path
 from view_entities.robot_view_entities import WinnerRobot
 
 
@@ -68,4 +69,7 @@ def get_name_and_creator_by_id(robot_id: int):
 
 @db_session
 def get_robot_avatar_by_name_and_owner(owner: str, name: str):
-    return Robot.get(owner=get_user_by_username(owner), name=name).avatar
+    robot_avatar = Robot.get(owner=get_user_by_username(owner), name=name).avatar
+    if robot_avatar != 'default':
+        return get_b64_from_path(robot_avatar)
+    return robot_avatar 

@@ -4,7 +4,7 @@ from pony.orm import db_session, select, delete
 import schedule, time
 
 from database.models.models import User, RUNNING_ENVIRONMENT
-from utils.user_utils import send_cleanup_email,  save_user_avatar
+from utils.user_utils import send_cleanup_email,  get_b64_from_path
 from view_entities.user_view_entities import NewUserToDb
 
 #
@@ -48,7 +48,7 @@ def get_user_avatar(username: str):
     if user_avatar == "default":
         return ""
     else:
-        return user_avatar
+        return get_b64_from_path(user_avatar)
 
 
 @db_session
