@@ -3,7 +3,7 @@ from validate_email_address import validate_email
 
 from database.dao.user_dao import *
 from utils.user_utils import *
-from view_entities.user_view_entities import UserAvatar, UserSignUpData
+from view_entities.user_view_entities import *
 
 def sign_up_validator(user: UserSignUpData):
     # Email format validator
@@ -67,3 +67,30 @@ def load_avatar_validator(username: str, avatar: UserAvatar):
 
     if not avatar.avatar.startswith("data:image/") and avatar.avatar != "":
         raise AVATAR_FORMAT_NOT_VALID
+
+def password_restore_request_validator(user: UserIDs):
+    user_in_db = get_user_by_username_and_email(user.username, user.email)
+
+    if not user_in_db:
+        raise INEXISTENT_USERNAME_EMAIL_COMBINATION
+
+    # User not yet verified.
+    if not user_in_db.verified:
+        raise NOT_VERIFIED_EXCEPTION
+
+
+def password_restore_validator(info: RestoreInfo):
+    user_in_db = get_user_by_username_or_email(info.email)
+
+    if not user_in_db:
+        raise USER_NOT_REGISTERED
+
+    # User not yet verified.
+    if not user_in_db.verified:
+        raise NOT_VERIFIED_EXCEPTION
+
+    if user_in_db.restore_password_code != info.restore_password_code:
+        raise INVALID_RESTORE_CODE
+
+    if not is_valid_password(info.new_password):
+        raise PASSWORD_FORMAT_NOT_VALID

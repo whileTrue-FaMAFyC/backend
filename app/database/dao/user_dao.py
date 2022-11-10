@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from threading import Thread
+from passlib.hash import bcrypt
 from pony.orm import db_session, select, delete
 import schedule, time
 
@@ -103,6 +104,31 @@ def unverified_users_cleanup():
     for u in users:
         send_cleanup_email(u.email, u.verification_code)
     delete_unverified_users()
+
+# To check if the user trying to restore the password actually exists.
+@db_session
+def get_user_by_username_and_email(username: str, email: str):
+    return User.get(username=username, email=email)
+
+@db_session
+def add_password_restore_code(username: str, restore_code: int):
+    user = User.get(username=username)
+    try:
+        user.set(restore_password_code=restore_code)
+        return True
+    except: 
+        return False
+
+@db_session
+def update_user_password(email: str, new_password: str):
+    user = User.get(email=email)
+    hashed_password = bcrypt.hash(new_password)
+    try:
+        user.set(hashed_password=hashed_password)
+        user.set(restore_password_code=0)
+        return True
+    except: 
+        return False
 
 
 def schedule_unverified_users_cleanup():

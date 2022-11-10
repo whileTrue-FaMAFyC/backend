@@ -12,6 +12,7 @@ class User(db.Entity):
     avatar = Optional(str)
     hashed_password = Required(str)
     verification_code = Required(int, unsigned=True)
+    restore_password_code = Optional(int, unsigned=True)
     verified = Required(bool)
     created_time = Required(datetime, default=lambda: datetime.now())
     robots = Set('Robot')

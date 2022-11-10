@@ -47,3 +47,12 @@ class UserAvatar(BaseModel):
 class JoinMatchUser(BaseModel):
     username: str
     avatar: str
+
+class UserIDs(BaseModel):
+    username: str
+    email: str
+
+class RestoreInfo(BaseModel):
+    email: str
+    new_password: str
+    restore_password_code: int

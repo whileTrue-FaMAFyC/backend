@@ -42,7 +42,8 @@ def users():
         ('valennegrelli', 'valen57negrelli@yahoo.com.ar', "", 'piXies18', 852436, False, MOCK_CREATED_TIME),
         ('sebagiraudo', 'sebagir4udo@unc.edu.ar', MOCK_AVATAR, 'B_1kerfuliate', 785364, True, datetime.now()),
         ('lucasca22ina', 'cassinalucas@gmail.com', "", 'chicosSSS1456', 152347, True, datetime.now()),
-        ('israangulo4', 'isra1234@hotmail.com', MOCK_AVATAR, 'Argentiña222', 853314, False, datetime.now())
+        ('israangulo4', 'isra1234@hotmail.com', MOCK_AVATAR, 'Argentiña222', 853314, False, datetime.now()),
+        ('pyrobots', 'pyrobots.notreply@gmail.com', MOCK_AVATAR, 'PyRobots', 525600, True, datetime.now())
     ]
     
     for username, email, avatar, password, verification_code, verified, created_time in users:

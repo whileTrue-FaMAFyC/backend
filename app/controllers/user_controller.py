@@ -71,3 +71,26 @@ async def login_for_access_token(login_data: UserLogin):
     )
     
     return JSONResponse(content={"Authorization": access_token})
+
+
+@user_controller.post("/password-restore-request", status_code=status.HTTP_200_OK)
+async def password_restore_request(user: UserIDs):
+    
+    password_restore_request_validator(user)
+
+    restore_code = randint(100000,999999)
+
+    if not add_password_restore_code(user.username, restore_code):
+        raise ERROR_UPDATING_USER_DATA
+
+    if not send_password_restore_mail(user.email, restore_code):
+        raise ERROR_SENDING_RESTORE_CODE_MAIL
+
+
+@user_controller.put("/password-restore", status_code=status.HTTP_200_OK)
+async def password_restore(info: RestoreInfo):
+    
+    password_restore_validator(info)
+
+    if not update_user_password(info.email, info.new_password):
+        raise ERROR_UPDATING_USER_DATA
