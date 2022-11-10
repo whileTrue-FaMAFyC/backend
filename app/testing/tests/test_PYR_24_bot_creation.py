@@ -2,6 +2,7 @@ import os
 
 from fastapi.testclient import TestClient
 from testing.helpers.generate_token import MOCK_TOKEN_VALEN, MOCK_TOKEN_JULI, MOCK_TOKEN_BENJA
+from utils.user_utils import USERS_ASSETS
 from main import app
 
 client = TestClient(app)
@@ -70,8 +71,8 @@ def test_create_bot():
     )
     
     assert response.status_code == 200
-    assert os.path.exists('../assets/users/juliolcese/avatar_cool_robot.png') == True
-    assert os.path.exists('../assets/users/juliolcese/cool_robot.py')
-    os.remove('../assets/users/juliolcese/avatar_cool_robot.png')
-    os.remove('../assets/users/juliolcese/cool_robot.py')
-    os.rmdir('../assets/users/juliolcese/')
+    assert os.path.exists(f'{USERS_ASSETS}/juliolcese/avatar_cool_robot.png') == True
+    assert os.path.exists(f'{USERS_ASSETS}/juliolcese/cool_robot.py')
+    os.remove(f'{USERS_ASSETS}/juliolcese/avatar_cool_robot.png')
+    os.remove(f'{USERS_ASSETS}/juliolcese/cool_robot.py')
+    os.rmdir(f'{USERS_ASSETS}/juliolcese/')

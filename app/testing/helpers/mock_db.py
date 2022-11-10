@@ -6,18 +6,19 @@ from database.models.models import *
 from database.dao.match_dao import *
 from database.dao.robot_dao import *
 from database.dao.user_dao import *
+from utils.user_utils import USERS_ASSETS
 from view_entities.robot_view_entities import RobotInMatch
 from view_entities.user_view_entities import UserInMatch
 
 
 def mock_avatar(username: str):
-    return f'../assets/users/{username}/avatar.png'
+    return f'{USERS_ASSETS}/{username}/avatar.png'
 
 def mock_bot_avatar(username: str, bot_filename: str):
-    return f'../assets/users/{username}/avatar_{bot_filename}.png'
+    return f'{USERS_ASSETS}/{username}/avatar_{bot_filename}.png'
 
 def mock_source_code(filename: str):
-    return f'../assets/model_robots/{filename}'
+    return f'assets/model_robots/{filename}'
 
 MOCK_CREATED_TIME = datetime.now() - timedelta(hours=5)
 

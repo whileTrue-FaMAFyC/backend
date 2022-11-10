@@ -5,6 +5,7 @@ import io
 
 from main import app
 from database.dao.user_dao import *
+from utils.user_utils import USERS_ASSETS
 
 def mock_avatar():
     return ('avatar2.png', open('./testing/helpers/avatar2.png', 'rb'), 'image/png' )
@@ -21,18 +22,18 @@ def test_successful_load_not_default_avatar():
     )
 
     assert response.status_code == 200
-    assert os.path.exists('../assets/users/lucasca22ina/avatar.png') == True
-    assert get_user_by_username("lucasca22ina").avatar == '../assets/users/lucasca22ina/avatar.png'
+    assert os.path.exists(f'{USERS_ASSETS}/lucasca22ina/avatar.png') == True
+    assert get_user_by_username("lucasca22ina").avatar == f'{USERS_ASSETS}/lucasca22ina/avatar.png'
     
     response = client.get(
-        f'/assets/users/lucasca22ina/avatar.png'
+        f'{USERS_ASSETS}/lucasca22ina/avatar.png'
     )
     
     image = Image.open(io.BytesIO(response.content))
     image.show()
 
-    os.remove('../assets/users/lucasca22ina/avatar.png')
-    os.rmdir('../assets/users/lucasca22ina/')
+    os.remove(f'{USERS_ASSETS}/lucasca22ina/avatar.png')
+    os.rmdir(f'{USERS_ASSETS}/lucasca22ina/')
 
 
 def test_successful_load_default_avatar():
@@ -79,7 +80,7 @@ def test_avatar_already_loaded():
     # Must fail because the avatar was already loaded (it is "fake_avatar(username")
     assert response.json()["detail"] == "Avatar already loaded."
 
-    assert get_user_by_username("bas_benja").avatar == '../assets/users/bas_benja/avatar.png'
+    assert get_user_by_username("bas_benja").avatar == f'{USERS_ASSETS}/bas_benja/avatar.png'
 
 
 def test_avatar_format_not_valid():

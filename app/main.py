@@ -27,6 +27,6 @@ app.add_middleware(
 
 app.mount(
     "/assets/users",
-    StaticFiles(directory="../assets/users"),
+    StaticFiles(directory="assets/users"),
     name="assets"
 )

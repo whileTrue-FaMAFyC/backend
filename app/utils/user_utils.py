@@ -7,6 +7,8 @@ from pydantic import BaseModel
 import smtplib
 import os
 
+USERS_ASSETS = 'assets/users'
+
 SECRET_KEY = "2c329a8eca7d0c2ff68d261ad0b2e3efa66cc2603183fe6d0b4b219a11138c84"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 1440 # One day
@@ -187,11 +189,11 @@ def get_avatar_file(avatar: str):
 # Save avatar in assests directory and return the url
 def save_user_avatar(username: str, contents: bytes, file_extension: str):
     # If the file exsists, it will override it. If not, it will create a new one
-    if os.path.exists(f'../assets/users/{username}'):
+    if os.path.exists(f'{USERS_ASSETS}/{username}'):
         pass
     else:
-        os.mkdir(f'../assets/users/{username}')
-    f = open(f'../assets/users/{username}/avatar.{file_extension}', 'wb')
+        os.mkdir(f'{USERS_ASSETS}/{username}')
+    f = open(f'{USERS_ASSETS}/{username}/avatar.{file_extension}', 'wb')
     f.write(contents)
     f.close()
-    return (f'../assets/users/{username}/avatar.{file_extension}')
+    return (f'{USERS_ASSETS}/{username}/avatar.{file_extension}')

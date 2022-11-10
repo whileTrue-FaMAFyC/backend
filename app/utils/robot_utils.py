@@ -3,6 +3,7 @@ from pony.orm import db_session
 import os
 
 from database.models.models import Robot, Match, User
+from utils.user_utils import USERS_ASSETS
 from view_entities.robot_view_entities import *
 
 
@@ -78,28 +79,28 @@ def get_robot_in_match_by_owner(match_id: int, owner_username: str):
 
 # Save avatar in assests directory and return the url
 def save_bot_avatar(username: str, bot_filename: str, contents: bytes, file_extension: str):
-    if os.path.exists(f'../assets/users/{username}'):
+    if os.path.exists(f'{USERS_ASSETS}/{username}'):
         pass
     # Here, the else will execute only if the username didn't upload an avatar
     else:
-        os.mkdir(f'../assets/users/{username}')
+        os.mkdir(f'assets/users/{username}')
 
     # If the file exsists, it will override it. If not, it will create a new one
-    f = open(f'../assets/users/{username}/avatar_{bot_filename}.{file_extension}', 'wb')
+    f = open(f'{USERS_ASSETS}/{username}/avatar_{bot_filename}.{file_extension}', 'wb')
     f.write(contents)
     f.close()
-    return (f'../assets/users/{username}/avatar_{bot_filename}.{file_extension}')
+    return (f'{USERS_ASSETS}/{username}/avatar_{bot_filename}.{file_extension}')
 
 
 def save_bot_source_code(username: str, bot_filename: str, contents: bytes):
-    if os.path.exists(f'../assets/users/{username}'):
+    if os.path.exists(f'{USERS_ASSETS}/{username}'):
         pass
     # Here, the else will execute only if the username didn't upload an avatar
     else:
-        os.mkdir(f'../assets/users/{username}')
+        os.mkdir(f'{USERS_ASSETS}/{username}')
 
     # If the file exsists, it will override it. If not, it will create a new one
-    f = open(f'../assets/users/{username}/{bot_filename}', 'wb')
+    f = open(f'{USERS_ASSETS}/{username}/{bot_filename}', 'wb')
     f.write(contents)
     f.close()
-    return (f'../assets/users/{username}/{bot_filename}')
+    return (f'{USERS_ASSETS}/users/{username}/{bot_filename}')
