@@ -1,4 +1,7 @@
 from fastapi.testclient import TestClient
+from pony.orm import db_session
+
+from app.database.dao.robot_dao import get_bot_by_id, get_bot_by_owner_and_name
 from testing.helpers.generate_token import MOCK_TOKEN_VALEN, MOCK_TOKEN_JULI
 from testing.helpers.mock_db import MOCK_SOURCE_CODE, MOCK_AVATAR
 
@@ -59,5 +62,10 @@ def test_create_bot():
         }
     )
     
+    with db_session:
+        new_robot = get_bot_by_owner_and_name('juliolcese', 'R2D2')
+        assert new_robot != None
+        assert new_robot.stats != None
+
     assert response.status_code == 200
     assert response.json() == True

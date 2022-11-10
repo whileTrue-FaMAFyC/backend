@@ -18,10 +18,22 @@ class RobotInMatch(BaseModel):
         orm_mode = True
 
 
+class ShowStats(BaseModel):
+    matches_played: int
+    matches_won: int
+    matches_tied: int
+    matches_lost: int
+    games_win_rate: int
+
+    class Config:
+        orm_mode = True
+
+
 class ShowRobot(BaseModel):
     name: str
     avatar: str
-    
+    stats: ShowStats
+
     class Config:
         orm_mode = True
 

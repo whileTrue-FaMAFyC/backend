@@ -148,4 +148,4 @@ def match_winner(robots_id: List[int], game_results: Dict[int, Dict[str, int]]):
     for r in winners_robots:
         winners.append(get_name_and_creator_by_id(r))
         
-    return winners
+    return winners, winners_robots

@@ -98,12 +98,16 @@ def robots():
     ]
 
     for robot_name, source_code, owner_email, avatar in robots:
-        Robot(
+        robot = Robot(
             name=robot_name,
             source_code=source_code,
             owner=get_user_by_email(owner_email),
             avatar=avatar
         )
+        robot_stats = RobotStats(
+            robot=robot
+        )
+        robot.set(stats=robot_stats)
     return
 
 @db_session
