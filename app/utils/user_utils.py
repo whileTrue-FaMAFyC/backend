@@ -1,4 +1,3 @@
-from base64 import b64decode
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
 from jose import jwt
@@ -7,7 +6,7 @@ from pydantic import BaseModel
 import smtplib
 import os
 
-USERS_ASSETS = 'assets/users'
+from app import USERS_ASSETS
 
 SECRET_KEY = "2c329a8eca7d0c2ff68d261ad0b2e3efa66cc2603183fe6d0b4b219a11138c84"
 ALGORITHM = "HS256"

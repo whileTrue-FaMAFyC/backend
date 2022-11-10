@@ -3,9 +3,9 @@ import os
 from PIL import Image
 import io
 
-from main import app
+from app import USERS_ASSETS
 from database.dao.user_dao import *
-from utils.user_utils import USERS_ASSETS
+from main import app
 
 def mock_avatar():
     return ('avatar2.png', open('./testing/helpers/avatar2.png', 'rb'), 'image/png' )
@@ -25,12 +25,12 @@ def test_successful_load_not_default_avatar():
     assert os.path.exists(f'{USERS_ASSETS}/lucasca22ina/avatar.png') == True
     assert get_user_by_username("lucasca22ina").avatar == f'{USERS_ASSETS}/lucasca22ina/avatar.png'
     
-    response = client.get(
-        f'{USERS_ASSETS}/lucasca22ina/avatar.png'
-    )
+    # response = client.get(
+    #     f'{USERS_ASSETS}/lucasca22ina/avatar.png'
+    # )
     
-    image = Image.open(io.BytesIO(response.content))
-    image.show()
+    # image = Image.open(io.BytesIO(response.content))
+    # image.show()
 
     os.remove(f'{USERS_ASSETS}/lucasca22ina/avatar.png')
     os.rmdir(f'{USERS_ASSETS}/lucasca22ina/')

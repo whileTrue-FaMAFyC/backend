@@ -1,9 +1,9 @@
+from fastapi.testclient import TestClient
 import os
 
-from fastapi.testclient import TestClient
-from testing.helpers.generate_token import MOCK_TOKEN_VALEN, MOCK_TOKEN_JULI, MOCK_TOKEN_BENJA
-from utils.user_utils import USERS_ASSETS
+from app import USERS_ASSETS
 from main import app
+from testing.helpers.generate_token import MOCK_TOKEN_VALEN, MOCK_TOKEN_JULI, MOCK_TOKEN_BENJA
 
 client = TestClient(app)
 

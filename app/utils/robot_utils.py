@@ -2,8 +2,8 @@ from fastapi import HTTPException, status
 from pony.orm import db_session
 import os
 
+from app import USERS_ASSETS
 from database.models.models import Robot, Match, User
-from utils.user_utils import USERS_ASSETS
 from view_entities.robot_view_entities import *
 
 
@@ -83,7 +83,7 @@ def save_bot_avatar(username: str, bot_filename: str, contents: bytes, file_exte
         pass
     # Here, the else will execute only if the username didn't upload an avatar
     else:
-        os.mkdir(f'assets/users/{username}')
+        os.mkdir(f'{USERS_ASSETS}/{username}')
 
     # If the file exsists, it will override it. If not, it will create a new one
     f = open(f'{USERS_ASSETS}/{username}/avatar_{bot_filename}.{file_extension}', 'wb')

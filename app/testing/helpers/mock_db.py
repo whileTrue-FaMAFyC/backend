@@ -6,7 +6,7 @@ from database.models.models import *
 from database.dao.match_dao import *
 from database.dao.robot_dao import *
 from database.dao.user_dao import *
-from utils.user_utils import USERS_ASSETS
+from app import USERS_ASSETS, MODEL_ROBOTS_ASSETS
 from view_entities.robot_view_entities import RobotInMatch
 from view_entities.user_view_entities import UserInMatch
 
@@ -18,7 +18,7 @@ def mock_bot_avatar(username: str, bot_filename: str):
     return f'{USERS_ASSETS}/{username}/avatar_{bot_filename}.png'
 
 def mock_source_code(filename: str):
-    return f'assets/model_robots/{filename}'
+    return f'{MODEL_ROBOTS_ASSETS}/{filename}'
 
 MOCK_CREATED_TIME = datetime.now() - timedelta(hours=5)
 
