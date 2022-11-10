@@ -5,7 +5,7 @@ import schedule, time
 
 from database.models.models import User, RUNNING_ENVIRONMENT
 from utils.user_utils import send_cleanup_email
-from view_entities.user_view_entities import NewUserToDb
+from view_entities.user_view_entities import NewUserToDb, UserBase
 
 #
 # The db_session() decorator performs the following actions on exiting function:
@@ -114,6 +114,15 @@ def schedule_unverified_users_cleanup():
         time.sleep(100)
         # NOTE: The cleanup function will be running on a different thread.
 
+@db_session
+def get_user_info(username: str):
+    user = User.get(username=username)
+    return UserBase(
+        username=user.username,
+        email=user.email,
+        avatar=user.avatar
+        )
+    
 # Creates a thread for cleanup unverified users every 4 hours.
 if RUNNING_ENVIRONMENT == "DEPLOYMENT":
     unverified_users_cleanup_thread = Thread(target=unverified_users_cleanup)
