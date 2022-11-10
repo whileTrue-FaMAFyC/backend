@@ -3,7 +3,8 @@ import os
 # from PIL import Image
 # import io
 
-from app import MOCK_USERS_ASSETS, USERS_ASSETS
+from testing.helpers.mock_db import MOCK_USERS_ASSETS
+from utils.user_utils import USERS_ASSETS
 from database.dao.user_dao import *
 from main import app
 

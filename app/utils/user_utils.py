@@ -7,7 +7,7 @@ from pydantic import BaseModel
 import smtplib
 import os
 
-from app import USERS_ASSETS
+USERS_ASSETS = '../assets/users'
 
 SECRET_KEY = "2c329a8eca7d0c2ff68d261ad0b2e3efa66cc2603183fe6d0b4b219a11138c84"
 ALGORITHM = "HS256"

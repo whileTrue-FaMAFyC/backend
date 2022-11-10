@@ -3,10 +3,11 @@ from fastapi import HTTPException, status
 from pony.orm import db_session
 import os
 
-from app import USERS_ASSETS
+from utils.user_utils import USERS_ASSETS
 from database.models.models import Robot, Match
 from view_entities.robot_view_entities import *
 
+MODEL_ROBOTS_ASSETS = '../assets/model_robots'
 
 BOT_NAME_EXCEPTION = HTTPException(
     status_code=status.HTTP_409_CONFLICT,

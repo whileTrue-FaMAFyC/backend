@@ -6,10 +6,11 @@ from database.models.models import *
 from database.dao.match_dao import *
 from database.dao.robot_dao import *
 from database.dao.user_dao import *
-from app import MOCK_USERS_ASSETS, MODEL_ROBOTS_ASSETS
+from utils.robot_utils import MODEL_ROBOTS_ASSETS
 from view_entities.robot_view_entities import RobotInMatch
 from view_entities.user_view_entities import UserInMatch
 
+MOCK_USERS_ASSETS = 'testing/helpers/mock_assets/users'
 
 def mock_avatar(username: str):
     return f'{MOCK_USERS_ASSETS}/{username}/avatar.png'
