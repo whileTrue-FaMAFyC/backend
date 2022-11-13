@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 
 from database.dao.match_dao import get_match_by_name_and_user, update_joining_user_match
 from main import app
-from testing.helpers.generate_token import MOCK_TOKEN_JULI, MOCK_TOKEN_BENJA, MOCK_TOKEN_SEBA
+from testing.helpers.generate_token import MOCK_TOKEN_JULI, MOCK_TOKEN_BENJA, MOCK_TOKEN_LUCAS
 from testing.helpers.robot_stats_helpers import get_stats_by_robot
 
 client = TestClient(app)
@@ -40,7 +40,7 @@ def new_match_post_benja(match_name: str):
     assert response.status_code == 201
 
 
-def test_all():
+def test_all_stats():
     new_match_post_juli("myMatch!")
 
     match_id = get_match_by_name_and_user('myMatch!', 'juliolcese').match_id
@@ -91,10 +91,10 @@ def test_all():
     new_match_post_benja("tiedMatch")
 
     match_id = get_match_by_name_and_user('tiedMatch', 'bas_benja').match_id
-    update_joining_user_match("sebagiraudo", "RobotInutil", match_id)
+    update_joining_user_match("lucasca22ina", "RobotInutil", match_id)
     
     with client.websocket_connect(
-        f"/matches/ws/follow-lobby/{match_id}?authorization={MOCK_TOKEN_SEBA}"
+        f"/matches/ws/follow-lobby/{match_id}?authorization={MOCK_TOKEN_LUCAS}"
     ) as websocket:
         response = client.put(
             f'matches/start-match/{match_id}',
@@ -116,7 +116,7 @@ def test_all():
                 "data": {
                     "winners": [
                         {
-                            "username": "sebagiraudo",
+                            "username": "lucasca22ina",
                             "robot_name": "RobotInutil"
                         },
                         {
@@ -135,7 +135,7 @@ def test_all():
                             "robot_name": "RobotInutil"
                         },
                         {
-                            "username": "sebagiraud",
+                            "username": "lucasca22ina",
                             "robot_name": "RobotInutil"
                         }
                     ]
@@ -147,13 +147,13 @@ def test_all():
         websocket.close()
         
     tied_robot_stats_benja = get_stats_by_robot('bas_benja', 'RobotInutil')
-    tied_robot_stats_seba = get_stats_by_robot('sebagiraudo', 'RobotInutil')
+    tied_robot_stats_lucas = get_stats_by_robot('lucasca22ina', 'RobotInutil')
     
     assert tied_robot_stats_benja.matches_played == 2
-    assert tied_robot_stats_seba.matches_played == 1
+    assert tied_robot_stats_lucas.matches_played == 1
     assert tied_robot_stats_benja.matches_won == 0
-    assert tied_robot_stats_seba.matches_won == 0
+    assert tied_robot_stats_lucas.matches_won == 0
     assert tied_robot_stats_benja.matches_lost == 1
-    assert tied_robot_stats_seba.matches_lost == 0
+    assert tied_robot_stats_lucas.matches_lost == 0
     assert tied_robot_stats_benja.matches_tied == 1
-    assert tied_robot_stats_seba.matches_tied == 1
+    assert tied_robot_stats_lucas.matches_tied == 1
