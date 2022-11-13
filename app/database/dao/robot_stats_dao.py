@@ -32,8 +32,8 @@ def update_robot_stats(
             matches_lost=
                 (current_matches_lost+1) if is_loser else current_matches_lost,
             games_win_rate=
-                (current_games_win_rate+games_win_proportion)/2 
-                if current_games_win_rate != 0 else games_win_proportion
+                round((current_games_win_rate+games_win_proportion)/2, 2)
+                if current_games_win_rate != 0 else round(games_win_proportion,2)
         )        
         return True
     except: 

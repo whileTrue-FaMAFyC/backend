@@ -23,7 +23,7 @@ class ShowStats(BaseModel):
     matches_won: int
     matches_tied: int
     matches_lost: int
-    games_win_rate: int
+    games_win_rate: float
 
     class Config:
         orm_mode = True
