@@ -62,7 +62,7 @@ class RobotStats(db.Entity):
     matches_won = Required(int, default=0)
     matches_tied = Required(int, default=0)
     matches_lost = Required(int, default=0)
-    games_win_rate = Required(int, default=0)
+    games_win_rate = Required(float, default=0)
 
 
 def open_database(filename):
