@@ -49,7 +49,7 @@ def get_user_by_email(email: str):
 
 @db_session
 def get_user_by_username(username: str):
-    return User.get(username=username) # Select from table User where column username=username.
+    return User.get(username=username)
 
 @db_session
 def get_user_by_username_or_email(username_or_email: str):

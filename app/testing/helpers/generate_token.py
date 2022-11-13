@@ -45,3 +45,10 @@ MOCK_TOKEN_VALEN = generate_token(
         email='valen57negrelli@yahoo.com.ar'
     )
 )
+
+MOCK_TOKEN_SEBA = generate_token(
+    TokenData(
+        username='sebagiraudo',
+        email='sebagir4udo@unc.edu.ar'
+    )
+)

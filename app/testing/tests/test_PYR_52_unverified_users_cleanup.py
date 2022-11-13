@@ -9,6 +9,6 @@ def test_unverified_users_cleanup():
 
     for user in not_deleted:
         assert(get_user_by_username(user)) != None
-        
+     
     for user in deleted:
         assert(get_user_by_username(user)) == None
