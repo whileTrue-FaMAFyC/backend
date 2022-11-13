@@ -33,6 +33,12 @@ class UserFromDb(UserBase):
 class UserVerificationCode(BaseModel):
     verification_code: int
 
+# To change password
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str
+    new_password_confirmation: str
+
 # To show in list matches
 class UserInMatch(BaseModel):
     username: str

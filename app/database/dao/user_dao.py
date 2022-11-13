@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
-from threading import Thread
+from passlib.hash import bcrypt
 from pony.orm import db_session, select, delete
 import schedule, time
+from threading import Thread
 
 from database.models.models import User, RUNNING_ENVIRONMENT
 from utils.user_utils import send_cleanup_email
@@ -84,6 +85,15 @@ def update_user_verification(username: str):
     try:
         user_db = User.get(username=username)
         user_db.set(verified=True)
+        return True
+    except:
+        return False
+
+@db_session
+def update_user_password(username: str, new_password: str):
+    try:
+        user_db = User.get(username=username)
+        user_db.set(hashed_password=bcrypt.hash(new_password))
         return True
     except:
         return False
