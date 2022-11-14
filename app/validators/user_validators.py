@@ -3,7 +3,7 @@ from validate_email_address import validate_email
 
 from database.dao.user_dao import *
 from utils.user_utils import *
-from view_entities.user_view_entities import UserAvatar, UserSignUpData
+from view_entities.user_view_entities import UserAvatar, UserSignUpData, PasswordChange
 
 def sign_up_validator(user: UserSignUpData):
     # Email format validator
@@ -31,6 +31,7 @@ def user_verification_validator(username: str, code: int):
         raise USER_ALREADY_VERIFIED
     if user_in_db.verification_code != code:
         raise WRONG_VERIFICATION_CODE
+
 
 # NOTE: jwt.decode() raises an exception upon invalid token
 def validate_token(token: str):
@@ -67,3 +68,27 @@ def load_avatar_validator(username: str, avatar: UserAvatar):
 
     if not avatar.avatar.startswith("data:image/") and avatar.avatar != "":
         raise AVATAR_FORMAT_NOT_VALID
+
+
+def change_password_validator(username: str, data: PasswordChange):
+    user = get_user_by_username(username)
+    # User doesn't exist in database
+    if not user:
+        raise INEXISTENT_USER_EXCEPTION
+    
+    # Current password is different from the one in the database
+    if not verify_password(data.current_password, user.hashed_password):
+        raise CREDENTIALS_EXCEPTION
+        
+    # New password doesn't satisfy password format requirements
+    if not is_valid_password(data.new_password):
+        raise PASSWORD_FORMAT_NOT_VALID
+    
+    # New password and its confirmation don't match
+    if data.new_password != data.new_password_confirmation:
+        raise PASSWORD_CONFIRMATION_NOT_MATCH
+    
+    # New password is the same as the current one (already checked that the
+    # current password matches with the one in the database)
+    if data.current_password == data.new_password:
+        raise INVALID_NEW_PASSWORD
