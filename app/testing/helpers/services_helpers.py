@@ -22,7 +22,7 @@ class RobotTest(Robot):
     def get_scanner_details(self):
         return (self._scan_direction, self._scan_resolution)
 
-    
+
 class Robot1(RobotTest):
     def initialize(self):
         pass
@@ -54,6 +54,15 @@ class Robot4(RobotTest):
 
     def respond(self):
         pass
+
+class ForeverRobot(RobotTest):
+    def initialize(self):
+        while True:
+            pass
+
+    def respond(self):
+        while True:
+            pass
 
 class GameTest(Game):
     def set_missiles(self, missiles):

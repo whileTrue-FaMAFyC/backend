@@ -1,6 +1,5 @@
 from base64 import b64decode
 import math
-import multiprocessing
 from numpy import add, sign
 from typing import List, Tuple
 
@@ -97,17 +96,35 @@ def is_inside(vertexs: List[Tuple[int, int]], center: Tuple[int, int]):
     return is_inside
 
 
+# Problem with this one: the changes made on the instance doesn't have effect
+# import multiprocessing
+# def timeout_decorator(robot, func):
+#     # Start bar as a process
+#     p = multiprocessing.Process(target=func)
+#     p.start()
+
+#     # Wait for 10 seconds or until process finishes
+#     p.join(10)
+
+#     # If thread is still active
+#     if p.is_alive():
+#         print('Timeout reached! Killing robot')
+#         robot._increase_damage(100)
+#         p.terminate()
+#         p.join()
+
+# Problem with this one: only works on certains OS
+import signal
 def timeout_decorator(robot, func):
-    # Start bar as a process
-    p = multiprocessing.Process(target=func)
-    p.start()
+    def handler(signum, frame):
+        raise Exception('timeout!')
 
-    # Wait for 10 seconds or until process finishes
-    p.join(0.05)
+    signal.signal(signal.SIGALRM, handler)
+    signal.alarm(1)
 
-    # If thread is still active
-    if p.is_alive():
-        print('Timeout reached! Killing robot')
-        robot._increase_damage(100)
-        p.terminate()
-        p.join()
+    try:
+        func()
+    except Exception as exc:
+        print(exc)
+    finally:
+        signal.alarm(0)

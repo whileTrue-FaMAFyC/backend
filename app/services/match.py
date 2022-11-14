@@ -9,8 +9,8 @@ from utils.services_utils import create_robots_instances, timeout_decorator
 
 def execute_game_match(game: Game):
     for r in game.robots:
-        r.initialize()
-        # timeout_decorator(r, r.initialize)
+        # r.initialize()
+        timeout_decorator(r, r.initialize)
 
     while game.get_robots_alive() > 1 and game.get_rounds_remaining() > 0:
         game.execute_round()
