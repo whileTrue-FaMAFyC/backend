@@ -1,8 +1,8 @@
-import math
-from re import M
-from numpy import add, sign
-from typing import Dict, List, Tuple
 from base64 import b64decode
+import math
+import multiprocessing
+from numpy import add, sign
+from typing import List, Tuple
 
 from database.dao.robot_dao import get_source_code_by_id
 
@@ -95,3 +95,19 @@ def is_inside(vertexs: List[Tuple[int, int]], center: Tuple[int, int]):
             break
 
     return is_inside
+
+
+def timeout_decorator(robot, func):
+    # Start bar as a process
+    p = multiprocessing.Process(target=func)
+    p.start()
+
+    # Wait for 10 seconds or until process finishes
+    p.join(0.05)
+
+    # If thread is still active
+    if p.is_alive():
+        print('Timeout reached! Killing robot')
+        robot._increase_damage(100)
+        p.terminate()
+        p.join()

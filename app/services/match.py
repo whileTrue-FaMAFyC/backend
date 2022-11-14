@@ -5,12 +5,12 @@ from database.dao.match_dao import get_match_info
 from database.dao.match_results_dao import create_match_results
 from services.game import Game
 from utils.match_utils import match_winner
-from utils.services_utils import create_robots_instances
+from utils.services_utils import create_robots_instances, timeout_decorator
 
 def execute_game_match(game: Game):
     for r in game.robots:
-        # Timeout
         r.initialize()
+        # timeout_decorator(r, r.initialize)
 
     while game.get_robots_alive() > 1 and game.get_rounds_remaining() > 0:
         game.execute_round()
