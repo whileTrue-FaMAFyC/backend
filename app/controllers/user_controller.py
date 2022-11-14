@@ -74,7 +74,7 @@ async def login_for_access_token(login_data: UserLogin):
     return JSONResponse(content={"Authorization": access_token})
 
 
-@user_controller.post("/change-password", status_code=status.HTTP_200_OK)
+@user_controller.patch("/change-password", status_code=status.HTTP_200_OK)
 async def change_password(
     data: PasswordChange,
     authorization: Union[str, None] = Header(None)

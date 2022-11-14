@@ -79,10 +79,16 @@ def change_password_validator(username: str, data: PasswordChange):
     # Current password is different from the one in the database
     if not verify_password(data.current_password, user.hashed_password):
         raise CREDENTIALS_EXCEPTION
-    
+        
     # New password doesn't satisfy password format requirements
     if not is_valid_password(data.new_password):
         raise PASSWORD_FORMAT_NOT_VALID
     
+    # New password and its confirmation don't match
     if data.new_password != data.new_password_confirmation:
         raise PASSWORD_CONFIRMATION_NOT_MATCH
+    
+    # New password is the same as the current one (already checked that the
+    # current password matches with the one in the database)
+    if data.current_password == data.new_password:
+        raise INVALID_NEW_PASSWORD

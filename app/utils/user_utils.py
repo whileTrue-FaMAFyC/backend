@@ -34,6 +34,11 @@ PASSWORD_CONFIRMATION_NOT_MATCH = HTTPException(
     detail="Password and password confirmation don't match."
 )
 
+INVALID_NEW_PASSWORD = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="New password is the same as the current one."
+)
+
 USERNAME_ALREADY_IN_USE = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
     detail="Username already in use."
