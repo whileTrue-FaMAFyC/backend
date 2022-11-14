@@ -56,7 +56,7 @@ class MatchResult(db.Entity):
 
 
 class RobotStats(db.Entity):
-    statistics_id = PrimaryKey(int, auto=True, unsigned=True)
+    stats_id = PrimaryKey(int, auto=True, unsigned=True)
     robot = Required(Robot)
     matches_played = Required(int, default=0)
     matches_won = Required(int, default=0)

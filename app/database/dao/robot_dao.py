@@ -3,7 +3,7 @@ from pony.orm import db_session, select
 from database.dao.user_dao import get_user_by_username
 from database.models.models import Robot, RobotStats
 from utils.robot_utils import insert_filename_to_file
-from view_entities.robot_view_entities import BotCreate, WinnerRobot
+from view_entities.robot_view_entities import RobotCreate, WinnerRobot
 
 
 @db_session 
@@ -14,16 +14,16 @@ def get_bot_by_owner_and_name(owner_username: str, bot_name: str):
 # The exsitance and validation of the username was previously validated,
 # i.e. for this function we can assume that the user exists and is verified
 @db_session
-def create_new_bot(owner_username: str, bot_data: BotCreate):
+def create_new_robot(owner_username: str, robot_data: RobotCreate):
     try:
         new_robot = Robot(
-            name=bot_data.name,
+            name=robot_data.name,
             source_code=insert_filename_to_file(
-                bot_data.source_code, 
-                bot_data.bot_filename
+                robot_data.source_code, 
+                robot_data.bot_filename
             ),
             owner=get_user_by_username(owner_username),
-            avatar=bot_data.avatar
+            avatar=robot_data.avatar
         )
         new_robot_stats = RobotStats(
             robot=new_robot
