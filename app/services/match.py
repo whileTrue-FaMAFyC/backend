@@ -9,6 +9,7 @@ from utils.services_utils import create_robots_instances
 
 def execute_game_match(game: Game):
     for r in game.robots:
+        # Timeout
         r.initialize()
 
     while game.get_robots_alive() > 1 and game.get_rounds_remaining() > 0:

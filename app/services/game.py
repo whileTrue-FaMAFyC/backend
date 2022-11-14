@@ -84,6 +84,7 @@ class Game():
 
         for r in self.robots:
             if r.get_damage() < 100:
+                # Timeout
                 r.respond()
 
         for r in self.robots:
