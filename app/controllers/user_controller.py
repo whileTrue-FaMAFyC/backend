@@ -1,7 +1,8 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Header
 from fastapi.responses import JSONResponse
 from passlib.hash import bcrypt
 from random import randint
+from typing import Union
 
 from database.dao.user_dao import *
 from utils.user_utils import generate_token, TokenData
@@ -71,3 +72,20 @@ async def login_for_access_token(login_data: UserLogin):
     )
     
     return JSONResponse(content={"Authorization": access_token})
+
+
+@user_controller.patch("/change-password", status_code=status.HTTP_200_OK)
+async def change_password(
+    data: PasswordChange,
+    authorization: Union[str, None] = Header(None)
+):
+    validate_token(authorization)
+    token_data = jwt.decode(authorization, SECRET_KEY)
+    username = token_data['username']
+    
+    change_password_validator(username, data)
+    
+    if update_user_password(username, data.new_password):
+        return True
+    else:
+        raise ERROR_UPDATING_USER_DATA

@@ -1,5 +1,4 @@
 from fastapi.testclient import TestClient
-from passlib.hash import bcrypt
 
 from main import app
 
