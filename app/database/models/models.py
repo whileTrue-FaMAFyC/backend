@@ -26,6 +26,7 @@ class Robot(db.Entity):
     avatar = Optional(str)
     matches_joined = Set('Match')
     match_results = Set('MatchResult')
+    stats = Optional('RobotStats')
     composite_key(name, owner)
 
 
@@ -54,9 +55,20 @@ class MatchResult(db.Entity):
     composite_key(robot, match)
 
 
+class RobotStats(db.Entity):
+    stats_id = PrimaryKey(int, auto=True, unsigned=True)
+    robot = Required(Robot)
+    matches_played = Required(int, default=0)
+    matches_won = Required(int, default=0)
+    matches_tied = Required(int, default=0)
+    matches_lost = Required(int, default=0)
+    games_win_rate = Required(float, default=0)
+
+
 def open_database(filename):
     db.bind('sqlite', filename, create_db=True)
     db.generate_mapping(create_tables=True)
+
 
 # When testing (pytest), it gets set to TESTING and creates a database in
 # RAM memory
