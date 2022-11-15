@@ -125,6 +125,7 @@ def timeout_decorator(robot, func):
     try:
         func()
     except Exception as exc:
+        robot._damage = 100
         print(exc)
     finally:
         signal.alarm(0)

@@ -2,7 +2,7 @@ from services.Robot import Robot
 from services.game import Game
 
 class RobotTest(Robot):
-    # To mock the initial position or a specific damage percentage 
+    # To mock the initial position or a specific damage percentage
     def set_initial_position(self, x, y):
         self._position = (x, y)
 
@@ -63,6 +63,7 @@ class ForeverRobot(RobotTest):
     def respond(self):
         while True:
             pass
+
 
 class GameTest(Game):
     def set_missiles(self, missiles):
