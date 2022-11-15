@@ -42,7 +42,7 @@ def test_user_not_registered():
 
 def test_user_not_verified():
     response = client.post(
-        "/load-avatar/tonimondejar",
+        "/load-avatar/israangulo4",
         json={"avatar": "fake_default"}
     )
 

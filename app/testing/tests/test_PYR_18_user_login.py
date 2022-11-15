@@ -1,5 +1,4 @@
 from fastapi.testclient import TestClient
-from passlib.hash import bcrypt
 
 from main import app
 
@@ -75,8 +74,8 @@ def test_login_email():
     response = client.post(
         '/login',
         json = {
-            'username_or_email': 'sebagir4udo@unc.edu.ar',
-            'password': 'B_1kerfuliate'
+            'username_or_email': 'valen57negrelli@yahoo.com.ar',
+            'password': 'piXies18'
         }
     )
 

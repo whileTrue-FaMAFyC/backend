@@ -10,7 +10,7 @@ def test_successful_sign_up():
         "/signup",
         json={
             "username": "jakeperalta", 
-            "email": "pyrobots.notreply@gmail.com",
+            "email": "pyrobots.noreply@gmail.com",
             "password": "Test1234"
         }
     )
@@ -33,7 +33,7 @@ def test_username_already_in_use():
         "/signup",
         json={
             "username": "jakeperalta", 
-            "email": "pyrobots.notreply@gmail.com",
+            "email": "pyrobots.noreply@gmail.com",
             "password": "Test1234"
         }
     )
@@ -65,7 +65,7 @@ def test_email_already_in_use():
         "/signup",
         json={
             "username": "jakeperalta", 
-            "email": "pyrobots.notreply@gmail.com",
+            "email": "pyrobots.noreply@gmail.com",
             "password": "Test1234"
         }
     )
@@ -79,7 +79,7 @@ def test_email_already_in_use():
         "/signup",
         json={
             "username": "jakeperalta1", 
-            "email": "pyrobots.notreply@gmail.com",
+            "email": "pyrobots.noreply@gmail.com",
             "password": "Test1234"
         }
     )
@@ -112,7 +112,7 @@ def test_password_format_not_valid():
         "/signup",
         json={
             "username": "jakeperalta", 
-            "email": "pyrobots.notreply@gmail.com",
+            "email": "pyrobots.noreply@gmail.com",
             "password": "test"
         } 
     )

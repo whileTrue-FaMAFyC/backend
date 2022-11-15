@@ -1,7 +1,8 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Header
 from fastapi.responses import JSONResponse
 from passlib.hash import bcrypt
 from random import randint
+from typing import Union
 
 from database.dao.user_dao import *
 from utils.user_utils import generate_token, TokenData
@@ -92,5 +93,27 @@ async def password_restore(info: RestoreInfo):
     
     password_restore_validator(info)
 
-    if not update_user_password(info.email, info.new_password):
+    username = get_user_by_email(info.email).username
+    
+    if not update_user_password(username, info.new_password):
+        raise ERROR_UPDATING_USER_DATA
+    
+    if not update_restore_password_code(username):
+        raise ERROR_UPDATING_USER_DATA
+
+
+@user_controller.patch("/change-password", status_code=status.HTTP_200_OK)
+async def change_password(
+    data: PasswordChange,
+    authorization: Union[str, None] = Header(None)
+):
+    validate_token(authorization)
+    token_data = jwt.decode(authorization, SECRET_KEY)
+    username = token_data['username']
+    
+    change_password_validator(username, data)
+    
+    if update_user_password(username, data.new_password):
+        return True
+    else:
         raise ERROR_UPDATING_USER_DATA

@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
-from threading import Thread
 from passlib.hash import bcrypt
 from pony.orm import db_session, select, delete
 import schedule, time
+from threading import Thread
 
 from database.models.models import User, RUNNING_ENVIRONMENT
 from utils.user_utils import send_cleanup_email
@@ -50,7 +50,7 @@ def get_user_by_email(email: str):
 
 @db_session
 def get_user_by_username(username: str):
-    return User.get(username=username) # Select from table User where column username=username.
+    return User.get(username=username)
 
 @db_session
 def get_user_by_username_or_email(username_or_email: str):
@@ -90,6 +90,24 @@ def update_user_verification(username: str):
         return False
 
 @db_session
+def update_user_password(username: str, new_password: str):
+    try:
+        user_db = User.get(username=username)
+        user_db.set(hashed_password=bcrypt.hash(new_password))
+        return True
+    except:
+        return False
+
+@db_session
+def update_restore_password_code(username: str):
+    user = User.get(username=username)
+    try:
+        user.set(restore_password_code=0)
+        return True
+    except: 
+        return False
+
+@db_session
 def delete_unverified_users():
     try:
         delete(u for u in User if (u.verified == False and
@@ -118,18 +136,6 @@ def add_password_restore_code(username: str, restore_code: int):
         return True
     except: 
         return False
-
-@db_session
-def update_user_password(email: str, new_password: str):
-    user = User.get(email=email)
-    hashed_password = bcrypt.hash(new_password)
-    try:
-        user.set(hashed_password=hashed_password)
-        user.set(restore_password_code=0)
-        return True
-    except: 
-        return False
-
 
 def schedule_unverified_users_cleanup():
     schedule.every(4).hours.do(unverified_users_cleanup)
