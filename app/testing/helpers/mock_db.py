@@ -40,9 +40,9 @@ def users():
     users = [
         ('bas_benja', 'basbenja3@gmail.com', MOCK_AVATAR, 'Compuamigos2', 555888, True, datetime.now()),
         ('juliolcese', 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR, '1whileTrue1', 889654, True, MOCK_CREATED_TIME),
-        ('tonimondejar', 'mondejarantonio@hotmail.com', "default", 'FAMAFyC2022', 853314, True, datetime.now()),
-        ('valennegrelli', 'valen57negrelli@yahoo.com.ar', "default", 'piXies18', 852436, True, MOCK_CREATED_TIME),
-        ('lucasca22ina', 'cassinalucas@gmail.com', "default", 'chicosSSS1456', 152347, True, datetime.now()),
+        ('tonimondejar', 'mondejarantonio@hotmail.com', "", 'FAMAFyC2022', 853314, True, datetime.now()),
+        ('valennegrelli', 'valen57negrelli@yahoo.com.ar', "", 'piXies18', 852436, True, MOCK_CREATED_TIME),
+        ('lucasca22ina', 'cassinalucas@gmail.com', "", 'chicosSSS1456', 152347, True, datetime.now()),
         ('sebagiraudo', 'sebagir4udo@unc.edu.ar', MOCK_AVATAR, 'B_1kerfuliate', 123456, False, MOCK_CREATED_TIME),
         ('israangulo4', 'isra1234@hotmail.com', MOCK_AVATAR, 'Argentiña222', 785364, False, MOCK_CREATED_TIME)
     ]
