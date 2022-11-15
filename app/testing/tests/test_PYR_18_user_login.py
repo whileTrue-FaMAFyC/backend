@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 
 from main import app
+from testing.helpers.mock_db import MOCK_AVATAR
 
 client = TestClient(app)
 
@@ -11,10 +12,10 @@ def test_inexistent_user():
         '/login',
         json = {
             'username_or_email': 'basbenja3',
-            'password': 'password' 
+            'password': 'password'
         }
     )
-    
+
     assert response.status_code == 401
     assert response.json() == {
         'detail': 'Inexistent user.'
@@ -27,10 +28,10 @@ def test_invalid_credentials():
         '/login',
         json = {
             'username_or_email': 'sebagiraudo',
-            'password': 'password' 
+            'password': 'password'
         }
     )
-    
+
     assert response.status_code == 401
     assert response.json() == {
         'detail': 'Invalid credentials.'
@@ -43,10 +44,10 @@ def test_not_verified_user():
         '/login',
         json = {
             'username_or_email': 'israangulo4',
-            'password': 'Argentiña222' 
+            'password': 'Argentiña222'
         }
     )
-    
+
     assert response.status_code == 401
     assert response.json() == {
         'detail': 'Not verified user.'
@@ -60,12 +61,13 @@ def test_login_username():
         '/login',
         json = {
             'username_or_email': 'bas_benja',
-            'password': 'Compuamigos2' 
+            'password': 'Compuamigos2'
         }
     )
-    
-    assert response.json()['Authorization'] != ''
+
     assert response.status_code == 200
+    assert response.json()['authorization'] != ''
+    assert response.json()['avatar'] == MOCK_AVATAR
 
 
 # Logging in with email and correct password
@@ -80,4 +82,5 @@ def test_login_email():
     )
 
     assert response.status_code == 200
-    assert response.json()['Authorization'] != ''
+    assert response.json()['authorization'] != ''
+    assert response.json()['avatar'] == ''

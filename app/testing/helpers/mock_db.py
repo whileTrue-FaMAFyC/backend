@@ -40,13 +40,13 @@ def users():
     users = [
         ('bas_benja', 'basbenja3@gmail.com', MOCK_AVATAR, 'Compuamigos2', 555888, True, datetime.now()),
         ('juliolcese', 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR, '1whileTrue1', 889654, True, MOCK_CREATED_TIME),
-        ('tonimondejar', 'mondejarantonio@hotmail.com', "", 'FAMAFyC2022', 853314, True, datetime.now()),
-        ('valennegrelli', 'valen57negrelli@yahoo.com.ar', "", 'piXies18', 852436, True, MOCK_CREATED_TIME),
-        ('lucasca22ina', 'cassinalucas@gmail.com', "", 'chicosSSS1456', 152347, True, datetime.now()),
+        ('tonimondejar', 'mondejarantonio@hotmail.com', "default", 'FAMAFyC2022', 853314, True, datetime.now()),
+        ('valennegrelli', 'valen57negrelli@yahoo.com.ar', "default", 'piXies18', 852436, True, MOCK_CREATED_TIME),
+        ('lucasca22ina', 'cassinalucas@gmail.com', "default", 'chicosSSS1456', 152347, True, datetime.now()),
         ('sebagiraudo', 'sebagir4udo@unc.edu.ar', MOCK_AVATAR, 'B_1kerfuliate', 123456, False, MOCK_CREATED_TIME),
         ('israangulo4', 'isra1234@hotmail.com', MOCK_AVATAR, 'Argentiña222', 785364, False, MOCK_CREATED_TIME)
     ]
-    
+
     for username, email, avatar, password, verification_code, verified, created_time in users:
         User(
             username=username,
@@ -58,7 +58,7 @@ def users():
             created_time=created_time
         )
     return
-            
+
 # Add some robots to the database
 robot_crack_source_code = "name:robot_capo_crack.py;base64,Y2xhc3MgUm9ib3RDYXBvQ3JhY2"\
                           "soUm9ib3QpOg0KDQogICAgZGVmIGluaXRpYWxpemUoc2VsZik6DQogICAg"\

@@ -46,12 +46,15 @@ def authenticate_user(username_or_email: str, password: str):
     # User doesn't exist in database
     if not user:
         raise INEXISTENT_USER_EXCEPTION
+
     # User exists but inserted incorrect password
     if not verify_password(password, user.hashed_password):
         raise CREDENTIALS_EXCEPTION
+
     # User exists, inserted correct password but user is not yet verified
     if not user.verified:
         raise NOT_VERIFIED_EXCEPTION
+
 
 def load_avatar_validator(username: str, avatar: UserAvatar):
     user_in_db = get_user_by_username(username)
@@ -63,7 +66,7 @@ def load_avatar_validator(username: str, avatar: UserAvatar):
         raise NOT_VERIFIED_EXCEPTION
 
     # Checks that the link is not being used for a second time.
-    if user_in_db.avatar != "":
+    if user_in_db.avatar != "default":
         raise AVATAR_ALREADY_LOADED
 
     if not avatar.avatar.startswith("data:image/") and avatar.avatar != "":
@@ -75,19 +78,19 @@ def change_password_validator(username: str, data: PasswordChange):
     # User doesn't exist in database
     if not user:
         raise INEXISTENT_USER_EXCEPTION
-    
+
     # Current password is different from the one in the database
     if not verify_password(data.current_password, user.hashed_password):
         raise CREDENTIALS_EXCEPTION
-        
+
     # New password doesn't satisfy password format requirements
     if not is_valid_password(data.new_password):
         raise PASSWORD_FORMAT_NOT_VALID
-    
+
     # New password and its confirmation don't match
     if data.new_password != data.new_password_confirmation:
         raise PASSWORD_CONFIRMATION_NOT_MATCH
-    
+
     # New password is the same as the current one (already checked that the
     # current password matches with the one in the database)
     if data.current_password == data.new_password:

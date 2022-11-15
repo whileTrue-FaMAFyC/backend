@@ -109,7 +109,7 @@ def is_valid_password(password):
     for i in password:
         # counting lowercase alphabets
         if (i.islower()):
-            l+=1 
+            l+=1
         # counting uppercase alphabets
         if (i.isupper()):
             u+=1
@@ -181,13 +181,13 @@ class TokenData(BaseModel):
 # Utility function to generate a token that represents 'data'
 def generate_token(data: TokenData):
     data_to_encode = data.dict()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    data_to_encode.update({"exp": expire})
+    # expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    # data_to_encode.update({"exp": expire})
     token = jwt.encode(data_to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
 def get_avatar_file(avatar: str):
-    if (avatar==""):
+    if (avatar == ""):
         return "default"
     else:
         return avatar
