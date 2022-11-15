@@ -137,3 +137,14 @@ def test_successful_restore():
     assert response.status_code == status.HTTP_200_OK
     assert get_user_by_username('pyrobots').restore_password_code == 0
     assert get_user_by_username('pyrobots').hashed_password != new_password
+
+    response = client.post(
+        '/login',
+        json = {
+            'username_or_email': 'pyrobots.notreply@gmail.com',
+            'password': 'NewPass123'
+        }
+    )
+
+    assert response.status_code == 200
+    assert response.json()['Authorization'] != ''
