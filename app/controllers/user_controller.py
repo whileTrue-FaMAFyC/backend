@@ -77,6 +77,15 @@ async def login(login_data: UserLogin):
     )
 
 
+@user_controller.get("/user-profile", status_code=status.HTTP_200_OK)
+async def get_matches(authorization: Union[str, None] = Header(None)):
+   validate_token(authorization)
+   token_data = jwt.decode(authorization, SECRET_KEY)
+   username = token_data['username']
+   
+   return get_user_info(username)
+
+
 @user_controller.post("/password-restore-request", status_code=status.HTTP_200_OK)
 async def password_restore_request(user: UserIDs):
     
@@ -89,6 +98,7 @@ async def password_restore_request(user: UserIDs):
 
     if not send_password_restore_mail(user.email, restore_code):
         raise ERROR_SENDING_RESTORE_CODE_MAIL
+
 
 
 @user_controller.put("/password-restore", status_code=status.HTTP_200_OK)

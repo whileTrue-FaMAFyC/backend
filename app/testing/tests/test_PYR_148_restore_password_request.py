@@ -3,7 +3,6 @@ from fastapi.testclient import TestClient
 from database.dao.user_dao import get_user_by_username
 from main import app
 from utils.user_utils import *
-from view_entities.user_view_entities import UserIDs
 
 client = TestClient(app)
 
