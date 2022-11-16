@@ -44,9 +44,10 @@ def users():
         ('valennegrelli', 'valen57negrelli@yahoo.com.ar', "", 'piXies18', 852436, True, MOCK_CREATED_TIME),
         ('lucasca22ina', 'cassinalucas@gmail.com', "", 'chicosSSS1456', 152347, True, datetime.now()),
         ('sebagiraudo', 'sebagir4udo@unc.edu.ar', MOCK_AVATAR, 'B_1kerfuliate', 123456, False, MOCK_CREATED_TIME),
-        ('israangulo4', 'isra1234@hotmail.com', MOCK_AVATAR, 'Argentiña222', 785364, False, MOCK_CREATED_TIME)
+        ('israangulo4', 'isra1234@hotmail.com', MOCK_AVATAR, 'Argentiña222', 785364, False, MOCK_CREATED_TIME),
+        ('pyrobots', 'pyrobots.notreply@gmail.com', MOCK_AVATAR, 'Test1234', 525600, True, datetime.now())
     ]
-    
+
     for username, email, avatar, password, verification_code, verified, created_time in users:
         User(
             username=username,
@@ -58,7 +59,7 @@ def users():
             created_time=created_time
         )
     return
-            
+
 # Add some robots to the database
 robot_crack_source_code = "name:robot_capo_crack.py;base64,Y2xhc3MgUm9ib3RDYXBvQ3JhY2"\
                           "soUm9ib3QpOg0KDQogICAgZGVmIGluaXRpYWxpemUoc2VsZik6DQogICAg"\

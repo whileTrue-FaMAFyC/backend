@@ -71,9 +71,3 @@ def get_robot_in_match_by_owner(match_id: int, owner_username: str):
             return r
     
     return None
-    # return left_join(
-    #     (r)
-    #     for m in Match for r in m.robots_joined
-    #     if m.match_id == match_id and
-    #        r.owner == User.get(username=owner_username)
-    #     )

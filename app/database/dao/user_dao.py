@@ -6,7 +6,7 @@ from threading import Thread
 
 from database.models.models import User, RUNNING_ENVIRONMENT
 from utils.user_utils import send_cleanup_email
-from view_entities.user_view_entities import NewUserToDb
+from view_entities.user_view_entities import NewUserToDb, UserIDs
 
 #
 # The db_session() decorator performs the following actions on exiting function:
@@ -99,6 +99,15 @@ def update_user_password(username: str, new_password: str):
         return False
 
 @db_session
+def update_restore_password_code(username: str):
+    user = User.get(username=username)
+    try:
+        user.set(restore_password_code=0)
+        return True
+    except: 
+        return False
+
+@db_session
 def delete_unverified_users():
     try:
         delete(u for u in User if (u.verified == False and
@@ -114,6 +123,19 @@ def unverified_users_cleanup():
         send_cleanup_email(u.email, u.verification_code)
     delete_unverified_users()
 
+# To check if the user trying to restore the password actually exists.
+@db_session
+def get_user_by_username_and_email(username: str, email: str):
+    return User.get(username=username, email=email)
+
+@db_session
+def add_password_restore_code(username: str, restore_code: int):
+    user = User.get(username=username)
+    try:
+        user.set(restore_password_code=restore_code)
+        return True
+    except: 
+        return False
 
 def schedule_unverified_users_cleanup():
     schedule.every(4).hours.do(unverified_users_cleanup)
@@ -124,6 +146,14 @@ def schedule_unverified_users_cleanup():
         time.sleep(100)
         # NOTE: The cleanup function will be running on a different thread.
 
+@db_session
+def get_user_info(username: str):
+    user = User.get(username=username)
+    return UserIDs(
+        username=user.username,
+        email=user.email
+        )
+    
 # Creates a thread for cleanup unverified users every 4 hours.
 if RUNNING_ENVIRONMENT == "DEPLOYMENT":
     unverified_users_cleanup_thread = Thread(target=unverified_users_cleanup)
