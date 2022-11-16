@@ -79,16 +79,11 @@ async def login(login_data: UserLogin):
 
 @user_controller.get("/user-profile", status_code=status.HTTP_200_OK)
 async def get_matches(authorization: Union[str, None] = Header(None)):
-
    validate_token(authorization)
-
    token_data = jwt.decode(authorization, SECRET_KEY)
-   
    username = token_data['username']
    
-   user_info = get_user_info(username)
-      
-   return user_info
+   return get_user_info(username)
 
 
 @user_controller.post("/password-restore-request", status_code=status.HTTP_200_OK)
