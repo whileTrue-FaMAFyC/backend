@@ -15,6 +15,11 @@ ROBOT_DB_EXCEPTION = HTTPException(
     detail="Internal error when creating the new bot in the database."
 )
 
+ERROR_INSERTING_ROBOTS = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error when adding the default robots."
+)
+
 # def parse_b64_source_code(b64_source_code: str):
 #     without_prefix = b64_source_code.replace('data:text/x-python;base64,', '')
 #     source_code = b64decode(without_prefix).decode()
