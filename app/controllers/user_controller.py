@@ -82,7 +82,7 @@ async def change_avatar(avatar: UserAvatar, authorization: Union[str, None] = He
 
     username = token_data['username']
 
-    if avatar != "":
+    if avatar.avatar != "":
         change_avatar_validator(avatar)
         
         avatar_file = get_avatar_file(avatar.avatar)
@@ -92,6 +92,6 @@ async def change_avatar(avatar: UserAvatar, authorization: Union[str, None] = He
         else:
             raise ERROR_UPDATING_USER_DATA
     
-    # # If user didn´t upload any avatar, don't change the db
+    # If user didn´t upload any avatar, don't change the db
     else:
         raise AVATAR_NOT_INSERTED
