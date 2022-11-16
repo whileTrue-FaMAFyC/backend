@@ -47,3 +47,7 @@ class UserAvatar(BaseModel):
 class JoinMatchUser(BaseModel):
     username: str
     avatar: str
+
+class UserProfile(BaseModel):
+    username: str
+    email: str

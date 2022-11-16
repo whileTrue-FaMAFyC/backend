@@ -17,8 +17,7 @@ def test_successful_profile():
     assert response.status_code == 200
     assert response.json() == {
         "username": "bas_benja", 
-        "email": "basbenja3@gmail.com",
-        "avatar": MOCK_AVATAR
+        "email": "basbenja3@gmail.com"
     }
     return
 
