@@ -55,10 +55,17 @@ class Robot4(RobotTest):
     def respond(self):
         pass
 
-class ForeverRobot(RobotTest):
+class ForeverRobotInitialize(RobotTest):
     def initialize(self):
         while True:
             pass
+
+    def respond(self):
+        print("Never reach this point!")
+
+class ForeverRobotRespond(RobotTest):
+    def initialize(self):
+        print("ForeverRobotRespond initializing...")
 
     def respond(self):
         while True:

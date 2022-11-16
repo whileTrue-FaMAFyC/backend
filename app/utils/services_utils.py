@@ -38,6 +38,11 @@ DISTANCE_DAMAGE_3 = 100
 IMPORT_ROBOT_CLASS = "from services.Robot import Robot\n"
 
 
+INITIALIZATION_TIMEOUT = 0.01
+RESPOND_TIMEOUT = 0.01
+RETRY_TIMEOUT = 0.02
+
+
 class GameException(Exception):
     def __init__(self, detail):
         self.message = detail
@@ -94,38 +99,3 @@ def is_inside(vertexs: List[Tuple[int, int]], center: Tuple[int, int]):
             break
 
     return is_inside
-
-
-# Problem with this one: the changes made on the instance doesn't have effect
-# import multiprocessing
-# def timeout_decorator(robot, func):
-#     # Start bar as a process
-#     p = multiprocessing.Process(target=func)
-#     p.start()
-
-#     # Wait for 10 seconds or until process finishes
-#     p.join(10)
-
-#     # If thread is still active
-#     if p.is_alive():
-#         print('Timeout reached! Killing robot')
-#         robot._increase_damage(100)
-#         p.terminate()
-#         p.join()
-
-# Problem with this one: only works on certains OS
-import signal
-def timeout_decorator(robot, func):
-    def handler(signum, frame):
-        raise Exception('timeout!')
-
-    signal.signal(signal.SIGALRM, handler)
-    signal.alarm(1)
-
-    try:
-        func()
-    except Exception as exc:
-        robot._damage = 100
-        print(exc)
-    finally:
-        signal.alarm(0)

@@ -1,3 +1,4 @@
+from func_timeout import func_timeout, FunctionTimedOut
 from math import cos, sin, radians, dist
 from typing import List, Tuple
 
@@ -84,8 +85,11 @@ class Game():
 
         for r in self.robots:
             if r.get_damage() < 100:
-                # r.respond()
-                timeout_decorator(r, r.respond)
+                try:
+                    func_timeout(timeout=RESPOND_TIMEOUT, func=r.respond)
+                except:
+                    print('Robot timed out during respond!')
+                    r._increase_damage(100)
 
         for r in self.robots:
             others_positions = []
@@ -110,13 +114,13 @@ class Game():
                         remaining_distance=r._cannon_distance
                     ))
                     self._missile_id += 1
-        
+
         for m in self._missiles:
             self._advance_missile(m)
 
         for m in self._missiles:
             self._inflict_damage(m)
-        
+
         for r in self.robots:
         # Check if the robot got killed during the shooting stage
             if r.get_damage() < 100:
@@ -128,7 +132,7 @@ class Game():
                 r._position = OUT_OF_BOUNDS
 
         for r in self.robots:
-        # Check if the robot got killed during the moving stage 
+        # Check if the robot got killed during the moving stage
         # (collision with the walls damage)
             if r.get_damage() < 100:
                 self._check_collisions(r)

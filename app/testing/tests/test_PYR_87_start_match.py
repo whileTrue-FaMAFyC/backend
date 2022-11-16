@@ -29,7 +29,7 @@ def test_inexistent_match():
         "/matches/start-match/1024",
         headers = {'authorization': MOCK_TOKEN_BENJA}
     )
-    
+
     assert response.status_code == INEXISTENT_MATCH_EXCEPTION.status_code
     assert response.json()["detail"] == INEXISTENT_MATCH_EXCEPTION.detail
 
