@@ -80,14 +80,24 @@ def get_name_and_creator_by_id(robot_id: int):
 @db_session
 def add_default_robots(username: str):
     try:
-        create_new_robot(username, RobotCreate(name="Shooter",
-                                    source_code=SHOOTER_SOURCE_CODE,
-                                    bot_filename="shooter_robot.py",
-                                    avatar=SHOOTER_AVATAR))
-        create_new_robot(username, RobotCreate(name="Random",
-                                    source_code=RANDOM_SOURCE_CODE,
-                                    bot_filename="random_robot.py",
-                                    avatar=RANDOM_AVATAR))
+        create_new_robot(
+            username, 
+            RobotCreate(
+                name="Shooter",
+                source_code=SHOOTER_SOURCE_CODE,
+                bot_filename="shooter_robot.py",
+                avatar=SHOOTER_AVATAR
+            )
+        )
+        create_new_robot(
+            username, 
+            RobotCreate(
+                name="Random",
+                source_code=RANDOM_SOURCE_CODE,
+                bot_filename="random_robot.py",
+                avatar=RANDOM_AVATAR
+            )
+        )
         return True
     except: 
         return False
