@@ -24,9 +24,6 @@ def test_no_robots():
     assert response.json() == []
     return
 
-expected_response =  [{"name": "R2D2", "avatar": MOCK_AVATAR}, 
-                      {"name": "WALL-E", "avatar": ""}, 
-                      {"name": "jarvis22", "avatar": MOCK_AVATAR}]
 
 def test_with_robots():
     response = client.get(
@@ -35,7 +32,14 @@ def test_with_robots():
     )
 
     assert response.status_code == 200
-    assert response.json() == expected_response
+    assert response.json() ==  [
+        {"name": "R2D2", "avatar": MOCK_AVATAR, "stats": { "matches_played": 0, "matches_won": 0, 
+        "matches_tied": 0, "matches_lost": 0, "games_win_rate": 0}}, 
+        {"name": "WALL-E", "avatar": "", "stats": { "matches_played": 0, "matches_won": 0, 
+        "matches_tied": 0, "matches_lost": 0, "games_win_rate": 0}}, 
+        {"name": "jarvis22", "avatar": MOCK_AVATAR, "stats": { "matches_played": 0, "matches_won": 0, 
+        "matches_tied": 0, "matches_lost": 0, "games_win_rate": 0}}
+    ]
 
 def test_invalid_token():
     response = client.get(

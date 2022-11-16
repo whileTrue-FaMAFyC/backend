@@ -29,6 +29,16 @@ PASSWORD_FORMAT_NOT_VALID = HTTPException(
     detail="Password format not valid."
 )
 
+PASSWORD_CONFIRMATION_NOT_MATCH = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="Password and password confirmation don't match."
+)
+
+INVALID_NEW_PASSWORD = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="New password is the same as the current one."
+)
+
 USERNAME_ALREADY_IN_USE = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
     detail="Username already in use."
@@ -94,12 +104,26 @@ AVATAR_ALREADY_LOADED = HTTPException(
     detail="Avatar already loaded."
 )
 
+ERROR_SENDING_RESTORE_CODE_MAIL = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error sending the email with the password restauration code." 
+)
+
+INVALID_RESTORE_CODE = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="Wrong restore password code."
+)
+
+INEXISTENT_USERNAME_EMAIL_COMBINATION = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="There is no user with that email and username."
+)
 def is_valid_password(password):
     l, u, d = 0, 0, 0
     for i in password:
         # counting lowercase alphabets
         if (i.islower()):
-            l+=1 
+            l+=1
         # counting uppercase alphabets
         if (i.isupper()):
             u+=1
@@ -171,13 +195,35 @@ class TokenData(BaseModel):
 # Utility function to generate a token that represents 'data'
 def generate_token(data: TokenData):
     data_to_encode = data.dict()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    data_to_encode.update({"exp": expire})
+    # expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    # data_to_encode.update({"exp": expire})
     token = jwt.encode(data_to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
 def get_avatar_file(avatar: str):
-    if (avatar==""):
+    if (avatar == ""):
         return "default"
     else:
         return avatar
+
+
+def send_password_restore_mail(recipient, restore_code):
+    FROM = SYSTEM_MAIL
+    TO = recipient
+    SUBJECT = "Restore your password"
+    TEXT = (f"You can restore your password using this code: {restore_code}. " +
+    "\nDo not reply this email.")
+
+    # Prepare actual message
+    message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.ehlo()
+        server.starttls()
+        server.login(SYSTEM_MAIL, SYSTEM_MAIL_PASSWORD)
+        server.sendmail(FROM, TO, message)
+        server.close()
+        return True
+    except:
+        return False

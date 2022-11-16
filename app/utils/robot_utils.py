@@ -36,7 +36,7 @@ ROBOT_DB_EXCEPTION = HTTPException(
 @db_session
 def robot_db_to_view(robots: Robot):
     return [ShowRobot.from_orm(r) for r in robots]
-
+    
 
 def insert_filename_to_file(file: str, filename: str):
     if file == "":
