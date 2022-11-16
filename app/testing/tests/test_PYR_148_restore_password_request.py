@@ -12,7 +12,7 @@ def test_inexistent_user():
         "/password-restore-request",
         json = {
             'username': 'inexistent',
-            'email': 'inexistent',
+            'email': 'inexistent'
         }
     )
 
@@ -23,7 +23,7 @@ def test_inexistent_user():
         "/password-restore-request",
         json = {
             'username': 'inexistent',
-            'email': 'basbenja3@gmail.com',
+            'email': 'basbenja3@gmail.com'
         }
     )
 
@@ -34,7 +34,7 @@ def test_inexistent_user():
         "/password-restore-request",
         json = {
             'username': 'bas_benja',
-            'email': 'inexistent',
+            'email': 'inexistent'
         }
     )
 
@@ -45,7 +45,7 @@ def test_inexistent_user():
         "/password-restore-request",
         json = {
             'username': 'juliolcese',
-            'email': 'basbenja3@gmail.com',
+            'email': 'basbenja3@gmail.com'
         }
     )
 
@@ -58,7 +58,7 @@ def test_not_verified_user():
         "/password-restore-request",
         json = {
             'username': 'sebagiraudo',
-            'email': 'sebagir4udo@unc.edu.ar',
+            'email': 'sebagir4udo@unc.edu.ar'
         }
     )
 
@@ -71,7 +71,7 @@ def test_successful_request():
         "/password-restore-request",
         json = {
             'username': 'bas_benja',
-            'email': 'basbenja3@gmail.com',
+            'email': 'basbenja3@gmail.com'
         }
     )
 
@@ -83,7 +83,7 @@ def test_successful_request():
         "/password-restore-request",
         json = {
             'username': 'pyrobots',
-            'email': 'pyrobots.notreply@gmail.com',
+            'email': 'pyrobots.notreply@gmail.com'
         }
     )
 
