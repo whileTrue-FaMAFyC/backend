@@ -50,7 +50,7 @@ def test_invalid_restore_code():
         "/password-restore-request",
         json = {
             'username': 'pyrobots',
-            'email': 'pyrobots.notreply@gmail.com',
+            'email': 'pyrobots.notreply@gmail.com'
         }
     )
 
@@ -82,7 +82,7 @@ def test_invalid_password_format():
         "/password-restore-request",
         json = {
             'username': 'pyrobots',
-            'email': 'pyrobots.notreply@gmail.com',
+            'email': 'pyrobots.notreply@gmail.com'
         }
     )
 
@@ -112,7 +112,7 @@ def test_successful_restore():
         "/password-restore-request",
         json = {
             'username': 'pyrobots',
-            'email': 'pyrobots.notreply@gmail.com',
+            'email': 'pyrobots.notreply@gmail.com'
         }
     )
 
