@@ -13,7 +13,12 @@ class UserSignUpData(UserBase):
 class UserLogin(BaseModel):
     username_or_email: str
     password: str
-    
+
+# To return token and avatar upon succesful login
+class LoginData(BaseModel):
+    authorization: str
+    avatar: str
+
 # To insert a user to the database
 class NewUserToDb(UserBase):
     hashed_password: str

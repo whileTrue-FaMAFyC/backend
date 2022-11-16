@@ -145,4 +145,4 @@ def test_successful_restore():
     )
 
     assert response.status_code == 200
-    assert response.json()['Authorization'] != ''
+    assert response.json()['authorization'] != ''
