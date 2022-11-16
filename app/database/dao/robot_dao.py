@@ -3,6 +3,8 @@ from pony.orm import db_session, select
 from database.dao.user_dao import get_user_by_username
 from database.models.models import Robot, RobotStats
 from utils.robot_utils import insert_filename_to_file
+from utils.shooter_default_utils import *
+from utils.random_default_utils import *
 from view_entities.robot_view_entities import RobotCreate, WinnerRobot
 
 
@@ -74,3 +76,28 @@ def get_name_and_creator_by_id(robot_id: int):
         "username": robot.owner.username,
         "robot_name": robot.name
     }
+
+@db_session
+def add_default_robots(username: str):
+    try:
+        create_new_robot(
+            username, 
+            RobotCreate(
+                name="Shooter",
+                source_code=SHOOTER_SOURCE_CODE,
+                bot_filename="shooter_robot.py",
+                avatar=SHOOTER_AVATAR
+            )
+        )
+        create_new_robot(
+            username, 
+            RobotCreate(
+                name="Random",
+                source_code=RANDOM_SOURCE_CODE,
+                bot_filename="random_robot.py",
+                avatar=RANDOM_AVATAR
+            )
+        )
+        return True
+    except: 
+        return False

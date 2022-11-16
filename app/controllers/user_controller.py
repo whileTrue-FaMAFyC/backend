@@ -3,7 +3,9 @@ from passlib.hash import bcrypt
 from random import randint
 from typing import Union
 
+from database.dao.robot_dao import add_default_robots
 from database.dao.user_dao import *
+from utils.robot_utils import ERROR_INSERTING_ROBOTS
 from utils.user_utils import generate_token, TokenData
 from validators.user_validators import *
 from view_entities.user_view_entities import *
@@ -41,11 +43,13 @@ async def sign_up_post(user: UserSignUpData):
 async def verify_user(username: str, code: UserVerificationCode):
     user_verification_validator(username, code.verification_code)
 
-    if update_user_verification(username): # Check if updating the verified attribute had any problems.
-        return True
-    else:
+    if not update_user_verification(username): # Check if updating the verified attribute had any problems.
         raise ERROR_UPDATING_USER_DATA
 
+    if not add_default_robots(username):
+        raise ERROR_INSERTING_ROBOTS
+
+    return True
 
 @user_controller.post("/load-avatar/{username}", status_code=status.HTTP_200_OK)
 async def load_avatar(username: str, avatar: UserAvatar):
