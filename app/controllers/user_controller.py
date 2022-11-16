@@ -75,26 +75,23 @@ async def login_for_access_token(login_data: UserLogin):
 
 
 @user_controller.put("/change-avatar", status_code=status.HTTP_200_OK)
-async def change_avatar(avatar: UploadFile = None, authorization: Union[str, None] = Header(None)):
+async def change_avatar(avatar: UserAvatar, authorization: Union[str, None] = Header(None)):
     validate_token(authorization)
 
     token_data = jwt.decode(authorization, SECRET_KEY)
 
     username = token_data['username']
 
-    if avatar:
-        change_avatar_validator(avatar.content_type)
-
-        contents = await avatar.read()
-        file_extension = avatar.filename.split('.')[1].lower()
-        # Saves the file in disk and returns its path
-        avatar_path = save_user_avatar(username, contents, file_extension)
+    if avatar != "":
+        change_avatar_validator(avatar)
         
-        if update_user_avatar(username, avatar_path):
+        avatar_file = get_avatar_file(avatar.avatar)
+
+        if update_user_avatar(username, avatar_file):
             return True
         else:
             raise ERROR_UPDATING_USER_DATA
     
-    # If user didn´t upload any avatar, don't change the db
+    # # If user didn´t upload any avatar, don't change the db
     else:
         raise AVATAR_NOT_INSERTED
