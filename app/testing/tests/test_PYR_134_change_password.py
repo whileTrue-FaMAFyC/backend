@@ -131,7 +131,7 @@ def test_successful_password_change():
             'new_password_confirmation': 'NewPassword1'
         }
     )
-    
+
     assert response.status_code == 200
     assert verify_password(
         'NewPassword1', 
