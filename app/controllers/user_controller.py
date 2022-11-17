@@ -70,4 +70,4 @@ async def login_for_access_token(login_data: UserLogin):
         TokenData(username=user.username, email=user.email)
     )
     
-    return JSONResponse(content={"Authorization": access_token})
+    return JSONResponse(content={"authorization": access_token})
