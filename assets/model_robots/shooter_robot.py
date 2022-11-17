@@ -6,6 +6,6 @@ class ShooterRobot(Robot):
     def respond(self):
         self.point_scanner(self.degrees, 10)
         if self.scanned() != None:
-            self.cannon(self.degrees, self.scanned)
+            self.cannon(self.degrees, self.scanned())
         else:
             self.degrees += 10

@@ -4,7 +4,7 @@ from typing import Tuple
 
 from utils.services_utils import *
 
-class Robot:   
+class Robot:
     def __init__(self, robot_id: int, id_in_game: int):
         self._id = robot_id
         self._id_in_game: int = id_in_game

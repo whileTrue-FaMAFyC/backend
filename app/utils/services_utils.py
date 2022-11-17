@@ -1,8 +1,7 @@
-import math
-from re import M
-from numpy import add, sign
-from typing import Dict, List, Tuple
 from base64 import b64decode
+import math
+from numpy import add, sign
+from typing import List, Tuple
 
 from database.dao.robot_dao import get_source_code_by_id
 
@@ -21,7 +20,7 @@ M_VELOC_1 = 1
 # Meters a missile advances in a round
 MISSILE_ADVANCE = 25
 
-OUT_OF_BOUNDS = (1500,1500)
+OUT_OF_BOUNDS = (5000,5000)
 
 # The maximum possible distance between two robots is 1414 meters
 # sqrt(1000^2 + 1000^2) = 1414,21
@@ -37,6 +36,10 @@ DISTANCE_DAMAGE_5 = 50
 DISTANCE_DAMAGE_3 = 100
 
 IMPORT_ROBOT_CLASS = "from services.Robot import Robot\n"
+
+
+INITIALIZATION_TIMEOUT = 0.2
+RESPOND_TIMEOUT = 0.2
 
 
 class GameException(Exception):

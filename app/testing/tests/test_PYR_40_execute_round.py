@@ -13,7 +13,7 @@ def test_all_rounds_executed():
         assert False
     except GameException as e:
         assert e.message == "All rounds already executed"
-    
+
 
 def test_all_robots_dead():
     robots = [Robot1(1,0), Robot2(2,0), Robot3(3,0)]
@@ -27,7 +27,7 @@ def test_all_robots_dead():
         assert False
     except GameException as e:
         assert e.message == "All robots dead"
-        
+
 
 def test_robots_move():
     # The Robot4 does not move

@@ -1,7 +1,8 @@
+from func_timeout import func_timeout
 
 from database.dao.robot_dao import get_bot_by_owner_and_name, get_bot_by_id
 from services.game import Game
-from utils.services_utils import create_robots_instances, OUT_OF_BOUNDS
+from utils.services_utils import create_robots_instances, OUT_OF_BOUNDS, INITIALIZATION_TIMEOUT
 from view_entities.robot_view_entities import RobotInSimulation
 from view_entities.simulation_view_entities import Simulation
 
@@ -10,13 +11,19 @@ def execute_game_simulation(game: Game):
     robots = []
     frames.append({"robots": {}})
     for r in game.robots:
-        r.initialize()
-        frames[0]["robots"][r._id_in_game] = {"x": r.get_position()[0],
-                                              "y": r.get_position()[1],
-                                              "harmed": False,
-                                              "died": False, 
-                                              "status": 0
-                                             }
+        try:
+            func_timeout(timeout=INITIALIZATION_TIMEOUT, func=r.initialize)
+        except:
+            print('Robot timed out during initialization in simulation')
+            r._increase_damage(100)
+
+        frames[0]["robots"][r._id_in_game] = {
+            "x": r.get_position()[0],
+            "y": r.get_position()[1],
+            "harmed": r.get_damage() >= 100,
+            "died": r.get_damage() >= 100,
+            "status": r.get_damage()
+        }
         frames[0]["missiles"] = {}
         name = get_bot_by_id(r._id).name
         robots.append(RobotInSimulation(name=name, id=r._id_in_game))
@@ -25,7 +32,7 @@ def execute_game_simulation(game: Game):
         game.execute_round()
         round = game._num_rounds_executed
         frames.append({"robots": {}, "missiles": {}})
-      
+
         for r in game.robots:
             position = r.get_position() if r.get_position() != OUT_OF_BOUNDS else r._final_position
             frames[round]["robots"][r._id_in_game] = {
