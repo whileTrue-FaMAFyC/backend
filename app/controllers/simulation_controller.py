@@ -23,9 +23,10 @@ async def create_simulation(simulation_info: Simulation,
     
     simulation_validator(creator_username, simulation_info)  
 
-    frames, robots = execute_simulation(creator_username, simulation_info)
+    frames, robots, winners = execute_simulation(creator_username, simulation_info)
     
     return {
         "names": robots,
-        "simulation": frames
+        "simulation": frames,
+        "winners": winners
     }
