@@ -29,7 +29,7 @@ class Robot1(RobotTest):
 
 
     def respond(self):
-        self.drive(0, 10)
+        self.drive(0, 30)
 
 class Robot2(RobotTest):
     def initialize(self):
@@ -37,7 +37,7 @@ class Robot2(RobotTest):
 
 
     def respond(self):
-        self.drive(180,10)
+        self.drive(180,30)
 
 class Robot3(RobotTest):
     def initialize(self):

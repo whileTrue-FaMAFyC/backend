@@ -229,7 +229,12 @@ class Robot:
         elif self._velocity >= 90 and self._req_velocity == 100:
             self._velocity = self._req_velocity
         else:
-            self._velocity = ceil((self._velocity + self._req_velocity)/2)
+            offset_velocity = ceil((self._req_velocity - self._velocity)/3) 
+            self._velocity = self._velocity + offset_velocity
+            if self._velocity < 0:
+                self._velocity = 0
+            elif self._velocity > 100:
+                self._velocity = 100
 
         distance_x = round_up((round(cos(radians(self._direction)), 5)*self._velocity)*M_VELOC_1)
         distance_y = round_up((round(sin(radians(self._direction)), 5)*self._velocity)*M_VELOC_1)

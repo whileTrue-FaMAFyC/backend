@@ -101,3 +101,6 @@ def test_successful_start():
             }
         }
         websocket.close()
+
+    match = get_match_by_name_and_user('myMatch!', 'juliolcese')
+    assert match.started

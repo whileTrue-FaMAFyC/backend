@@ -129,14 +129,14 @@ def get_lobby_info(match_id: int, username: str):
             im_in = True
         
         user_robot.append(UserAndRobotInfo(
-                username=robot.owner.username,
-                user_avatar= "" if (robot.owner.avatar == "default") else robot.owner.avatar,
-                robot_name=robot.name,
-                robot_avatar=robot.avatar
+            username=robot.owner.username,
+            user_avatar= "" if (robot.owner.avatar == "default") else robot.owner.avatar,
+            robot_name=robot.name,
+            robot_avatar=robot.avatar
         ))
     
     if match.started:
-        results = match_winner(robots_id, game_results)
+        results = match_winner(robots_id, game_results)[0]
 
     if match.hashed_password != "":
         has_password = True
@@ -174,7 +174,6 @@ def update_joining_user_match(joining_username: str, joining_robot: str, match_i
     match_in_db = Match[match_id]
 
     joining_user_in_db = User.get(username=joining_username)
-
     joining_robot_in_db = Robot.get(name=joining_robot, owner=joining_user_in_db)
 
     try:
@@ -182,3 +181,24 @@ def update_joining_user_match(joining_username: str, joining_robot: str, match_i
         return True
     except:
         return False
+
+@db_session
+def get_matches_with_filter(is_owner: bool, is_joined: bool, started: bool, user: str):
+    q = Match.select()
+
+    if is_owner == True:
+        q = q.filter(lambda m: m.creator_user.username == user)
+    elif is_owner == False:
+        q = q.filter(lambda m: m.creator_user.username != user)
+    
+    if is_joined == True:
+        q = q.filter(lambda m: user in (rj.owner.username for rj in m.robots_joined))
+    elif is_joined == False:
+        q = q.filter(lambda m: not (user in (rj.owner.username for rj in m.robots_joined)))
+        
+    if started == True:
+        q = q.filter(lambda m: m.started)
+    elif started == False:
+        q = q.filter(lambda m: not m.started)
+    
+    return q

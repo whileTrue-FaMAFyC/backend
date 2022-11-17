@@ -54,7 +54,12 @@ def execute_game_simulation(game: Game):
                 "new": new
             }
 
-    return frames, robots
+    winners = []
+    for r in game.robots:
+        if r.get_damage() < 100:
+            winners.append(get_bot_by_id(r._id).name)
+
+    return frames, robots, winners
 
 def execute_simulation(creator_username: str, simulation_info: Simulation):
     robots_id = []
@@ -65,6 +70,6 @@ def execute_simulation(creator_username: str, simulation_info: Simulation):
 
     robots = create_robots_instances(robots_id)
     game = Game(simulation_info.num_rounds, robots)
-    frames, robots = execute_game_simulation(game)
+    frames, robots, winners = execute_game_simulation(game)
 
-    return frames, robots
+    return frames, robots, winners

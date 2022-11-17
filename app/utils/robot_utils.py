@@ -15,6 +15,11 @@ ROBOT_DB_EXCEPTION = HTTPException(
     detail="Internal error when creating the new bot in the database."
 )
 
+ERROR_INSERTING_ROBOTS = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error when adding the default robots."
+)
+
 # def parse_b64_source_code(b64_source_code: str):
 #     without_prefix = b64_source_code.replace('data:text/x-python;base64,', '')
 #     source_code = b64decode(without_prefix).decode()
@@ -36,7 +41,7 @@ ROBOT_DB_EXCEPTION = HTTPException(
 @db_session
 def robot_db_to_view(robots: Robot):
     return [ShowRobot.from_orm(r) for r in robots]
-
+    
 
 def insert_filename_to_file(file: str, filename: str):
     if file == "":
@@ -66,9 +71,3 @@ def get_robot_in_match_by_owner(match_id: int, owner_username: str):
             return r
     
     return None
-    # return left_join(
-    #     (r)
-    #     for m in Match for r in m.robots_joined
-    #     if m.match_id == match_id and
-    #        r.owner == User.get(username=owner_username)
-    #     )

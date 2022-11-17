@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect, status, Header
+from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect, status, Header, Body
 from jose import jwt
 from typing import Union, List, Dict
 
@@ -10,7 +10,7 @@ from utils.match_utils import *
 from utils.user_utils import *
 from validators.match_validators import *
 from validators.user_validators import validate_token, SECRET_KEY
-from view_entities.match_view_entities import NewMatch, JoinMatch
+from view_entities.match_view_entities import NewMatch, JoinMatch, MatchesFilters
 
 
 
@@ -71,14 +71,21 @@ async def create_match(new_match: NewMatch, authorization: Union[str, None] = He
 
 
 @match_controller.get("/list-matches", status_code=status.HTTP_200_OK)
-async def get_matches(authorization: Union[str, None] = Header(None)):   
-   validate_token(authorization)
+async def get_matches(filters: Union[MatchesFilters, None] = Body(MatchesFilters()), 
+                      authorization: Union[str, None] = Header(None)):
 
-   matches_db = get_all_matches()
+    validate_token(authorization)
+
+    token_data = jwt.decode(authorization, SECRET_KEY)
+
+    user = token_data['username']
+
+    matches_db = get_matches_with_filter(filters.is_owner, filters.is_joined, 
+                                        filters.started, user)
+
+    matches_view = match_db_to_view(matches_db)
    
-   matches_view = match_db_to_view(matches_db)
-   
-   return matches_view
+    return matches_view
 
 @match_controller.put("/start-match/{match_id}", status_code=status.HTTP_200_OK)
 async def start_match(match_id: int, authorization: Union[str, None] = Header(None)):
@@ -96,6 +103,10 @@ async def start_match(match_id: int, authorization: Union[str, None] = Header(No
         "action": "start",
         "data": ""
     })
+    
+    ## UPDATE BD
+    if not update_executed_match(match_id):
+        raise INTERNAL_ERROR_UPDATING_MATCH_INFO
 
     winners = execute_match(match_id)
 
@@ -110,10 +121,6 @@ async def start_match(match_id: int, authorization: Union[str, None] = Header(No
     ## DELETE CONECTION MANAGER.
     await lobbys[match_id].close_lobby()
     lobbys.pop(match_id)
-
-    ## UPDATE BD
-    if not update_executed_match(match_id):
-        raise INTERNAL_ERROR_UPDATING_MATCH_INFO
 
     return True
 
