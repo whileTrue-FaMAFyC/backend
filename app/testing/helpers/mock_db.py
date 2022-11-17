@@ -32,19 +32,22 @@ TEST_SOURCE_CODE_BENJA = """name:robot_test.py;base64,Y2xhc3MgUm9ib3RUZXN0KFJvYm
                     YgcmVzcG9uZCgpOgogICAgICAgIHBhc3M="""
 
 
-
+"""
+NOTE: unverified users shouldn't have matches nor robots
+"""
 @db_session
 def users():
     users = [
         ('bas_benja', 'basbenja3@gmail.com', MOCK_AVATAR, 'Compuamigos2', 555888, True, datetime.now()),
         ('juliolcese', 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR, '1whileTrue1', 889654, True, MOCK_CREATED_TIME),
-        ('tonimondejar', 'mondejarantonio@hotmail.com', "", 'FAMAFyC2022', 123456, False, MOCK_CREATED_TIME),
-        ('valennegrelli', 'valen57negrelli@yahoo.com.ar', "", 'piXies18', 852436, False, MOCK_CREATED_TIME),
-        ('sebagiraudo', 'sebagir4udo@unc.edu.ar', MOCK_AVATAR, 'B_1kerfuliate', 785364, True, datetime.now()),
+        ('tonimondejar', 'mondejarantonio@hotmail.com', "", 'FAMAFyC2022', 853314, True, datetime.now()),
+        ('valennegrelli', 'valen57negrelli@yahoo.com.ar', "", 'piXies18', 852436, True, MOCK_CREATED_TIME),
         ('lucasca22ina', 'cassinalucas@gmail.com', "", 'chicosSSS1456', 152347, True, datetime.now()),
-        ('israangulo4', 'isra1234@hotmail.com', MOCK_AVATAR, 'Argentiña222', 853314, False, datetime.now())
+        ('sebagiraudo', 'sebagir4udo@unc.edu.ar', MOCK_AVATAR, 'B_1kerfuliate', 123456, False, MOCK_CREATED_TIME),
+        ('israangulo4', 'isra1234@hotmail.com', MOCK_AVATAR, 'Argentiña222', 785364, False, MOCK_CREATED_TIME),
+        ('pyrobots', 'pyrobots.notreply@gmail.com', MOCK_AVATAR, 'Test1234', 525600, True, datetime.now())
     ]
-    
+
     for username, email, avatar, password, verification_code, verified, created_time in users:
         User(
             username=username,
@@ -56,7 +59,7 @@ def users():
             created_time=created_time
         )
     return
-            
+
 # Add some robots to the database
 robot_crack_source_code = "name:robot_capo_crack.py;base64,Y2xhc3MgUm9ib3RDYXBvQ3JhY2"\
                           "soUm9ib3QpOg0KDQogICAgZGVmIGluaXRpYWxpemUoc2VsZik6DQogICAg"\
@@ -79,31 +82,35 @@ robot_inutil_source_code = "name:robot_inutil.py;base64,Y2xhc3MgUm9ib3RJbnV0aWwo
 @db_session
 def robots():
     robots = [
-        ('robot_cool', MOCK_SOURCE_CODE, 'isra1234@hotmail.com', MOCK_AVATAR),
-        ('world_destroyer_29', MOCK_SOURCE_CODE, 'cassinalucas@gmail.com', MOCK_AVATAR),
-        ('_theTERMINATOR', MOCK_SOURCE_CODE, 'cassinalucas@gmail.com', MOCK_AVATAR),
-        ('R2D2', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
-        ('WALL-E', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', ""),
-        ('jarvis22', MOCK_SOURCE_CODE, 'valen57negrelli@yahoo.com.ar', MOCK_AVATAR),
-        ('0ptimusPrime', robot_inutil_source_code, 'basbenja3@gmail.com', MOCK_AVATAR),
-        ('Bumblebee', robot_crack_source_code, 'basbenja3@gmail.com', MOCK_AVATAR),
-        ('pichon', TEST_SOURCE_CODE_BENJA, 'basbenja3@gmail.com', MOCK_AVATAR),
-        ('_tron', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
-        ('MegaByte', MOCK_SOURCE_CODE, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
-        ('CYborg34', TEST_SOURCE_CODE_TONI, 'mondejarantonio@hotmail.com', MOCK_AVATAR),
-        ('automatax', TEST_SOURCE_CODE_JULI, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
-        ('astroGirl', MOCK_SOURCE_CODE, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
-        ('RobotCrack', robot_crack_source_code, 'juliolcese@mi.unc.edu.ar', MOCK_AVATAR),
-        ('RobotInutil', robot_inutil_source_code, 'basbenja3@gmail.com', MOCK_AVATAR)
+        ('world_destroyer_29', MOCK_SOURCE_CODE, 'lucasca22ina', MOCK_AVATAR),
+        ('_theTERMINATOR', MOCK_SOURCE_CODE, 'lucasca22ina', MOCK_AVATAR),
+        ('R2D2', MOCK_SOURCE_CODE, 'valennegrelli', MOCK_AVATAR),
+        ('WALL-E', MOCK_SOURCE_CODE, 'valennegrelli', ""),
+        ('jarvis22', MOCK_SOURCE_CODE, 'valennegrelli', MOCK_AVATAR),
+        ('0ptimusPrime', robot_inutil_source_code, 'bas_benja', MOCK_AVATAR),
+        ('Bumblebee', robot_crack_source_code, 'bas_benja', MOCK_AVATAR),
+        ('pichon', TEST_SOURCE_CODE_BENJA, 'bas_benja', MOCK_AVATAR),
+        ('_tron', MOCK_SOURCE_CODE, 'tonimondejar', MOCK_AVATAR),
+        ('MegaByte', MOCK_SOURCE_CODE, 'tonimondejar', MOCK_AVATAR),
+        ('CYborg34', TEST_SOURCE_CODE_TONI, 'tonimondejar', MOCK_AVATAR),
+        ('automatax', TEST_SOURCE_CODE_JULI, 'juliolcese', MOCK_AVATAR),
+        ('astroGirl', MOCK_SOURCE_CODE, 'juliolcese', MOCK_AVATAR),
+        ('RobotCrack', robot_crack_source_code, 'juliolcese', MOCK_AVATAR),
+        ('RobotInutil', robot_inutil_source_code, 'bas_benja', MOCK_AVATAR),
+        ('RobotInutil', robot_inutil_source_code, 'lucasca22ina', MOCK_AVATAR)
     ]
 
-    for robot_name, source_code, owner_email, avatar in robots:
-        Robot(
+    for robot_name, source_code, username, avatar in robots:
+        robot = Robot(
             name=robot_name,
             source_code=source_code,
-            owner=get_user_by_email(owner_email),
+            owner=get_user_by_username(username),
             avatar=avatar
         )
+        robot_stats = RobotStats(
+            robot=robot
+        )
+        robot.set(stats=robot_stats)
     return
 
 @db_session
@@ -133,8 +140,6 @@ def matches():
         ('partidaza', 'valennegrelli', 'R2D2', 2, 2, 200, 1, "", False,
          [RobotInMatch(owner=UserInMatch(username="valennegrelli"), name="R2D2"), 
          RobotInMatch(owner=UserInMatch(username="bas_benja"), name="Bumblebee")])
-
-    
     ]
 
     for (name, creator_user, creator_robot, min_players, max_players, 
