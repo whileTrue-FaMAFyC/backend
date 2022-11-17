@@ -79,4 +79,4 @@ def test_missile_out_of_both_axis_bounds():
     robot._attack()
     assert robot._missile_final_position == (999-MISSILE_HALF_SIZE,999-MISSILE_HALF_SIZE)
     # Because cannon distance was reduced to a number less than 300
-    assert robot._rounds_to_wait_for_cannon == ROUNDS_TO_RELOAD_CANNON_100_TO_300
+    assert robot._rounds_to_wait_for_cannon == ROUNDS_TO_RELOAD_CANNON_BELOW_100
