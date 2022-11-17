@@ -129,14 +129,14 @@ def get_lobby_info(match_id: int, username: str):
             im_in = True
         
         user_robot.append(UserAndRobotInfo(
-                username=robot.owner.username,
-                user_avatar= "" if (robot.owner.avatar == "default") else robot.owner.avatar,
-                robot_name=robot.name,
-                robot_avatar=robot.avatar
+            username=robot.owner.username,
+            user_avatar= "" if (robot.owner.avatar == "default") else robot.owner.avatar,
+            robot_name=robot.name,
+            robot_avatar=robot.avatar
         ))
     
     if match.started:
-        results = match_winner(robots_id, game_results)
+        results = match_winner(robots_id, game_results)[0]
 
     if match.hashed_password != "":
         has_password = True
@@ -174,7 +174,6 @@ def update_joining_user_match(joining_username: str, joining_robot: str, match_i
     match_in_db = Match[match_id]
 
     joining_user_in_db = User.get(username=joining_username)
-
     joining_robot_in_db = Robot.get(name=joining_robot, owner=joining_user_in_db)
 
     try:

@@ -83,6 +83,11 @@ CREATOR_CANT_ABANDON_EXCEPTION = HTTPException(
     detail="The creator can't abandon the match."
 )
 
+MATCH_DOES_NOT_HAVE_PASSWORD = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail="The match does not have password."
+)
+
 # Transforms the matches selected from the database to the format that will be
 # sent to the frontend.
 @db_session
@@ -147,5 +152,7 @@ def match_winner(robots_id: List[int], game_results: Dict[int, Dict[str, int]]):
     
     for r in winners_robots:
         winners.append(get_name_and_creator_by_id(r))
-        
-    return winners
+    
+    # winners: list of {creator_username: robot_name}
+    # winners_robots: winner robots' id
+    return winners, winners_robots

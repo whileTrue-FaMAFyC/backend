@@ -103,6 +103,10 @@ async def start_match(match_id: int, authorization: Union[str, None] = Header(No
         "action": "start",
         "data": ""
     })
+    
+    ## UPDATE BD
+    if not update_executed_match(match_id):
+        raise INTERNAL_ERROR_UPDATING_MATCH_INFO
 
     winners = execute_match(match_id)
 
@@ -117,10 +121,6 @@ async def start_match(match_id: int, authorization: Union[str, None] = Header(No
     ## DELETE CONECTION MANAGER.
     await lobbys[match_id].close_lobby()
     lobbys.pop(match_id)
-
-    ## UPDATE BD
-    if not update_executed_match(match_id):
-        raise INTERNAL_ERROR_UPDATING_MATCH_INFO
 
     return True
 

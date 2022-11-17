@@ -109,6 +109,21 @@ def test_match_already_started():
     assert response.json()["detail"] == MATCH_ALREADY_STARTED.detail
 
 
+def test_request_with_password_match_without():
+    match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id
+    response = client.post(
+        f'/matches/join-match/{match_id}',
+        headers = {'Authorization': MOCK_TOKEN_VALEN},
+        json={
+            "match_password": "pw",
+            "joining_robot": "R2D2"
+        }
+    )
+    
+    assert response.status_code == MATCH_DOES_NOT_HAVE_PASSWORD.status_code
+    assert response.json()["detail"] == MATCH_DOES_NOT_HAVE_PASSWORD.detail
+
+
 @pytest.mark.asyncio
 async def test_successful_join_match():
     response = client.post(

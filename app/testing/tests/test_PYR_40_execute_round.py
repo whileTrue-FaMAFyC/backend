@@ -46,9 +46,27 @@ def test_robots_move():
     assert robots[3].get_position() == initial_positions[3]
 
 
-def test_check_collisions():
+def test_check_collisions_same_position():
     robots = [Robot1(1,0), Robot2(2,0)]
     robots[0].set_initial_position(150,100)
+    robots[1].set_initial_position(190,100)
+
+    game = Game(100, robots)
+
+    for r in range(2):
+    # The damage must be 0 because the game didn't start.
+        assert robots[r].get_damage() == 0
+
+    game.execute_round()
+
+    for r in range(2):
+    # The damage must be 2 because they should have crashed.
+        assert robots[r].get_damage() == 2
+
+
+def test_check_collisions_at_some_distance():
+    robots = [Robot1(1,0), Robot2(2,0)]
+    robots[0].set_initial_position(180,100)
     robots[1].set_initial_position(200,100)
 
     game = Game(100, robots)
@@ -69,7 +87,7 @@ def test_dead_robots_go_out_of_bounds():
     robots = [Robot1(1,0), Robot2(2,0),Robot4(4,0)]
     # INITIAL POSITIONS
     robots[0].set_initial_position(ROBOT_HALF_SIZE,ROBOT_HALF_SIZE)
-    robots[1].set_initial_position(50+ROBOT_HALF_SIZE,ROBOT_HALF_SIZE)
+    robots[1].set_initial_position(20+ROBOT_HALF_SIZE,ROBOT_HALF_SIZE)
     # INITIAL DAMAGE
     robots[0].set_damage(98)
     robots[1].set_damage(98)
