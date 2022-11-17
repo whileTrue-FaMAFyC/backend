@@ -10,13 +10,13 @@ def test_increase_velocity():
     assert r1.get_velocity() == 0
     r1.drive(0, 80)
     r1._move()
-    assert r1.get_velocity() == 40
+    assert r1.get_velocity() == 27 # (80-0)/3 
 
 def test_decrease_velocity():
-    assert r1.get_velocity() == 40
+    assert r1.get_velocity() == 27
     r1.drive(0, 20)
     r1._move()
-    assert r1.get_velocity() == 30
+    assert r1.get_velocity() ==  25 # (27-0)/3 
 
 def test_stop_motor():
     while r1.get_velocity() > 10:
