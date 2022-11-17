@@ -72,6 +72,11 @@ def load_avatar_validator(username: str, avatar: UserAvatar):
     if not avatar.avatar.startswith("data:image/") and avatar.avatar != "":
         raise AVATAR_FORMAT_NOT_VALID
 
+
+def change_avatar_validator(avatar: str):
+    if not avatar.avatar.startswith("data:image/") and avatar.avatar != "":
+        raise AVATAR_FORMAT_NOT_VALID
+
 def password_restore_request_validator(user: UserIDs):
     user_in_db = get_user_by_username_and_email(user.username, user.email)
 

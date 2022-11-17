@@ -6,7 +6,7 @@ from typing import Union
 from database.dao.robot_dao import add_default_robots
 from database.dao.user_dao import *
 from utils.robot_utils import ERROR_INSERTING_ROBOTS
-from utils.user_utils import generate_token, TokenData
+from utils.user_utils import *
 from validators.user_validators import *
 from view_entities.user_view_entities import *
 
@@ -134,3 +134,28 @@ async def change_password(
         return True
     else:
         raise ERROR_UPDATING_USER_DATA
+
+    return JSONResponse(content={"Authorization": access_token})
+
+
+@user_controller.put("/change-avatar", status_code=status.HTTP_200_OK)
+async def change_avatar(avatar: UserAvatar, authorization: Union[str, None] = Header(None)):
+    validate_token(authorization)
+
+    token_data = jwt.decode(authorization, SECRET_KEY)
+
+    username = token_data['username']
+
+    if avatar.avatar != "":
+        change_avatar_validator(avatar)
+        
+        avatar_file = get_avatar_file(avatar.avatar)
+
+        if update_user_avatar(username, avatar_file):
+            return True
+        else:
+            raise ERROR_UPDATING_USER_DATA
+    
+    # If user didn´t upload any avatar, don't change the db
+    else:
+        raise AVATAR_NOT_INSERTED
