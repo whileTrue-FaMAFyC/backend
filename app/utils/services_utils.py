@@ -20,7 +20,7 @@ M_VELOC_1 = 1
 # Meters a missile advances in a round
 MISSILE_ADVANCE = 25
 
-OUT_OF_BOUNDS = (1500,1500)
+OUT_OF_BOUNDS = (5000,5000)
 
 # The maximum possible distance between two robots is 1414 meters
 # sqrt(1000^2 + 1000^2) = 1414,21
