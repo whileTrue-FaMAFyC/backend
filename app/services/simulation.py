@@ -6,6 +6,7 @@ from utils.services_utils import create_robots_instances, OUT_OF_BOUNDS, INITIAL
 from view_entities.robot_view_entities import RobotInSimulation
 from view_entities.simulation_view_entities import Simulation
 
+
 def execute_game_simulation(game: Game):
     frames = []
     robots = []
@@ -13,7 +14,7 @@ def execute_game_simulation(game: Game):
     for r in game.robots:
         try:
             func_timeout(timeout=INITIALIZATION_TIMEOUT, func=r.initialize)
-        except:
+        except BaseException:
             print('Robot timed out during initialization in simulation')
             r._increase_damage(100)
 
@@ -34,17 +35,18 @@ def execute_game_simulation(game: Game):
         frames.append({"robots": {}, "missiles": {}})
 
         for r in game.robots:
-            position = r.get_position() if r.get_position() != OUT_OF_BOUNDS else r._final_position
+            position = r.get_position() if r.get_position(
+            ) != OUT_OF_BOUNDS else r._final_position
             frames[round]["robots"][r._id_in_game] = {
                 "x": position[0],
                 "y": position[1],
-                "harmed": frames[round-1]["robots"][r._id_in_game]["status"] != r.get_damage(),
+                "harmed": frames[round - 1]["robots"][r._id_in_game]["status"] != r.get_damage(),
                 "died": r.get_damage() >= 100,
                 "status": r.get_damage()
             }
 
         for m in game._missiles:
-            new = m.id in frames[round-1]["missiles"]
+            new = m.id in frames[round - 1]["missiles"]
             frames[round]["missiles"][m.id] = {
                 "initial_x": m.initial_position[0],
                 "initial_y": m.initial_position[1],
@@ -60,6 +62,7 @@ def execute_game_simulation(game: Game):
             winners.append(get_bot_by_id(r._id).name)
 
     return frames, robots, winners
+
 
 def execute_simulation(creator_username: str, simulation_info: Simulation):
     robots_id = []

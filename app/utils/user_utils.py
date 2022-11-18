@@ -11,7 +11,7 @@ USERS_ASSETS = 'assets/users'
 
 SECRET_KEY = "2c329a8eca7d0c2ff68d261ad0b2e3efa66cc2603183fe6d0b4b219a11138c84"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 1440 # One day
+ACCESS_TOKEN_EXPIRE_MINUTES = 1440  # One day
 
 SYSTEM_MAIL = "pyrobots.noreply@gmail.com"
 
@@ -56,7 +56,7 @@ ERROR_INSERTING_DATA = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="Internal error when inserting the user into the database."
 )
-    
+
 ERROR_SENDING_VERIFICATION_EMAIL = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="Internal error sending the email with the verification code."
@@ -109,7 +109,7 @@ AVATAR_ALREADY_LOADED = HTTPException(
 
 ERROR_SENDING_RESTORE_CODE_MAIL = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    detail="Internal error sending the email with the password restauration code." 
+    detail="Internal error sending the email with the password restauration code."
 )
 
 INVALID_RESTORE_CODE = HTTPException(
@@ -126,20 +126,21 @@ AVATAR_NOT_INSERTED = HTTPException(
     detail="Avatar not inserted."
 )
 
+
 def is_valid_password(password):
     l, u, d = 0, 0, 0
     for i in password:
         # counting lowercase alphabets
         if (i.islower()):
-            l+=1
+            l += 1
         # counting uppercase alphabets
         if (i.isupper()):
-            u+=1
+            u += 1
         # counting digits
         if (i.isdigit()):
-            d+=1
+            d += 1
 
-    return (l>=1 and u>=1 and d>=1 and len(password)>=8)
+    return (l >= 1 and u >= 1 and d >= 1 and len(password) >= 8)
 
 
 def send_verification_email(recipient, verification_code):
@@ -147,7 +148,7 @@ def send_verification_email(recipient, verification_code):
     TO = recipient
     SUBJECT = "Here is your verification code"
     TEXT = (f"Your verification code is: {verification_code}. It is valid for 4 hours." +
-    "\nDo not reply this email.")
+            "\nDo not reply this email.")
 
     # Prepare actual message
     message = """From: %s\nTo: %s\nSubject: %s\n\n%s
@@ -160,7 +161,7 @@ def send_verification_email(recipient, verification_code):
         server.sendmail(FROM, TO, message)
         server.close()
         return True
-    except:
+    except BaseException:
         return False
 
 
@@ -181,7 +182,7 @@ def send_cleanup_email(recipient, verification_code):
         server.sendmail(FROM, TO, message)
         server.close()
         return True
-    except:
+    except BaseException:
         return False
 
 
@@ -190,7 +191,7 @@ def insert_filename_to_file(file: str, filename: str):
         return ""
     return "name:" + filename + ";" + file
 
-    
+
 def verify_password(plain_password: str, hashed_password: str):
     return bcrypt.verify(plain_password, hashed_password)
 
@@ -208,6 +209,7 @@ def generate_token(data: TokenData):
     token = jwt.encode(data_to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
+
 def get_avatar_file(avatar: str):
     if (avatar == ""):
         return "default"
@@ -220,7 +222,7 @@ def send_password_restore_mail(recipient, restore_code):
     TO = recipient
     SUBJECT = "Restore your password"
     TEXT = (f"You can restore your password using this code: {restore_code}. " +
-    "\nDo not reply this email.")
+            "\nDo not reply this email.")
 
     # Prepare actual message
     message = """From: %s\nTo: %s\nSubject: %s\n\n%s
@@ -233,12 +235,15 @@ def send_password_restore_mail(recipient, restore_code):
         server.sendmail(FROM, TO, message)
         server.close()
         return True
-    except:
+    except BaseException:
         return False
 
 # Save avatar in assests directory and return the url
+
+
 def save_user_avatar(username: str, contents: bytes, file_extension: str):
-    # If the file exsists, it will override it. If not, it will create a new one
+    # If the file exsists, it will override it. If not, it will create a new
+    # one
     if os.path.exists(f'{USERS_ASSETS}/{username}'):
         pass
     else:
@@ -247,4 +252,3 @@ def save_user_avatar(username: str, contents: bytes, file_extension: str):
     f.write(contents)
     f.close()
     return (f'{USERS_ASSETS}/{username}/avatar.{file_extension}')
-

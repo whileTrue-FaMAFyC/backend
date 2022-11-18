@@ -11,11 +11,12 @@ from utils.match_utils import *
 
 client = TestClient(app)
 
+
 def test_inexistent_robot():
-    match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id    
+    match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id
     response = client.post(
         f'/matches/join-match/{match_id}',
-        headers = {'Authorization': MOCK_TOKEN_BENJA},
+        headers={'Authorization': MOCK_TOKEN_BENJA},
         json={
             "joining_robot": "_tron"
         }
@@ -24,24 +25,26 @@ def test_inexistent_robot():
     assert response.status_code == INEXISTENT_ROBOT.status_code
     assert response.json()["detail"] == INEXISTENT_ROBOT.detail
 
+
 def test_inexistent_match():
     response = client.post(
         f'/matches/join-match/1024',
-        headers = {'Authorization': MOCK_TOKEN_BENJA},
+        headers={'Authorization': MOCK_TOKEN_BENJA},
         json={
             "match_password": "",
             "joining_robot": "Bumblebee"
         }
     )
-    
+
     assert response.status_code == INEXISTENT_MATCH_EXCEPTION.status_code
     assert response.json()["detail"] == INEXISTENT_MATCH_EXCEPTION.detail
 
+
 def test_user_already_joined():
-    match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id    
+    match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id
     response = client.post(
         f'/matches/join-match/{match_id}',
-        headers = {'Authorization': MOCK_TOKEN_BENJA},
+        headers={'Authorization': MOCK_TOKEN_BENJA},
         json={
             "joining_robot": "0ptimusPrime"
         }
@@ -55,56 +58,59 @@ def test_incorrect_password():
     match_id = get_match_by_name_and_user('match1', 'juliolcese').match_id
     response = client.post(
         f'/matches/join-match/{match_id}',
-        headers = {'Authorization': MOCK_TOKEN_BENJA},
+        headers={'Authorization': MOCK_TOKEN_BENJA},
         json={
             "match_password": "Incorrect!",
             "joining_robot": "0ptimusPrime"
         }
     )
-    
+
     assert response.status_code == INCORRECT_PASSWORD.status_code
     assert response.json()["detail"] == INCORRECT_PASSWORD.detail
+
 
 def test_no_password():
     match_id = get_match_by_name_and_user('match1', 'juliolcese').match_id
     response = client.post(
         f'/matches/join-match/{match_id}',
-        headers = {'Authorization': MOCK_TOKEN_BENJA},
+        headers={'Authorization': MOCK_TOKEN_BENJA},
         json={
             "match_password": "",
             "joining_robot": "0ptimusPrime"
         }
     )
-    
+
     assert response.status_code == INCORRECT_PASSWORD.status_code
     assert response.json()["detail"] == INCORRECT_PASSWORD.detail
 
+
 def test_max_players_reached():
-    match_id = get_match_by_name_and_user('partidaza', 'valennegrelli').match_id
+    match_id = get_match_by_name_and_user(
+        'partidaza', 'valennegrelli').match_id
     response = client.post(
         f'/matches/join-match/{match_id}',
-        headers = {'Authorization': MOCK_TOKEN_TONI},
+        headers={'Authorization': MOCK_TOKEN_TONI},
         json={
             "match_password": "",
             "joining_robot": "_tron"
         }
     )
-    
+
     assert response.status_code == MAX_PLAYERS_REACHED.status_code
-    assert response.json()["detail"] == MAX_PLAYERS_REACHED.detail    
+    assert response.json()["detail"] == MAX_PLAYERS_REACHED.detail
 
 
 def test_match_already_started():
     match_id = get_match_by_name_and_user('match!', 'tonimondejar').match_id
     response = client.post(
         f'/matches/join-match/{match_id}',
-        headers = {'Authorization': MOCK_TOKEN_VALEN},
+        headers={'Authorization': MOCK_TOKEN_VALEN},
         json={
             "match_password": "pw",
             "joining_robot": "R2D2"
         }
     )
-    
+
     assert response.status_code == MATCH_ALREADY_STARTED.status_code
     assert response.json()["detail"] == MATCH_ALREADY_STARTED.detail
 
@@ -113,13 +119,13 @@ def test_request_with_password_match_without():
     match_id = get_match_by_name_and_user('match1', 'bas_benja').match_id
     response = client.post(
         f'/matches/join-match/{match_id}',
-        headers = {'Authorization': MOCK_TOKEN_VALEN},
+        headers={'Authorization': MOCK_TOKEN_VALEN},
         json={
             "match_password": "pw",
             "joining_robot": "R2D2"
         }
     )
-    
+
     assert response.status_code == MATCH_DOES_NOT_HAVE_PASSWORD.status_code
     assert response.json()["detail"] == MATCH_DOES_NOT_HAVE_PASSWORD.detail
 
@@ -128,8 +134,8 @@ def test_request_with_password_match_without():
 async def test_successful_join_match():
     response = client.post(
         "/matches/new-match",
-        headers = {'Authorization': MOCK_TOKEN_BENJA},
-        json = {
+        headers={'Authorization': MOCK_TOKEN_BENJA},
+        json={
             'name': 'myMatch',
             'creator_robot': 'Bumblebee',
             'min_players': 3,
@@ -145,29 +151,29 @@ async def test_successful_join_match():
 
     match_id = get_match_by_name_and_user('myMatch', 'bas_benja').match_id
     with client.websocket_connect(
-            f"/matches/ws/follow-lobby/{match_id}?authorization={MOCK_TOKEN_JULI}"
-        ) as websocket:
-            assert not user_and_robot_in_match(match_id, "tonimondejar", "_tron")
+        f"/matches/ws/follow-lobby/{match_id}?authorization={MOCK_TOKEN_JULI}"
+    ) as websocket:
+        assert not user_and_robot_in_match(match_id, "tonimondejar", "_tron")
 
-            response = client.post(
-                f"/matches/join-match/{match_id}",
-                headers={"Authorization": MOCK_TOKEN_TONI},
-                json={
-                    "joining_robot": "_tron"
-                }
-            )
-
-            assert response.status_code == 200
-            assert user_and_robot_in_match(match_id, "tonimondejar", "_tron")
-
-            data = websocket.receive_json()
-            assert data == {
-                "action": "join",
-                "data": {
-                    "username": "tonimondejar",
-                    "user_avatar": "",
-                    "robot_name": "_tron",
-                    "robot_avatar": MOCK_AVATAR
-                }
+        response = client.post(
+            f"/matches/join-match/{match_id}",
+            headers={"Authorization": MOCK_TOKEN_TONI},
+            json={
+                "joining_robot": "_tron"
             }
-            websocket.close()
+        )
+
+        assert response.status_code == 200
+        assert user_and_robot_in_match(match_id, "tonimondejar", "_tron")
+
+        data = websocket.receive_json()
+        assert data == {
+            "action": "join",
+            "data": {
+                "username": "tonimondejar",
+                "user_avatar": "",
+                "robot_name": "_tron",
+                "robot_avatar": MOCK_AVATAR
+            }
+        }
+        websocket.close()

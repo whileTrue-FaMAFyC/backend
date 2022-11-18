@@ -7,7 +7,8 @@ from utils.services_utils import *
 
 
 class Missile():
-    def __init__(self, id,  current_position, final_position, direction, remaining_distance):
+    def __init__(self, id, current_position, final_position,
+                 direction, remaining_distance):
         self.id = id
         self.initial_position = current_position
         self.current_position: Tuple(int, int) = current_position
@@ -27,7 +28,6 @@ class Game():
     def get_rounds_remaining(self):
         return self.num_rounds - self._num_rounds_executed
 
-
     def get_robots_alive(self):
         robots_alive_acc = 0
         for r in self.robots:
@@ -35,26 +35,26 @@ class Game():
                 robots_alive_acc += 1
         return robots_alive_acc
 
-
     def _check_collisions(self, robot: Robot):
         for robot2 in self.robots:
             vertexs = get_vertex(tuple(robot2.get_position()))
             if robot != robot2 and is_inside(vertexs, robot.get_position()):
                 robot._increase_damage(COLLISION_DAMAGE)
 
-
     def _advance_missile(self, missile: Missile):
-        if missile.remaining_distance <= MISSILE_ADVANCE+5:
+        if missile.remaining_distance <= MISSILE_ADVANCE + 5:
             missile.current_position = missile.final_position
 
         else:
             missile.current_position = tuple((
-                missile.current_position[0] + round_up(round(cos(radians(missile.direction)),5)*MISSILE_ADVANCE), 
-                missile.current_position[1] + round_up(round(sin(radians(missile.direction)),5)*MISSILE_ADVANCE)
+                missile.current_position[0] + round_up(
+                    round(cos(radians(missile.direction)), 5) * MISSILE_ADVANCE),
+                missile.current_position[1] + round_up(
+                    round(sin(radians(missile.direction)), 5) * MISSILE_ADVANCE)
             ))
         # print(missile.current_position, missile.id, missile.direction)
-        missile.remaining_distance = max(0,missile.remaining_distance-MISSILE_ADVANCE)
-
+        missile.remaining_distance = max(
+            0, missile.remaining_distance - MISSILE_ADVANCE)
 
     def _inflict_damage(self, missile: Missile):
         # Missile reached its final position
@@ -69,14 +69,14 @@ class Game():
                 elif distance < DISTANCE_DAMAGE_3:
                     r._increase_damage(3)
 
-
     def execute_round(self):
         if self._num_rounds_executed == self.num_rounds:
-        # You can´t execute another round. Max number of rounds executed reached
+            # You can´t execute another round. Max number of rounds executed
+            # reached
             raise GameException(detail="All rounds already executed")
 
         if self.get_robots_alive() == 0:
-        # You can´t execute another round. All robots dead.
+            # You can´t execute another round. All robots dead.
             raise GameException(detail="All robots dead")
 
         for m in self._missiles:
@@ -122,7 +122,7 @@ class Game():
             self._inflict_damage(m)
 
         for r in self.robots:
-        # Check if the robot got killed during the shooting stage
+            # Check if the robot got killed during the shooting stage
             if r.get_damage() < 100:
                 r._move()
 
@@ -132,8 +132,8 @@ class Game():
                 r._position = OUT_OF_BOUNDS
 
         for r in self.robots:
-        # Check if the robot got killed during the moving stage
-        # (collision with the walls damage)
+            # Check if the robot got killed during the moving stage
+            # (collision with the walls damage)
             if r.get_damage() < 100:
                 self._check_collisions(r)
 

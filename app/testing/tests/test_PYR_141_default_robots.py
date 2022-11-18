@@ -11,6 +11,7 @@ from utils.shooter_default_utils import *
 
 client = TestClient(app)
 
+
 def test_default_robots_added():
     response = client.put(
         "/verifyuser/sebagiraudo",
@@ -21,13 +22,13 @@ def test_default_robots_added():
 
     assert response.status_code == 200
 
-    assert get_bot_by_owner_and_name("sebagiraudo", "Shooter") != None
-    assert get_bot_by_owner_and_name("sebagiraudo", "Random") != None
+    assert get_bot_by_owner_and_name("sebagiraudo", "Shooter") is not None
+    assert get_bot_by_owner_and_name("sebagiraudo", "Random") is not None
 
     response = client.post(
         "/new-simulation",
-        headers = {"authorization": MOCK_TOKEN_SEBA},
-        json = {
+        headers={"authorization": MOCK_TOKEN_SEBA},
+        json={
             "num_rounds": 100,
             "robots": ["Shooter", "Random"]
         }

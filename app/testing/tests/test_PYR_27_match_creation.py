@@ -11,7 +11,8 @@ from utils.user_utils import INVALID_TOKEN_EXCEPTION
 # Usernames, robot names and match names used for the test
 tokens = [MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI]
 users = ['bas_benja', 'juliolcese', 'tonimondejar']
-robots = [['0ptimusPrime', 'Bumblebee'], ['automatax', 'astroGirl'], ['_tron', 'MegaByte', 'CYborg34']]
+robots = [['0ptimusPrime', 'Bumblebee'], ['automatax',
+                                          'astroGirl'], ['_tron', 'MegaByte', 'CYborg34']]
 matches = []
 
 
@@ -50,8 +51,8 @@ def client_put(creator_token: str, match_name: str, creator_robot: str,
                num_rounds: int, password: str):
     response = client.post(
         "/matches/new-match",
-        headers = {"authorization": creator_token},
-        json = {
+        headers={"authorization": creator_token},
+        json={
             "name": match_name,
             "creator_robot": creator_robot,
             "min_players": min_players,
@@ -60,22 +61,22 @@ def client_put(creator_token: str, match_name: str, creator_robot: str,
             "num_rounds": num_rounds,
             "password": password
         }
-    ) 
+    )
     return response
 
 
 def test_successful_creation_password():
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = tokens[user_index]
     creator_user = users[user_index]
 
     match_name = get_random_match_name()
-    matches.append((creator_user,match_name))
-    
-    robot_index = random.randint(0, max(1,user_index))
+    matches.append((creator_user, match_name))
+
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
-    min_players = random.choice([2,3,4])
+    min_players = random.choice([2, 3, 4])
 
     max_players = random.randint(min_players, 4)
 
@@ -84,24 +85,25 @@ def test_successful_creation_password():
     num_rounds = random.randint(1, 10000)
 
     password = get_random_password()
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_201_CREATED)
 
+
 def test_successful_creation_no_password():
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = tokens[user_index]
     creator_user = users[user_index]
 
     match_name = get_random_match_name()
-    matches.append((creator_user,match_name))
+    matches.append((creator_user, match_name))
 
-    robot_index = random.randint(0, max(1,user_index))
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
-    min_players = random.choice([2,3,4])
+    min_players = random.choice([2, 3, 4])
 
     max_players = random.randint(min_players, 4)
 
@@ -111,23 +113,24 @@ def test_successful_creation_no_password():
 
     password = ""
 
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_201_CREATED)
 
+
 def test_invalid_robot():
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = tokens[user_index]
     creator_user = users[user_index]
 
     match_name = get_random_match_name()
-    while((creator_user, match_name) in matches):
+    while ((creator_user, match_name) in matches):
         match_name = get_random_match_name()
-        
+
     creator_robot = 'unexistent robot'
 
-    min_players = random.choice([2,3,4])
+    min_players = random.choice([2, 3, 4])
 
     max_players = random.randint(min_players, 4)
 
@@ -136,8 +139,8 @@ def test_invalid_robot():
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_409_CONFLICT)
@@ -154,13 +157,13 @@ def test_match_name_used():
     creator_token = MOCK_TOKEN_BENJA
 
     user_index = 0
-    while(users[user_index] != creator_user):
+    while (users[user_index] != creator_user):
         user_index = user_index + 1
 
-    robot_index = random.randint(0, max(1,user_index))
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
-    min_players = random.choice([2,3,4])
+    min_players = random.choice([2, 3, 4])
 
     max_players = random.randint(min_players, 4)
 
@@ -169,8 +172,8 @@ def test_match_name_used():
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_409_CONFLICT)
@@ -180,18 +183,18 @@ def test_match_name_used():
 
 def test_invalid_min_players():
 
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = tokens[user_index]
     creator_user = users[user_index]
 
     match_name = get_random_match_name()
-    while((creator_user, match_name) in matches):
+    while ((creator_user, match_name) in matches):
         match_name = get_random_match_name()
-        
-    robot_index = random.randint(0, max(1,user_index))
+
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
-    min_players = random.choice([random.randint(-100, 1), 
+    min_players = random.choice([random.randint(-100, 1),
                                 random.randint(5, 100)])
 
     max_players = random.randint(2, 4)
@@ -201,70 +204,72 @@ def test_invalid_min_players():
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     # Here max_players will be between 2 and 4, but that could be a smaller
     # value than min_players, so the detail would include that.
     assert response.status_code == (status.HTTP_400_BAD_REQUEST)
-    assert  ("Minimum amount of players has to be between 2 and 4." 
-             in response.json()["detail"])
+    assert ("Minimum amount of players has to be between 2 and 4."
+            in response.json()["detail"])
+
 
 def test_invalid_max_players():
 
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = tokens[user_index]
     creator_user = users[user_index]
 
     match_name = get_random_match_name()
-    while((creator_user, match_name) in matches):
+    while ((creator_user, match_name) in matches):
         match_name = get_random_match_name()
-        
-    robot_index = random.randint(0, max(1,user_index))
+
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
-    min_players = random.choice([2,3,4])
+    min_players = random.choice([2, 3, 4])
 
-    max_players = random.choice([random.randint(-100, 1), 
-                                 random.randint(5, 100)]) 
+    max_players = random.choice([random.randint(-100, 1),
+                                 random.randint(5, 100)])
     num_games = random.randint(1, 200)
 
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_400_BAD_REQUEST)
-    assert ("Maximum amount of players has to be between 2 and 4. " 
+    assert ("Maximum amount of players has to be between 2 and 4. "
             in response.json()["detail"])
+
 
 def test_min_greater_than_max():
 
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = tokens[user_index]
     creator_user = users[user_index]
 
     match_name = get_random_match_name()
-    while((creator_user, match_name) in matches):
+    while ((creator_user, match_name) in matches):
         match_name = get_random_match_name()
-        
-    robot_index = random.randint(0, max(1,user_index))
+
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
     min_players = random.randint(3, 4)
 
-    max_players = random.randint(2, min_players-1)
+    max_players = random.randint(2, min_players - 1)
 
     num_games = random.randint(1, 200)
 
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_400_BAD_REQUEST)
@@ -272,109 +277,113 @@ def test_min_greater_than_max():
                                         "greater than maximum amount of " \
                                         "players. "
 
+
 def test_invalid_games():
 
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = tokens[user_index]
     creator_user = users[user_index]
 
     match_name = get_random_match_name()
-    while((creator_user, match_name) in matches):
+    while ((creator_user, match_name) in matches):
         match_name = get_random_match_name()
-        
-    robot_index = random.randint(0, max(1,user_index))
+
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
-    min_players = random.choice([2,3,4])
+    min_players = random.choice([2, 3, 4])
 
     max_players = random.randint(min_players, 4)
 
-    num_games = random.choice([random.randint(-100, 0), 
+    num_games = random.choice([random.randint(-100, 0),
                                random.randint(201, 300)])
 
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_400_BAD_REQUEST)
     assert response.json()["detail"] == "Number of games has to be between "\
                                         "1 and 200. "
 
+
 def test_invalid_rounds():
 
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = tokens[user_index]
     creator_user = users[user_index]
 
     match_name = get_random_match_name()
-    while((creator_user, match_name) in matches):
+    while ((creator_user, match_name) in matches):
         match_name = get_random_match_name()
-        
-    robot_index = random.randint(0, max(1,user_index))
+
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
-    min_players = random.choice([2,3,4])
+    min_players = random.choice([2, 3, 4])
 
     max_players = random.randint(min_players, 4)
 
     num_games = random.randint(1, 200)
 
-    num_rounds = random.choice([random.randint(-100, 0), 
+    num_rounds = random.choice([random.randint(-100, 0),
                                 random.randint(10001, 10100)])
 
     password = random.choice(["", get_random_password()])
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_400_BAD_REQUEST)
     assert response.json()["detail"] == "Number of rounds has to be between "\
                                         "1 and 10000. "
 
+
 def test_long_password():
 
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = tokens[user_index]
     creator_user = users[user_index]
 
     match_name = get_random_match_name()
-    while((creator_user, match_name) in matches):
+    while ((creator_user, match_name) in matches):
         match_name = get_random_match_name()
-        
-    robot_index = random.randint(0, max(1,user_index))
+
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
-    min_players = random.choice([2,3,4])
+    min_players = random.choice([2, 3, 4])
 
     max_players = random.randint(min_players, 4)
-    
+
     num_games = random.randint(1, 200)
 
     num_rounds = random.randint(1, 10000)
 
     password = "thisHasMoreThan16Characters"
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_400_BAD_REQUEST)
     assert response.json()["detail"] == "The password can't have more than "\
                                         "16 characters. "
 
+
 def test_long_match_name():
 
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = tokens[user_index]
 
     match_name = "thisHasMoreThan16Characters"
-        
-    robot_index = random.randint(0, max(1,user_index))
+
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
-    min_players = random.choice([2,3,4])
+    min_players = random.choice([2, 3, 4])
 
     max_players = random.randint(min_players, 4)
 
@@ -383,25 +392,26 @@ def test_long_match_name():
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_400_BAD_REQUEST)
     assert response.json()["detail"] == "The match name has to have between "\
                                         "3 and 16 characters. "
+
 
 def test_short_match_name():
 
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = tokens[user_index]
 
     match_name = "ab"
-        
-    robot_index = random.randint(0, max(1,user_index))
+
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
-    min_players = random.choice([2,3,4])
+    min_players = random.choice([2, 3, 4])
 
     max_players = random.randint(min_players, 4)
 
@@ -410,24 +420,25 @@ def test_short_match_name():
     num_rounds = random.randint(1, 10000)
 
     password = random.choice(["", get_random_password()])
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == (status.HTTP_400_BAD_REQUEST)
     assert response.json()["detail"] == "The match name has to have between "\
                                         "3 and 16 characters. "
 
+
 def test_invalid_token():
-    user_index = random.randint(0,2)
+    user_index = random.randint(0, 2)
     creator_token = ""
 
     match_name = get_random_match_name()
 
-    robot_index = random.randint(0, max(1,user_index))
+    robot_index = random.randint(0, max(1, user_index))
     creator_robot = robots[user_index][robot_index]
 
-    min_players = random.choice([2,3,4])
+    min_players = random.choice([2, 3, 4])
 
     max_players = random.randint(min_players, 4)
 
@@ -436,8 +447,8 @@ def test_invalid_token():
     num_rounds = random.randint(1, 10000)
 
     password = get_random_password()
-    
-    response = client_put(creator_token, match_name, creator_robot, min_players, 
+
+    response = client_put(creator_token, match_name, creator_robot, min_players,
                           max_players, num_games, num_rounds, password)
 
     assert response.status_code == INVALID_TOKEN_EXCEPTION.status_code

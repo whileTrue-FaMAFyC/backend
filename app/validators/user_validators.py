@@ -5,6 +5,7 @@ from database.dao.user_dao import *
 from utils.user_utils import *
 from view_entities.user_view_entities import *
 
+
 def sign_up_validator(user: UserSignUpData):
     # Email format validator
     if not validate_email(user.email):
@@ -24,11 +25,14 @@ def sign_up_validator(user: UserSignUpData):
 
 
 def user_verification_validator(username: str, code: int):
-    user_in_db = get_user_by_username(username) 
+    user_in_db = get_user_by_username(username)
+
     if user_in_db is None:
         raise USER_NOT_REGISTERED
+
     if user_in_db.verified:
         raise USER_ALREADY_VERIFIED
+
     if user_in_db.verification_code != code:
         raise WRONG_VERIFICATION_CODE
 
@@ -37,12 +41,13 @@ def user_verification_validator(username: str, code: int):
 def validate_token(token: str):
     try:
         jwt.decode(token, SECRET_KEY, ALGORITHM)
-    except:
+    except BaseException:
         raise INVALID_TOKEN_EXCEPTION
 
 
 def authenticate_user(username_or_email: str, password: str):
     user = get_user_by_username_or_email(username_or_email)
+
     # User doesn't exist in database
     if not user:
         raise INEXISTENT_USER_EXCEPTION
@@ -58,6 +63,7 @@ def authenticate_user(username_or_email: str, password: str):
 
 def load_avatar_validator(username: str, avatar: UserAvatar):
     user_in_db = get_user_by_username(username)
+
     if user_in_db is None:
         raise USER_NOT_REGISTERED
 
@@ -77,6 +83,7 @@ def change_avatar_validator(avatar: str):
     if not avatar.avatar.startswith("data:image/") and avatar.avatar != "":
         raise AVATAR_FORMAT_NOT_VALID
 
+
 def password_restore_request_validator(user: UserIDs):
     user_in_db = get_user_by_username_and_email(user.username, user.email)
 
@@ -86,6 +93,7 @@ def password_restore_request_validator(user: UserIDs):
     # User not yet verified.
     if not user_in_db.verified:
         raise NOT_VERIFIED_EXCEPTION
+
 
 def password_restore_validator(info: RestoreInfo):
     user_in_db = get_user_by_username_or_email(info.email)
@@ -103,8 +111,10 @@ def password_restore_validator(info: RestoreInfo):
     if not is_valid_password(info.new_password):
         raise PASSWORD_FORMAT_NOT_VALID
 
+
 def change_password_validator(username: str, data: PasswordChange):
     user = get_user_by_username(username)
+
     # User doesn't exist in database
     if not user:
         raise INEXISTENT_USER_EXCEPTION

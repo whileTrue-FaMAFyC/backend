@@ -13,7 +13,7 @@ def execute_game_match(game: Game):
     for r in game.robots:
         try:
             func_timeout(timeout=INITIALIZATION_TIMEOUT, func=r.initialize)
-        except:
+        except BaseException:
             print('Robot timed out during initialization in match')
             r._increase_damage(100)
 
@@ -52,15 +52,14 @@ def execute_match(match_id: int):
         if not create_match_results(match_id, i, games_results[i]):
             raise INTERNAL_ERROR_UPDATING_MATCH_INFO
 
-
-    winners, winners_id =  match_winner(robots_id, games_results)
+    winners, winners_id = match_winner(robots_id, games_results)
     for i in robots_id:
         if not update_robot_stats(
-            i, 
-            True if (i in winners_id and len(winners_id) == 1) else False, 
+            i,
+            True if (i in winners_id and len(winners_id) == 1) else False,
             True if (i in winners_id and len(winners_id) > 1) else False,
             True if (i not in winners_id) else False,
-            games_results[i]["games_won"]/match_info.num_games
+            games_results[i]["games_won"] / match_info.num_games
         ):
             raise INTERNAL_ERROR_UPDATING_ROBOT_STATS
 

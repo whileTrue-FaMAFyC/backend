@@ -6,7 +6,7 @@ from view_entities.user_view_entities import UserInMatch
 class RobotCreate(BaseModel):
     name: str
     source_code: str
-    bot_filename: str
+    bot_filename: str # CHANGE to robot_filename
     avatar: str = ""
 
 
@@ -49,6 +49,7 @@ class RobotPlayer(BaseModel):
 class WinnerRobot(BaseModel):
     username: str
     robot_name: str
+
 
 class RobotInSimulation(BaseModel):
     name: str

@@ -10,7 +10,9 @@ from utils.user_utils import *
 from validators.user_validators import *
 from view_entities.user_view_entities import *
 
+
 user_controller = APIRouter()
+
 
 @user_controller.post("/signup", status_code=status.HTTP_201_CREATED)
 async def sign_up_post(user: UserSignUpData):
@@ -18,7 +20,7 @@ async def sign_up_post(user: UserSignUpData):
 
     encrypted_password = bcrypt.hash(user.password)
 
-    verification_code = randint(100000,999999)
+    verification_code = randint(100000, 999999)
 
     user_to_db = NewUserToDb(
         username=user.username,
@@ -43,13 +45,15 @@ async def sign_up_post(user: UserSignUpData):
 async def verify_user(username: str, code: UserVerificationCode):
     user_verification_validator(username, code.verification_code)
 
-    if not update_user_verification(username): # Check if updating the verified attribute had any problems.
+    # Check if updating the verified attribute had any problems.
+    if not update_user_verification(username):
         raise ERROR_UPDATING_USER_DATA
 
     if not add_default_robots(username):
         raise ERROR_INSERTING_ROBOTS
 
     return True
+
 
 @user_controller.post("/load-avatar/{username}", status_code=status.HTTP_200_OK)
 async def load_avatar(username: str, avatar: UserAvatar):
@@ -65,7 +69,7 @@ async def load_avatar(username: str, avatar: UserAvatar):
 
 @user_controller.post("/login", status_code=status.HTTP_200_OK)
 async def login(login_data: UserLogin):
-     # Check credentials
+    # Check credentials
     authenticate_user(login_data.username_or_email, login_data.password)
 
     user = get_user_by_username_or_email(login_data.username_or_email)
@@ -83,19 +87,18 @@ async def login(login_data: UserLogin):
 
 @user_controller.get("/user-profile", status_code=status.HTTP_200_OK)
 async def get_matches(authorization: Union[str, None] = Header(None)):
-   validate_token(authorization)
-   token_data = jwt.decode(authorization, SECRET_KEY)
-   username = token_data['username']
-   
-   return get_user_info(username)
+    validate_token(authorization)
+    token_data = jwt.decode(authorization, SECRET_KEY)
+    username = token_data['username']
+
+    return get_user_info(username)
 
 
 @user_controller.post("/password-restore-request", status_code=status.HTTP_200_OK)
 async def password_restore_request(user: UserIDs):
-    
     password_restore_request_validator(user)
 
-    restore_code = randint(100000,999999)
+    restore_code = randint(100000, 999999)
 
     if not add_password_restore_code(user.username, restore_code):
         raise ERROR_UPDATING_USER_DATA
@@ -104,17 +107,15 @@ async def password_restore_request(user: UserIDs):
         raise ERROR_SENDING_RESTORE_CODE_MAIL
 
 
-
 @user_controller.put("/password-restore", status_code=status.HTTP_200_OK)
 async def password_restore(info: RestoreInfo):
-    
     password_restore_validator(info)
 
     username = get_user_by_email(info.email).username
-    
+
     if not update_user_password(username, info.new_password):
         raise ERROR_UPDATING_USER_DATA
-    
+
     if not update_restore_password_code(username):
         raise ERROR_UPDATING_USER_DATA
 
@@ -135,27 +136,26 @@ async def change_password(
     else:
         raise ERROR_UPDATING_USER_DATA
 
-    return JSONResponse(content={"Authorization": access_token})
-
 
 @user_controller.put("/change-avatar", status_code=status.HTTP_200_OK)
-async def change_avatar(avatar: UserAvatar, authorization: Union[str, None] = Header(None)):
+async def change_avatar(
+    avatar: UserAvatar,
+    authorization: Union[str, None] = Header(None)
+):
     validate_token(authorization)
-
     token_data = jwt.decode(authorization, SECRET_KEY)
-
     username = token_data['username']
 
     if avatar.avatar != "":
         change_avatar_validator(avatar)
-        
+
         avatar_file = get_avatar_file(avatar.avatar)
 
         if update_user_avatar(username, avatar_file):
             return True
         else:
             raise ERROR_UPDATING_USER_DATA
-    
+
     # If user didn´t upload any avatar, don't change the db
     else:
         raise AVATAR_NOT_INSERTED

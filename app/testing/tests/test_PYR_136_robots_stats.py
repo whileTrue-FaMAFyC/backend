@@ -7,11 +7,12 @@ from testing.helpers.robot_stats_helpers import get_stats_by_robot
 
 client = TestClient(app)
 
+
 def new_match_post_juli(match_name: str):
     response = client.post(
         "/matches/new-match",
-        headers = {'Authorization': MOCK_TOKEN_JULI},
-        json = {
+        headers={'Authorization': MOCK_TOKEN_JULI},
+        json={
             'name': match_name,
             'creator_robot': 'RobotCrack',
             'min_players': 2,
@@ -22,12 +23,13 @@ def new_match_post_juli(match_name: str):
         }
     )
     assert response.status_code == 201
-    
+
+
 def new_match_post_benja(match_name: str):
     response = client.post(
         "/matches/new-match",
-        headers = {'Authorization': MOCK_TOKEN_BENJA},
-        json = {
+        headers={'Authorization': MOCK_TOKEN_BENJA},
+        json={
             'name': match_name,
             'creator_robot': 'RobotInutil',
             'min_players': 2,
@@ -45,7 +47,7 @@ def test_all_stats():
 
     match_id = get_match_by_name_and_user('myMatch!', 'juliolcese').match_id
     update_joining_user_match("bas_benja", "RobotInutil", match_id)
-    
+
     with client.websocket_connect(
         f"/matches/ws/follow-lobby/{match_id}?authorization={MOCK_TOKEN_BENJA}"
     ) as websocket:
@@ -53,7 +55,7 @@ def test_all_stats():
             f'matches/start-match/{match_id}',
             headers={"Authorization": MOCK_TOKEN_JULI},
         )
-        
+
         assert response.status_code == 200
 
         data = websocket.receive_json()
@@ -61,7 +63,7 @@ def test_all_stats():
             "action": "start",
             "data": ""
         }
-        
+
         data = websocket.receive_json()
         assert data == {
             "action": "results",
@@ -73,10 +75,10 @@ def test_all_stats():
             }
         }
         websocket.close()
-    
+
     looser_robot_stats = get_stats_by_robot('bas_benja', 'RobotInutil')
     winner_robot_stats = get_stats_by_robot('juliolcese', 'RobotCrack')
-    
+
     assert looser_robot_stats.matches_played == 1
     assert winner_robot_stats.matches_played == 1
     assert looser_robot_stats.matches_won == 0
@@ -87,14 +89,14 @@ def test_all_stats():
     assert winner_robot_stats.matches_tied == 0
     assert looser_robot_stats.games_win_rate >= 0
     assert winner_robot_stats.games_win_rate > 0
-    
+
     # Now, play another match with RobotCrack and another one with RobotInutil
     # to check that their stats are updating
     new_match_post_benja("tiedMatch")
 
     match_id = get_match_by_name_and_user('tiedMatch', 'bas_benja').match_id
     update_joining_user_match("lucasca22ina", "RobotInutil", match_id)
-    
+
     with client.websocket_connect(
         f"/matches/ws/follow-lobby/{match_id}?authorization={MOCK_TOKEN_LUCAS}"
     ) as websocket:
@@ -102,7 +104,7 @@ def test_all_stats():
             f'matches/start-match/{match_id}',
             headers={"Authorization": MOCK_TOKEN_BENJA},
         )
-        
+
         assert response.status_code == 200
 
         data = websocket.receive_json()
@@ -110,7 +112,7 @@ def test_all_stats():
             "action": "start",
             "data": ""
         }
-        
+
         data = websocket.receive_json()
         assert (
             data == {
@@ -127,7 +129,7 @@ def test_all_stats():
                         }
                     ]
                 }
-            } 
+            }
             or data == {
                 "action": "results",
                 "data": {
@@ -144,13 +146,12 @@ def test_all_stats():
                 }
             }
         )
-            
-                
+
         websocket.close()
-        
+
     tied_robot_stats_benja = get_stats_by_robot('bas_benja', 'RobotInutil')
     tied_robot_stats_lucas = get_stats_by_robot('lucasca22ina', 'RobotInutil')
-    
+
     assert tied_robot_stats_benja.matches_played == 2
     assert tied_robot_stats_lucas.matches_played == 1
     assert tied_robot_stats_benja.matches_won == 0

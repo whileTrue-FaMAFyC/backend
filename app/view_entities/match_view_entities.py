@@ -18,7 +18,7 @@ class NewMatch(BaseModel):
         orm_mode = True
 
 
-# For listing matches
+# To list matches
 class MatchInfo(BaseModel):
     match_id: int
     name: str
@@ -28,14 +28,17 @@ class MatchInfo(BaseModel):
     class Config:
         orm_mode = True
 
-# For listing matches with amount of robots joined
+
+# To list matches with the amount of robots joined
 class ShowMatch(MatchInfo):
     robots_joined: int
+
 
 class StartMatch(BaseModel):
     num_games: int
     num_rounds: int
     robots_joined: List[RobotPlayer]
+
 
 class StartMatchValidator(BaseModel):
     creator_username: str
@@ -43,18 +46,21 @@ class StartMatchValidator(BaseModel):
     started: bool
     robots_joined: int
 
-#For showing the competitor(user and his robot) details inside the lobby.
+
+# To show the competitor (user and his robot) details inside the lobby.
 class UserAndRobotInfo(BaseModel):
     username: str
     user_avatar: str
     robot_name: str
     robot_avatar: str
 
+
 class JoinMatch(BaseModel):
     match_password: str = ""
     joining_robot: str
-    
-# For showing the match details inside the lobby
+
+
+# To show the match details inside the lobby
 class LobbyInfo(BaseModel):
     requester_username: str
     name: str
@@ -72,9 +78,6 @@ class LobbyInfo(BaseModel):
     has_password: bool
 
 
-class JoinMatch(BaseModel):
-    match_password: str = ""
-    joining_robot: str
 
 class MatchesFilters(BaseModel):
     is_owner: Union[bool, None] = None

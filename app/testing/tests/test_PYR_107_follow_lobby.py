@@ -15,8 +15,8 @@ client = TestClient(app)
 def test_websockets_for_same_lobby():
     response = client.post(
         "/matches/new-match",
-        headers = {'Authorization': MOCK_TOKEN_BENJA},
-        json = {
+        headers={'Authorization': MOCK_TOKEN_BENJA},
+        json={
             'name': 'myMatch',
             'creator_robot': 'Bumblebee',
             'min_players': 3,
@@ -27,16 +27,15 @@ def test_websockets_for_same_lobby():
         }
     )
     assert response.status_code == 201
-    
-    
+
     match_id = get_match_by_name_and_user('myMatch', 'bas_benja').match_id
 
     assert len(lobbys[match_id].active_connections) == 0
-    
+
     for token in tokens:
         with client.websocket_connect(
             f"/matches/ws/follow-lobby/{match_id}?authorization={token}"
         ) as websocket:
             websocket.close()
-    
+
     assert len(lobbys[match_id].active_connections) == 4

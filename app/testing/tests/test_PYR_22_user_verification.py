@@ -17,12 +17,12 @@ def test_successful_verification():
 
     assert response.status_code == 200
     user = get_user_by_username("sebagiraudo")
-    
+
     # Checks if the verified attribute was correctly updated
     assert user.verified == True
 
 
-def test_wrong_verification_code():    
+def test_wrong_verification_code():
     response = client.put(
         "/verifyuser/sebagiraudo",
         json={
@@ -38,8 +38,9 @@ def test_wrong_verification_code():
     # Checks if the verified attribute was not updated
     assert get_user_by_username("sebagiraudo").verified == False
 
-def test_user_not_registered():    
-    random_code = randint(100000,999999)
+
+def test_user_not_registered():
+    random_code = randint(100000, 999999)
 
     response = client.put(
         "/verifyuser/userNotInDb",
@@ -54,7 +55,7 @@ def test_user_not_registered():
     assert response.json()["detail"] == "User not registered."
 
 
-def test_user_already_verified():  
+def test_user_already_verified():
     response = client.put(
         "/verifyuser/bas_benja",
         json={

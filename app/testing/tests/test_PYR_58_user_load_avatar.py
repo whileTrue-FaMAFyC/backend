@@ -15,7 +15,8 @@ def test_successful_load_not_default_avatar():
     )
 
     assert response.status_code == 200
-    assert get_user_by_username("lucasca22ina").avatar == "data:image/png;not_default"
+    assert get_user_by_username(
+        "lucasca22ina").avatar == "data:image/png;not_default"
 
 
 def test_successful_load_default_avatar():
