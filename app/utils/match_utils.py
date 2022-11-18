@@ -1,9 +1,12 @@
+import asyncio
 from fastapi import HTTPException, status
 from pony.orm import db_session
 from typing import Dict, List
 
 from database.models.models import Match 
 from database.dao.robot_dao import get_name_and_creator_by_id
+from controllers.match_controller import lobbys
+from services.match import execute_match
 from view_entities.match_view_entities import *
 from view_entities.robot_view_entities import *
 
@@ -156,3 +159,30 @@ def match_winner(robots_id: List[int], game_results: Dict[int, Dict[str, int]]):
     # winners: list of {creator_username: robot_name}
     # winners_robots: winner robots' id
     return winners, winners_robots
+
+
+# This function is executed in another thread, it is called by the caller defined below
+async def execute_match_task(match_id):
+    winners = execute_match(match_id)
+
+    ## SEND WINNERS TO SUSCRIBERS.
+    await lobbys[match_id].broadcast({
+        "action": "results",
+        "data": {
+            "winners" : winners
+        }
+    })
+
+    ## DELETE CONECTION MANAGER.
+    await lobbys[match_id].close_lobby()
+    lobbys.pop(match_id)
+
+
+# This function executes the async function 'execute_match_task' in another thread.
+# It is necessary because you can´t execute an async task in another thread directly.
+def execute_match_task_caller(match_id):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    loop.run_until_complete(execute_match_task(match_id))
+    loop.close()

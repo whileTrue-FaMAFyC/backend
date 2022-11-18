@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect, status, Header, Body
 from jose import jwt
+from threading import Thread
 from typing import Union, List, Dict
 
 from database.dao.match_dao import *
 from database.dao.robot_dao import *
 from database.dao.user_dao import *
-from services.match import execute_match
 from utils.match_utils import *
 from utils.user_utils import *
 from validators.match_validators import *
@@ -87,6 +87,8 @@ async def get_matches(filters: Union[MatchesFilters, None] = Body(MatchesFilters
    
     return matches_view
 
+
+
 @match_controller.put("/start-match/{match_id}", status_code=status.HTTP_200_OK)
 async def start_match(match_id: int, authorization: Union[str, None] = Header(None)):
     validate_token(authorization)
@@ -108,21 +110,12 @@ async def start_match(match_id: int, authorization: Union[str, None] = Header(No
     if not update_executed_match(match_id):
         raise INTERNAL_ERROR_UPDATING_MATCH_INFO
 
-    winners = execute_match(match_id)
-
-    ## SEND WINNERS TO SUSCRIBERS.
-    await lobbys[match_id].broadcast({
-        "action": "results",
-        "data": {
-            "winners" : winners
-        }
-    })
-
-    ## DELETE CONECTION MANAGER.
-    await lobbys[match_id].close_lobby()
-    lobbys.pop(match_id)
+    # Execute the match in another thread and returns the HTTP response with 200 OK.
+    match_execution_thread = Thread(target=execute_match_task_caller, args=[match_id])
+    match_execution_thread.start()
 
     return True
+
 
 @match_controller.post("/join-match/{match_id}", status_code=status.HTTP_200_OK)
 async def join_match(match_id: int, match: JoinMatch, authorization: Union[str, None] = Header(None)):
