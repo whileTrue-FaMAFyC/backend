@@ -1,5 +1,4 @@
 from testing.helpers.services_helpers import RobotTest
-from utils.services_utils import MAX_POSSIBLE_DISTANCE
 
 r1 = RobotTest(1, 0)
 
