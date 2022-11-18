@@ -16,43 +16,11 @@ from view_entities.match_view_entities import NewMatch, JoinMatch, MatchesFilter
 
 match_controller = APIRouter(prefix="/matches")
 
-class LobbyManager:
-    def __init__(self):
-        self.active_connections: List[WebSocket] = []
-
-    async def connect(self, websocket: WebSocket):
-        await websocket.accept()
-        self.active_connections.append(websocket)
-
-    async def disconnect(self, websocket: WebSocket):
-        try:
-            await websocket.close()
-            self.active_connections.remove(websocket)
-        except:
-            pass
-
-    # async def send_personal_message(self, message: str, websocket: WebSocket):
-    #     await websocket.send_text(message)
-
-    async def broadcast(self, message: Dict):
-        for connection in self.active_connections:
-            try:
-                await connection.send_json(message)
-            except:
-                await self.disconnect(connection)
-
-    async def close_lobby(self):
-        for connection in self.active_connections:
-            await self.disconnect(connection)
-
-lobbys: Dict[int, LobbyManager] = {}
 
 @match_controller.post("/new-match", status_code=status.HTTP_201_CREATED)
 async def create_match(new_match: NewMatch, authorization: Union[str, None] = Header(None)):
     validate_token(authorization)
-
     token_data = jwt.decode(authorization, SECRET_KEY)
-    
     creator_username = token_data['username']
     
     new_match_validator(creator_username, new_match)  
@@ -73,11 +41,8 @@ async def create_match(new_match: NewMatch, authorization: Union[str, None] = He
 @match_controller.get("/list-matches", status_code=status.HTTP_200_OK)
 async def get_matches(filters: Union[MatchesFilters, None] = Body(MatchesFilters()), 
                       authorization: Union[str, None] = Header(None)):
-
     validate_token(authorization)
-
     token_data = jwt.decode(authorization, SECRET_KEY)
-
     user = token_data['username']
 
     matches_db = get_matches_with_filter(filters.is_owner, filters.is_joined, 
@@ -92,20 +57,17 @@ async def get_matches(filters: Union[MatchesFilters, None] = Body(MatchesFilters
 @match_controller.put("/start-match/{match_id}", status_code=status.HTTP_200_OK)
 async def start_match(match_id: int, authorization: Union[str, None] = Header(None)):
     validate_token(authorization)
-
     token_data = jwt.decode(authorization, SECRET_KEY)
-
     creator_username = token_data['username']
 
     start_match_validator(creator_username, match_id)
 
     ## SEND MESSAGE TO SUSCRIBERS, MATCH STARTED.
-
     await lobbys[match_id].broadcast({
         "action": "start",
         "data": ""
     })
-    
+
     ## UPDATE BD
     if not update_executed_match(match_id):
         raise INTERNAL_ERROR_UPDATING_MATCH_INFO
@@ -120,9 +82,7 @@ async def start_match(match_id: int, authorization: Union[str, None] = Header(No
 @match_controller.post("/join-match/{match_id}", status_code=status.HTTP_200_OK)
 async def join_match(match_id: int, match: JoinMatch, authorization: Union[str, None] = Header(None)):
     validate_token(authorization)
-
-    token_data = jwt.decode(authorization, SECRET_KEY)
-    
+    token_data = jwt.decode(authorization, SECRET_KEY)    
     joining_user = token_data['username']
 
     join_match_validator(joining_user, match, match_id)
@@ -189,13 +149,11 @@ async def follow_lobby(
             # print(f"{username} web socket connection closed")
             return
 
+
 @match_controller.delete("/leave-match/{match_id}", status_code=status.HTTP_200_OK)
 async def leave_match(match_id: int, authorization: Union[str, None] = Header(None)):
-    
     validate_token(authorization)
-
     token_data = jwt.decode(authorization, SECRET_KEY)
-    
     leaving_user = token_data['username']
 
     leave_match_validator(match_id, leaving_user)

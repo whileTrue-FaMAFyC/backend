@@ -1,9 +1,10 @@
 from base64 import b64decode
+from fastapi import HTTPException, status
 import math
 from numpy import add, sign
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
-from database.dao.robot_dao import get_source_code_by_id
+from database.dao.robot_dao import get_source_code_by_id, get_name_and_creator_by_id
 
 
 ROBOT_SIZE = 32
@@ -41,6 +42,11 @@ IMPORT_ROBOT_CLASS = "from services.Robot import Robot\n"
 INITIALIZATION_TIMEOUT = 0.2
 RESPOND_TIMEOUT = 0.2
 
+# It is used in execute_match()
+INTERNAL_ERROR_UPDATING_MATCH_INFO = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Internal error when updating the match info."
+)
 
 class GameException(Exception):
     def __init__(self, detail):
@@ -98,3 +104,35 @@ def is_inside(vertexs: List[Tuple[int, int]], center: Tuple[int, int]):
             break
 
     return is_inside
+
+
+def match_winner(robots_id: List[int], game_results: Dict[int, Dict[str, int]]):
+    max_won = 0
+    max_tied = 0
+    winners_robots = []
+    tied_robots = []
+    winners = []
+
+
+    for i in robots_id:
+        if game_results[i]["games_won"] == max_won:
+            winners_robots.append(i)
+        elif game_results[i]["games_won"] > max_won:
+            max_won = game_results[i]["games_won"]
+            winners_robots = [i]
+
+    if len(winners_robots) > 1:
+        for i in winners_robots:
+            if game_results[i]["games_tied"] == max_tied:
+                tied_robots.append(i)
+            elif game_results[i]["games_tied"] > max_tied:
+                max_tied = game_results[i]["games_tied"]
+                tied_robots = [i]
+        winners_robots = tied_robots
+
+    for r in winners_robots:
+        winners.append(get_name_and_creator_by_id(r))
+
+    # winners: list of {creator_username: robot_name}
+    # winners_robots: winner robots' id
+    return winners, winners_robots

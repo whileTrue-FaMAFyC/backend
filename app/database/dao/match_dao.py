@@ -3,11 +3,10 @@ from pony.orm import db_session, select
 
 from database.dao.match_results_dao import get_results_by_robot_and_match
 from database.models.models import Match, Robot, User
-from utils.match_utils import match_winner 
 from utils.robot_utils import get_robot_in_match_by_owner
+from utils.services_utils import match_winner
 from view_entities.robot_view_entities import *
 from view_entities.match_view_entities import *
-from utils.match_utils import match_winner
 
 @db_session
 def create_new_match(creator_username, new_match: NewMatch):

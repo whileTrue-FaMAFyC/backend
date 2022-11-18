@@ -4,9 +4,8 @@ from database.dao.match_dao import get_match_info
 from database.dao.match_results_dao import create_match_results
 from database.dao.robot_stats_dao import update_robot_stats
 from services.game import Game
-from utils.match_utils import INTERNAL_ERROR_UPDATING_MATCH_INFO, match_winner
 from utils.robot_stats_utils import INTERNAL_ERROR_UPDATING_ROBOT_STATS
-from utils.services_utils import create_robots_instances, INITIALIZATION_TIMEOUT
+from utils.services_utils import *
 
 
 def execute_game_match(game: Game):
