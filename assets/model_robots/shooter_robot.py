@@ -8,4 +8,4 @@ class ShooterRobot(Robot):
         if self.scanned() != None:
             self.cannon(self.degrees, self.scanned())
         else:
-            self.degrees += 10
+            self.degrees = (self.degrees + 10) % 360
