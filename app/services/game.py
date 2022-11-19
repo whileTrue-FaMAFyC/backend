@@ -95,7 +95,7 @@ class Game():
             others_positions = []
 
             for other_r in self.robots:
-                if not other_r == r and other_r.get_damage() < 100:
+                if other_r != r and other_r.get_damage() < 100:
                     if other_r.get_position() != OUT_OF_BOUNDS:
                         others_positions.append(other_r.get_position())
 
