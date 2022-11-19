@@ -14,7 +14,7 @@ def execute_game_simulation(game: Game):
         try:
             func_timeout(timeout=INITIALIZATION_TIMEOUT, func=r.initialize)
         except:
-            print('Robot timed out during initialization in simulation')
+            # print('Robot timed out during initialization in simulation')
             r._increase_damage(100)
 
         frames[0]["robots"][r._id_in_game] = {

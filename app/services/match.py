@@ -13,7 +13,7 @@ def execute_game_match(game: Game):
         try:
             func_timeout(timeout=INITIALIZATION_TIMEOUT, func=r.initialize)
         except:
-            print('Robot timed out during initialization in match')
+            # print('Robot timed out during initialization in match')
             r._increase_damage(100)
 
     while game.get_robots_alive() > 1 and game.get_rounds_remaining() > 0:
