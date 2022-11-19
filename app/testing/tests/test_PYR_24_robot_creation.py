@@ -19,7 +19,7 @@ def test_create_existent_robot():
         json={
             'name': 'jarvis22',
             'source_code': MOCK_SOURCE_CODE,
-            'robot_filename': 'myrobot.py',
+            'bot_filename': 'myrobot.py',
             'avatar': MOCK_AVATAR
         }
     )
@@ -38,7 +38,7 @@ def test_invalid_token():
         json={
             'name': 'jarvis22',
             'source_code': MOCK_SOURCE_CODE,
-            'robot_filename': 'myrobot.py',
+            'bot_filename': 'myrobot.py',
             'avatar': MOCK_AVATAR
         }
     )
@@ -57,7 +57,7 @@ def test_create_robot():
         json={
             'name': 'R2D2',
             'source_code': MOCK_SOURCE_CODE,
-            'robot_filename': 'myrobot.py',
+            'bot_filename': 'myrobot.py',
             'avatar': MOCK_AVATAR
         }
     )

@@ -11,16 +11,18 @@ class NewRobot(BaseModel):
     avatar: str = ""
     source_code: str
 
-# Creation
-
 
 @db_session
 def create_robot(robot: NewRobot):
     try:
-        Robot(name=robot.name, owner=get_user_by_email(robot.email),
-              avatar=robot.avatar, source_code=robot.source_code)
+        Robot(
+            name=robot.name,
+            owner=get_user_by_email(robot.email),
+            avatar=robot.avatar,
+            source_code=robot.source_code
+        )
         return True
-    except BaseException:
+    except:
         return False
 
 

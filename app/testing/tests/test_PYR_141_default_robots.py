@@ -1,4 +1,3 @@
-from random import randint
 from fastapi.testclient import TestClient
 
 from database.dao.robot_dao import *
@@ -22,8 +21,8 @@ def test_default_robots_added():
 
     assert response.status_code == 200
 
-    assert get_bot_by_owner_and_name("sebagiraudo", "Shooter") is not None
-    assert get_bot_by_owner_and_name("sebagiraudo", "Random") is not None
+    assert get_robot_by_owner_and_name("sebagiraudo", "Shooter") is not None
+    assert get_robot_by_owner_and_name("sebagiraudo", "Random") is not None
 
     response = client.post(
         "/new-simulation",

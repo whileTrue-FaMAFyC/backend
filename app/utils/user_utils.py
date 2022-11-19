@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 from fastapi import HTTPException, status
 from jose import jwt
 from passlib.hash import bcrypt
@@ -6,16 +5,14 @@ from pydantic import BaseModel
 import smtplib
 import os
 
-USERS_ASSETS = 'assets/users'
-
 
 SECRET_KEY = "2c329a8eca7d0c2ff68d261ad0b2e3efa66cc2603183fe6d0b4b219a11138c84"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 1440  # One day
 
 SYSTEM_MAIL = "pyrobots.noreply@gmail.com"
 
 SYSTEM_MAIL_PASSWORD = "kltrgevemdlcywkq"
+
 
 EMAIL_NOT_VALID = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
@@ -121,6 +118,7 @@ INEXISTENT_USERNAME_EMAIL_COMBINATION = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
     detail="There is no user with that email and username."
 )
+
 AVATAR_NOT_INSERTED = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST,
     detail="Avatar not inserted."
@@ -161,7 +159,7 @@ def send_verification_email(recipient, verification_code):
         server.sendmail(FROM, TO, message)
         server.close()
         return True
-    except BaseException:
+    except:
         return False
 
 
@@ -182,7 +180,7 @@ def send_cleanup_email(recipient, verification_code):
         server.sendmail(FROM, TO, message)
         server.close()
         return True
-    except BaseException:
+    except:
         return False
 
 
@@ -204,8 +202,6 @@ class TokenData(BaseModel):
 # Utility function to generate a token that represents 'data'
 def generate_token(data: TokenData):
     data_to_encode = data.dict()
-    # expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    # data_to_encode.update({"exp": expire})
     token = jwt.encode(data_to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
@@ -235,20 +231,5 @@ def send_password_restore_mail(recipient, restore_code):
         server.sendmail(FROM, TO, message)
         server.close()
         return True
-    except BaseException:
+    except:
         return False
-
-# Save avatar in assests directory and return the url
-
-
-def save_user_avatar(username: str, contents: bytes, file_extension: str):
-    # If the file exsists, it will override it. If not, it will create a new
-    # one
-    if os.path.exists(f'{USERS_ASSETS}/{username}'):
-        pass
-    else:
-        os.mkdir(f'{USERS_ASSETS}/{username}')
-    f = open(f'{USERS_ASSETS}/{username}/avatar.{file_extension}', 'wb')
-    f.write(contents)
-    f.close()
-    return (f'{USERS_ASSETS}/{username}/avatar.{file_extension}')

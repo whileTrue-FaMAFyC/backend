@@ -6,7 +6,11 @@ from testing.helpers.mock_db import MOCK_AVATAR
 
 
 def create_possible_answer(
-        possible_users, requester_username="bas_benja", im_in=True, is_creator=True):
+    possible_users,
+    requester_username="bas_benja",
+    im_in=True,
+    is_creator=True
+):
     possible_answers = []
     users_order = permutations(possible_users)
     for user in users_order:
@@ -32,7 +36,10 @@ def create_possible_answer(
 
 @db_session
 def user_and_robot_in_match(
-        match_id: int, joining_user: str, joining_robot: str):
+    match_id: int,
+    joining_user: str,
+    joining_robot: str
+):
     match_in_db = Match.get(match_id=match_id)
     is_in_match = False
     for r in match_in_db.robots_joined:

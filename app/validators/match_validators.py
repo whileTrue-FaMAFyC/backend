@@ -10,7 +10,7 @@ from view_entities.match_view_entities import JoinMatch, NewMatch
 
 def new_match_validator(creator_username: str, new_match: NewMatch):
     # To check if the user has a robot with the provided name
-    users_robot = robot_dao.get_bot_by_owner_and_name(
+    users_robot = robot_dao.get_robot_by_owner_and_name(
         creator_username,
         new_match.creator_robot
     )
@@ -125,7 +125,7 @@ def leave_match_validator(match_id: int, leaving_username: str):
 
 def join_match_validator(username: str, match: JoinMatch, match_id: int):
     # To check if the user has a robot with the provided name
-    joining_robot_in_db = robot_dao.get_bot_by_owner_and_name(
+    joining_robot_in_db = robot_dao.get_robot_by_owner_and_name(
         username,
         match.joining_robot
     )

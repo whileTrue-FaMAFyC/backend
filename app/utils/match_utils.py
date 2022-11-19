@@ -88,10 +88,9 @@ MATCH_DOES_NOT_HAVE_PASSWORD = HTTPException(
     detail="The match does not have password."
 )
 
+
 # Transforms the matches selected from the database to the format that will be
 # sent to the frontend.
-
-
 @db_session
 def match_db_to_view(matches: Match):  # No es list[Match] o algo así?
     matches_info = [MatchInfo.from_orm(m) for m in matches]
@@ -129,8 +128,10 @@ def match_validator_info(match_id: int):
         )
 
 
-def match_winner(robots_id: List[int],
-                 game_results: Dict[int, Dict[str, int]]):
+def match_winner(
+    robots_id: List[int],
+    game_results: Dict[int, Dict[str, int]]
+):
     max_won = 0
     max_tied = 0
     winners_robots = []

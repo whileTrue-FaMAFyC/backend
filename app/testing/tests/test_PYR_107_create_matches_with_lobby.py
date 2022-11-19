@@ -2,7 +2,8 @@ from fastapi.testclient import TestClient
 
 from controllers.match_controller import lobbys
 from main import app
-from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI, MOCK_TOKEN_VALEN
+from testing.helpers.generate_token import MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, \
+    MOCK_TOKEN_TONI, MOCK_TOKEN_VALEN
 
 
 tokens = [MOCK_TOKEN_BENJA, MOCK_TOKEN_JULI, MOCK_TOKEN_TONI, MOCK_TOKEN_VALEN]

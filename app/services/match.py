@@ -41,6 +41,7 @@ def execute_match(match_id: int):
     for i in range(match_info.num_games):
         robots = create_robots_instances(robots_id)
         game = Game(match_info.num_rounds, robots)
+
         survivors = execute_game_match(game)
         if len(survivors) > 1:
             for r in survivors:

@@ -11,6 +11,7 @@ from view_entities.user_view_entities import UserInMatch
 MOCK_SOURCE_CODE = """aW1wb3J0IHV2aWNvcm4KCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgog
                     ICAgdXZpY29ybi5ydW4oImFwcC5hcGk6YXBwIiwgaG9zdD0iMC4wLjAuMCIs
                     IHBvcnQ9ODAwMCwgcmVsb2FkPVRydWUp"""
+
 MOCK_AVATAR = """iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQ
                 DwAEhQGAhKmMIQAAAABJRU5ErkJggg=="""
 
@@ -32,11 +33,8 @@ TEST_SOURCE_CODE_BENJA = """name:robot_test.py;base64,Y2xhc3MgUm9ib3RUZXN0KFJvYm
                     YgcmVzcG9uZCgpOgogICAgICAgIHBhc3M="""
 
 
-"""
-NOTE: unverified users shouldn't have matches nor robots
-"""
 
-
+# NOTE: unverified users shouldn't have matches nor robots
 @db_session
 def users():
     users = [
@@ -163,7 +161,7 @@ def matches():
          num_games, num_rounds, password, started, robots_joined) in matches:
         set_robots = set()
         for r in robots_joined:
-            set_robots.add(get_bot_by_owner_and_name(r.owner.username, r.name))
+            set_robots.add(get_robot_by_owner_and_name(r.owner.username, r.name))
 
         Match(
             name=name,
@@ -191,7 +189,7 @@ def match_result():
          games_won, games_tied, games_lost) in match_result:
 
         MatchResult(
-            robot=get_bot_by_owner_and_name(robot_owner, robot_name),
+            robot=get_robot_by_owner_and_name(robot_owner, robot_name),
             match=get_match_by_name_and_user(match_name, match_owner),
             games_won=games_won,
             games_tied=games_tied,

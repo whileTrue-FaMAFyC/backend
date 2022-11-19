@@ -74,7 +74,8 @@ def create_robots_instances(robots_id):
             b64decode(source_code_b64).decode("utf-8")
         exec(source_code)
         exec(
-            f"\nrobot = {class_name}(robot_id={r}, id_in_game={r_id_in_game})\nrobots.append(robot)")
+            f"\nrobot = {class_name}(robot_id={r}, id_in_game={r_id_in_game})\nrobots.append(robot)"
+        )
         r_id_in_game += 1
     return robots
 
@@ -84,10 +85,12 @@ def round_up(x):
 
 
 def get_vertex(center: Tuple[int, int]):
-    return [tuple(add(center, (-ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))),
-            tuple(add(center, (ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))),
-            tuple(add(center, (ROBOT_HALF_SIZE, ROBOT_HALF_SIZE))),
-            tuple(add(center, (-ROBOT_HALF_SIZE, ROBOT_HALF_SIZE)))]
+    return [
+        tuple(add(center, (-ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))),
+        tuple(add(center, (ROBOT_HALF_SIZE, -ROBOT_HALF_SIZE))),
+        tuple(add(center, (ROBOT_HALF_SIZE, ROBOT_HALF_SIZE))),
+        tuple(add(center, (-ROBOT_HALF_SIZE, ROBOT_HALF_SIZE)))
+    ]
 
 
 def is_inside(vertexs: List[Tuple[int, int]], center: Tuple[int, int]):

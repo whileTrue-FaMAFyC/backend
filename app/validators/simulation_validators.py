@@ -17,7 +17,7 @@ def simulation_validator(creator_username: str, simulation_info: Simulation):
 
     for r in simulation_info.robots:
         robots += 1
-        robot = robot_dao.get_bot_by_owner_and_name(creator_username, r)
+        robot = robot_dao.get_robot_by_owner_and_name(creator_username, r)
         if not robot:
             code = status.HTTP_409_CONFLICT
             valid_match = False

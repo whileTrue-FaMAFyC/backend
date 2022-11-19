@@ -5,7 +5,7 @@ from database.models.models import Robot, Match
 from view_entities.robot_view_entities import *
 
 
-BOT_NAME_EXCEPTION = HTTPException(
+ROBOT_NAME_EXCEPTION = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
     detail="User already has a robot with this name."
 )
@@ -51,7 +51,6 @@ def insert_filename_to_file(file: str, filename: str):
 
 @db_session
 def get_robot_in_match_by_owner(match_id: int, owner_username: str):
-
     match = Match[match_id]
     for r in match.robots_joined:
         if r.owner.username == owner_username:

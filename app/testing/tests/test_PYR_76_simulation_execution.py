@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 
 from main import app
-from database.dao.robot_dao import get_bot_by_owner_and_name
+from database.dao.robot_dao import get_robot_by_owner_and_name
 from testing.helpers.generate_token import MOCK_TOKEN_BENJA
 
 client = TestClient(app)
