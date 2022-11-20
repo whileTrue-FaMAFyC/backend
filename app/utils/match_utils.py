@@ -91,7 +91,7 @@ MATCH_DOES_NOT_HAVE_PASSWORD = HTTPException(
 # Transforms the matches selected from the database to the format that will be
 # sent to the frontend.
 @db_session
-def match_db_to_view(matches: Match): # No es list[Match] o algo así?
+def match_db_to_view(matches: list[Match]): 
     matches_info = [MatchInfo.from_orm(m) for m in matches]
     all_robots_joined = []
     info_and_robots = []
