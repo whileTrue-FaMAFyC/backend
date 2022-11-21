@@ -72,6 +72,15 @@ def update_executed_match(match_id: int):
         return False
 
 @db_session
+def update_finished_match(match_id: int):
+    try:
+        match = Match[match_id]
+        match.set(finished=True)
+        return True
+    except:
+        return False
+
+@db_session
 def update_leaving_user(match_id: int, leaving_user: str):
     
     match = Match.get(match_id=match_id)
@@ -119,7 +128,7 @@ def get_lobby_info(match_id: int, username: str):
     im_in = False
     user_robot = []
     for robot in match.robots_joined:
-        if match.started:
+        if match.finished:
             robot_id = robot.robot_id
             robots_id.append(robot_id)
             game_results[robot_id] = get_results_by_robot_and_match(robot_id, match_id)
@@ -134,7 +143,7 @@ def get_lobby_info(match_id: int, username: str):
             robot_avatar=robot.avatar
         ))
     
-    if match.started:
+    if match.finished:
         results = match_winner(robots_id, game_results)[0]
 
     if match.hashed_password != "":

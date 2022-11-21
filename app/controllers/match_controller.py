@@ -136,7 +136,7 @@ async def follow_lobby(
        await websocket.close()
        return
     
-    if match.started:
+    if match.finished:
        await websocket.close()
        return
 
