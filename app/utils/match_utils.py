@@ -3,6 +3,7 @@ from fastapi import HTTPException, status, WebSocket
 from pony.orm import db_session
 from typing import Dict, List
 
+from database.dao.match_dao import update_finished_match
 from database.models.models import Match 
 from services.match import execute_match
 from view_entities.match_view_entities import *
@@ -159,7 +160,10 @@ def match_validator_info(match_id: int):
 async def execute_match_task(match_id):
     winners = execute_match(match_id)
 
-    ## SEND WINNERS TO SUSCRIBERS.
+    if not update_finished_match(match_id):
+        raise INTERNAL_ERROR_UPDATING_MATCH_INFO
+
+    # SEND WINNERS TO SUSCRIBERS.
     await lobbys[match_id].broadcast({
         "action": "results",
         "data": {
@@ -167,7 +171,7 @@ async def execute_match_task(match_id):
         }
     })
 
-    ## DELETE CONECTION MANAGER.
+    # DELETE CONECTION MANAGER.
     await lobbys[match_id].close_lobby()
     lobbys.pop(match_id)
 
