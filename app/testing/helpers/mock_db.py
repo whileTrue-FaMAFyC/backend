@@ -116,34 +116,34 @@ def robots():
 @db_session
 def matches():
     matches = [
-        ('match1', 'bas_benja', '0ptimusPrime', 2, 4, 10, 1570, "", False,
+        ('match1', 'bas_benja', '0ptimusPrime', 2, 4, 10, 1570, "", False, False,
         [RobotInMatch(owner=UserInMatch(username="bas_benja"), name="0ptimusPrime"), 
          RobotInMatch(owner=UserInMatch(username="juliolcese"), name="astroGirl")]),
         
-        ('match2', 'bas_benja', 'Bumblebee', 3, 3, 200, 100000, "matchPass!", False, 
-        [RobotInMatch(owner=UserInMatch(username="bas_benja"), name="Bumblebee")]),
+        ('match2', 'bas_benja', 'Bumblebee', 3, 3, 200, 100000, "matchPass!", False,
+        False, [RobotInMatch(owner=UserInMatch(username="bas_benja"), name="Bumblebee")]),
         
-        ('match1', 'juliolcese', 'astroGirl', 2, 3, 1, 1, "P455W0RD", False,
+        ('match1', 'juliolcese', 'astroGirl', 2, 3, 1, 1, "P455W0RD", False, False,
         [RobotInMatch(owner=UserInMatch(username="juliolcese"), name="astroGirl")]),
         
-        ('jmatch2', 'juliolcese', 'automatax', 2, 3, 1, 1, "P455W0RD", False,
+        ('jmatch2', 'juliolcese', 'automatax', 2, 3, 1, 1, "P455W0RD", False, False,
         [RobotInMatch(owner=UserInMatch(username="juliolcese"), name="automatax")]),
         
-        ('24601', 'tonimondejar', 'MegaByte', 2, 2, 157, 3250, "", False,
+        ('24601', 'tonimondejar', 'MegaByte', 2, 2, 157, 3250, "", False, False,
         [RobotInMatch(owner=UserInMatch(username="tonimondejar"), name="MegaByte")]),
         
-        ('match!', 'tonimondejar', '_tron', 3, 4, 200, 1, "pw", True,
+        ('match!', 'tonimondejar', '_tron', 3, 4, 200, 1, "pw", True, True,
          [RobotInMatch(owner=UserInMatch(username="tonimondejar"), name="_tron"), 
          RobotInMatch(owner=UserInMatch(username="bas_benja"), name="Bumblebee"), 
          RobotInMatch(owner=UserInMatch(username="juliolcese"), name="automatax")]),
 
-        ('partidaza', 'valennegrelli', 'R2D2', 2, 2, 200, 1, "", False,
+        ('partidaza', 'valennegrelli', 'R2D2', 2, 2, 200, 1, "", False, False,
          [RobotInMatch(owner=UserInMatch(username="valennegrelli"), name="R2D2"), 
          RobotInMatch(owner=UserInMatch(username="bas_benja"), name="Bumblebee")])
     ]
 
     for (name, creator_user, creator_robot, min_players, max_players, 
-         num_games, num_rounds, password, started, robots_joined) in matches:
+         num_games, num_rounds, password, started, finished, robots_joined) in matches:
         set_robots = set()
         for r in robots_joined:
             set_robots.add(get_bot_by_owner_and_name(r.owner.username, r.name))
@@ -156,6 +156,7 @@ def matches():
             num_games=num_games,
             num_rounds=num_rounds,
             started=started,
+            finished=finished,
             hashed_password=bcrypt.hash(password) if password else "",
             robots_joined=set_robots
         )       
