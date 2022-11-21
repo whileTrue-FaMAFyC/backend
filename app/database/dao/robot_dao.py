@@ -4,7 +4,7 @@ from database.dao.user_dao import get_user_by_username
 from database.models.models import Robot, RobotStats
 from utils.robot_utils import insert_filename_to_file
 from utils.shooter_default_utils import *
-from utils.random_default_utils import *
+from utils.runner_default_utils import *
 from view_entities.robot_view_entities import RobotCreate, WinnerRobot
 
 
@@ -92,10 +92,10 @@ def add_default_robots(username: str):
         create_new_robot(
             username, 
             RobotCreate(
-                name="Random",
-                source_code=RANDOM_SOURCE_CODE,
-                bot_filename="random_robot.py",
-                avatar=RANDOM_AVATAR
+                name="Runner",
+                source_code=RUNNER_SOURCE_CODE,
+                bot_filename="runner_robot.py",
+                avatar=RUNNER_AVATAR
             )
         )
         return True
