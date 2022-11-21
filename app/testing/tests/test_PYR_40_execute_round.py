@@ -47,8 +47,8 @@ def test_robots_move():
 
 
 def test_check_collisions_same_position():
-    robots = [Robot1(1,0), Robot2(2,0)]
-    robots[0].set_initial_position(150,100)
+    robots = [Robot1(1,0), Robot2(2,1)]
+    robots[0].set_initial_position(170,100)
     robots[1].set_initial_position(190,100)
 
     game = Game(100, robots)
@@ -65,8 +65,8 @@ def test_check_collisions_same_position():
 
 
 def test_check_collisions_at_some_distance():
-    robots = [Robot1(1,0), Robot2(2,0)]
-    robots[0].set_initial_position(180,100)
+    robots = [Robot1(1,0), Robot2(2,1)]
+    robots[0].set_initial_position(170,100)
     robots[1].set_initial_position(200,100)
 
     game = Game(100, robots)
@@ -84,7 +84,7 @@ def test_check_collisions_at_some_distance():
 
 def test_dead_robots_go_out_of_bounds():
     # The Robot4 does not move
-    robots = [Robot1(1,0), Robot2(2,0),Robot4(4,0)]
+    robots = [Robot1(1,0), Robot2(2,1),Robot4(4,2)]
     # INITIAL POSITIONS
     robots[0].set_initial_position(ROBOT_HALF_SIZE,ROBOT_HALF_SIZE)
     robots[1].set_initial_position(20+ROBOT_HALF_SIZE,ROBOT_HALF_SIZE)

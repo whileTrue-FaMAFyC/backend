@@ -77,6 +77,6 @@ class JoinMatch(BaseModel):
     joining_robot: str
 
 class MatchesFilters(BaseModel):
-    is_owner: Union[bool, None] = None
-    is_joined: Union[bool, None] = None
-    started: Union[bool, None] = None
+    is_owner: Union[str, None] = None
+    is_joined: Union[str, None] = None
+    started: Union[str, None] = None
