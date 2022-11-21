@@ -4,7 +4,7 @@ from typing import Tuple
 
 from utils.services_utils import *
 
-class Robot:
+class Robot():
     def __init__(self, robot_id: int, id_in_game: int):
         self._id = robot_id
         self._id_in_game: int = id_in_game
@@ -26,7 +26,7 @@ class Robot:
 
 
     def __eq__(self, other):
-        return self._id == other._id
+        return self._id_in_game == other._id_in_game
 
 
     def get_robot_id(self):
