@@ -182,22 +182,31 @@ def update_joining_user_match(joining_username: str, joining_robot: str, match_i
         return False
 
 @db_session
-def get_matches_with_filter(is_owner: bool, is_joined: bool, started: bool, user: str):
+def get_matches_with_filter(
+    is_owner: bool,
+    is_joined: bool,
+    started: bool,
+    user: str
+):
     q = Match.select()
 
-    if is_owner == True:
+    if is_owner == "True":
         q = q.filter(lambda m: m.creator_user.username == user)
-    elif is_owner == False:
+    elif is_owner == "False":
         q = q.filter(lambda m: m.creator_user.username != user)
-    
-    if is_joined == True:
-        q = q.filter(lambda m: user in (rj.owner.username for rj in m.robots_joined))
-    elif is_joined == False:
-        q = q.filter(lambda m: not (user in (rj.owner.username for rj in m.robots_joined)))
-        
-    if started == True:
+
+    if is_joined == "True":
+        q = q.filter(
+            lambda m: user in (rj.owner.username for rj in m.robots_joined)
+        )
+    elif is_joined == "False":
+        q = q.filter(
+            lambda m: not (user in (rj.owner.username for rj in m.robots_joined))
+        )
+
+    if started == "True":
         q = q.filter(lambda m: m.started)
-    elif started == False:
+    elif started == "False":
         q = q.filter(lambda m: not m.started)
-    
+
     return q

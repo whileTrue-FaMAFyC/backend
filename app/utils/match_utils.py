@@ -120,7 +120,7 @@ lobbys: Dict[int, LobbyManager] = {}
 # Transforms the matches selected from the database to the format that will be
 # sent to the frontend.
 @db_session
-def match_db_to_view(matches: Match): # No es list[Match] o algo así?
+def match_db_to_view(matches: List[Match]): 
     matches_info = [MatchInfo.from_orm(m) for m in matches]
     all_robots_joined = []
     info_and_robots = []

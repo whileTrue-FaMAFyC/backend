@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect, status, Header, Body
+from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect, status, Header, Depends
 from jose import jwt
 from threading import Thread
-from typing import Union, List, Dict
+from typing import Union
 
 from database.dao.match_dao import *
 from database.dao.robot_dao import *
@@ -39,18 +39,21 @@ async def create_match(new_match: NewMatch, authorization: Union[str, None] = He
 
 
 @match_controller.get("/list-matches", status_code=status.HTTP_200_OK)
-async def get_matches(filters: Union[MatchesFilters, None] = Body(MatchesFilters()), 
-                      authorization: Union[str, None] = Header(None)):
+async def get_matches(
+    filters: MatchesFilters = Depends(),
+    authorization: Union[str, None] = Header(None)
+):
     validate_token(authorization)
     token_data = jwt.decode(authorization, SECRET_KEY)
     user = token_data['username']
+    
+    matches_db = get_matches_with_filter(
+        filters.is_owner,
+        filters.is_joined,
+        filters.started, user
+    )
 
-    matches_db = get_matches_with_filter(filters.is_owner, filters.is_joined, 
-                                        filters.started, user)
-
-    matches_view = match_db_to_view(matches_db)
-   
-    return matches_view
+    return match_db_to_view(matches_db)
 
 
 
