@@ -2,8 +2,8 @@ from pony.orm import db_session
 
 from database.dao.user_dao import get_user_by_username
 from database.models.models import Robot, RobotStats
-from utils.random_default_utils import *
 from utils.robot_utils import insert_filename_to_file
+from utils.runner_default_utils import *
 from utils.shooter_default_utils import *
 from view_entities.robot_view_entities import RobotCreate, WinnerRobot
 
@@ -35,7 +35,7 @@ def create_new_robot(owner_username: str, robot_data: RobotCreate):
         )
         new_robot.set(stats=new_robot_stats)
         return True
-    except BaseException:
+    except:
         return False
 
 
@@ -72,10 +72,6 @@ def get_robot_by_id(robot_id: int):
 @db_session
 def get_name_and_creator_by_id(robot_id: int):
     robot = Robot[robot_id]
-    # return WinnerRobot(
-    #     username=robot.owner.username,
-    #     robot_name=robot.name
-    # )
     return {
         "username": robot.owner.username,
         "robot_name": robot.name
@@ -97,12 +93,12 @@ def add_default_robots(username: str):
         create_new_robot(
             username,
             RobotCreate(
-                name="Random",
-                source_code=RANDOM_SOURCE_CODE,
-                bot_filename="random_robot.py",
-                avatar=RANDOM_AVATAR
+                name="Runner",
+                source_code=RUNNER_SOURCE_CODE,
+                bot_filename="runner_robot.py",
+                avatar=RUNNER_AVATAR
             )
         )
         return True
-    except BaseException:
+    except:
         return False

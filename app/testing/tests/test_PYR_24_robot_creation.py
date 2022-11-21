@@ -14,7 +14,7 @@ client = TestClient(app)
 # Try creating a robot that already exists in the database
 def test_create_existent_robot():
     response = client.post(
-        '/create-robot',
+        '/create-bot',
         headers={'Authorization': MOCK_TOKEN_VALEN},
         json={
             'name': 'jarvis22',
@@ -33,7 +33,7 @@ def test_create_existent_robot():
 # Invalid token
 def test_invalid_token():
     response = client.post(
-        '/create-robot',
+        '/create-bot',
         headers={'Authorization': 'dsafaerafasf.sfaserfasf'},
         json={
             'name': 'jarvis22',
@@ -52,7 +52,7 @@ def test_invalid_token():
 # Create new robot succesfully
 def test_create_robot():
     response = client.post(
-        '/create-robot',
+        '/create-bot',
         headers={'Authorization': MOCK_TOKEN_JULI},
         json={
             'name': 'R2D2',

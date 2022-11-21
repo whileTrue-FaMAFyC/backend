@@ -4,8 +4,7 @@ from typing import Tuple
 
 from utils.services_utils import *
 
-
-class Robot:
+class Robot():
     def __init__(self, robot_id: int, id_in_game: int):
         self._id = robot_id
         self._id_in_game: int = id_in_game
@@ -29,7 +28,7 @@ class Robot:
 
 
     def __eq__(self, other):
-        return self._id == other._id
+        return self._id_in_game == other._id_in_game
 
 
     def get_robot_id(self):
@@ -159,14 +158,14 @@ class Robot:
                 (not new_min and not new_max
                 and angle_diff >= min_angle and angle_diff <= max_angle)
                 or
-               # The case where one of the limits went out of range. In this
-               # case 0 will be between the valid values of angle_diff, so we
-               # can consider two possibilities: angle_diff is between min_angle
-               # and 360 or between 0 and max_angle. As angle_diff is between 0
-               # and 360, we can confirm that if it's greater than min_angle,
-               # it's also smaller than 0, and that if it's smaller than
-               # max_angle, it's also greater than 0.
-               # This is why we can use or here.
+                # The case where one of the limits went out of range. In this
+                # case 0 will be between the valid values of angle_diff, so we
+                # can consider two possibilities: angle_diff is between min_angle
+                # and 360 or between 0 and max_angle. As angle_diff is between 0
+                # and 360, we can confirm that if it's greater than min_angle,
+                # it's also smaller than 0, and that if it's smaller than
+                # max_angle, it's also greater than 0.
+                # This is why we can use or here.
                 (new_min or new_max and
                     (angle_diff >= min_angle or angle_diff <= max_angle)
                 )
@@ -236,13 +235,17 @@ class Robot:
             # Set number of rounds that the user needs to wait for the cannon
             # to reload.
             if self._cannon_distance in range(500, 701):
-                self._rounds_to_wait_for_cannon = ROUNDS_TO_RELOAD_CANNON_500_TO_700
+                self._rounds_to_wait_for_cannon = \
+                    ROUNDS_TO_RELOAD_CANNON_500_TO_700
             elif self._cannon_distance in range(300, 500):
-                self._rounds_to_wait_for_cannon = ROUNDS_TO_RELOAD_CANNON_300_TO_500
+                self._rounds_to_wait_for_cannon = \
+                    ROUNDS_TO_RELOAD_CANNON_300_TO_500
             elif self._cannon_distance in range(100, 300):
-                self._rounds_to_wait_for_cannon = ROUNDS_TO_RELOAD_CANNON_100_TO_300
+                self._rounds_to_wait_for_cannon = \
+                    ROUNDS_TO_RELOAD_CANNON_100_TO_300
             else:
-                self._rounds_to_wait_for_cannon = ROUNDS_TO_RELOAD_CANNON_BELOW_100
+                self._rounds_to_wait_for_cannon = \
+                    ROUNDS_TO_RELOAD_CANNON_BELOW_100
 
         else:
             self._rounds_to_wait_for_cannon = max(

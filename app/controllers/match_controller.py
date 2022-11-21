@@ -1,49 +1,21 @@
-from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect, status, Header, Body
+from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect, status, \
+    Header, Depends
 from jose import jwt
-from typing import Union, List, Dict
+from threading import Thread
+from typing import Union
 
 from database.dao.match_dao import *
 from database.dao.robot_dao import *
 from database.dao.user_dao import *
-from services.match import execute_match
 from utils.match_utils import *
 from utils.user_utils import *
 from validators.match_validators import *
 from validators.user_validators import validate_token, SECRET_KEY
-from view_entities.match_view_entities import NewMatch, JoinMatch, MatchesFilters
+from view_entities.match_view_entities import NewMatch, JoinMatch, \
+    MatchesFilters
 
 
 match_controller = APIRouter(prefix="/matches")
-
-
-class LobbyManager:
-    def __init__(self):
-        self.active_connections: List[WebSocket] = []
-
-    async def connect(self, websocket: WebSocket):
-        await websocket.accept()
-        self.active_connections.append(websocket)
-
-    async def disconnect(self, websocket: WebSocket):
-        try:
-            await websocket.close()
-            self.active_connections.remove(websocket)
-        except BaseException:
-            pass
-
-    async def broadcast(self, message: Dict):
-        for connection in self.active_connections:
-            try:
-                await connection.send_json(message)
-            except:
-                await self.disconnect(connection)
-
-    async def close_lobby(self):
-        for connection in self.active_connections:
-            await self.disconnect(connection)
-
-
-lobbys: Dict[int, LobbyManager] = {}
 
 
 @match_controller.post("/new-match", status_code=status.HTTP_201_CREATED)
@@ -75,7 +47,7 @@ async def create_match(
 
 @match_controller.get("/list-matches", status_code=status.HTTP_200_OK)
 async def get_matches(
-    filters: Union[MatchesFilters, None] = Body(MatchesFilters()),
+    filters: MatchesFilters = Depends(),
     authorization: Union[str, None] = Header(None)
 ):
     validate_token(authorization)
@@ -85,7 +57,8 @@ async def get_matches(
     matches_db = get_matches_with_filter(
         filters.is_owner,
         filters.is_joined,
-        filters.started, user
+        filters.started,
+        user
     )
 
     return match_db_to_view(matches_db)
@@ -102,36 +75,30 @@ async def start_match(
 
     start_match_validator(creator_username, match_id)
 
-    # SEND MESSAGE TO SUSCRIBERS, MATCH STARTED.
+    ## SEND MESSAGE TO SUSCRIBERS, MATCH STARTED.
     await lobbys[match_id].broadcast({
         "action": "start",
         "data": ""
     })
 
-    # UPDATE BD
+    ## UPDATE BD
     if not update_executed_match(match_id):
         raise INTERNAL_ERROR_UPDATING_MATCH_INFO
 
-    winners = execute_match(match_id)
-
-    # SEND WINNERS TO SUSCRIBERS.
-    await lobbys[match_id].broadcast({
-        "action": "results",
-        "data": {
-            "winners": winners
-        }
-    })
-
-    # DELETE CONECTION MANAGER.
-    await lobbys[match_id].close_lobby()
-    lobbys.pop(match_id)
+    # Execute the match in another thread and returns the HTTP response with 200 OK.
+    match_execution_thread = Thread(
+        target=execute_match_task_caller,
+        args=[match_id]
+    )
+    match_execution_thread.start()
 
     return True
 
 
 @match_controller.post("/join-match/{match_id}", status_code=status.HTTP_200_OK)
 async def join_match(
-    match_id: int, match: JoinMatch,
+    match_id: int,
+    match: JoinMatch,
     authorization: Union[str, None] = Header(None)
 ):
     validate_token(authorization)
@@ -190,23 +157,21 @@ async def follow_lobby(
 
     match = get_match_by_id(match_id)
     if match is None:
-        await websocket.close()
-        return
+       await websocket.close()
+       return
 
-    if match.started:
-        await websocket.close()
-        return
+    if match.finished:
+       await websocket.close()
+       return
 
     if not match_id in lobbys:
         lobbys[match_id] = LobbyManager()
 
     await lobbys[match_id].connect(websocket)
-    # print(f"{username} has now joined the lobby")
     while True:
         try:
             await websocket.receive_text()
         except WebSocketDisconnect:
-            # print(f"{username} web socket connection closed")
             return
 
 

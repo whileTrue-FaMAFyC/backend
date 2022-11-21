@@ -41,6 +41,7 @@ class Match(db.Entity):
     num_games = Required(int)
     num_rounds = Required(int)
     started = Required(bool)
+    finished = Required(bool, default=False)
     hashed_password = Optional(str)
     robots_joined = Set(Robot)
     match_results = Set('MatchResult')

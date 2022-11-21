@@ -3,8 +3,8 @@ from pony.orm import db_session, select
 
 from database.dao.match_results_dao import get_results_by_robot_and_match
 from database.models.models import Match, Robot, User
-from utils.match_utils import match_winner
 from utils.robot_utils import get_robot_in_match_by_owner
+from utils.services_utils import match_winner
 from view_entities.robot_view_entities import *
 from view_entities.match_view_entities import *
 
@@ -70,7 +70,16 @@ def update_executed_match(match_id: int):
     try:
         Match[match_id].set(started=True)
         return True
-    except BaseException:
+    except:
+        return False
+
+
+@db_session
+def update_finished_match(match_id: int):
+    try:
+        Match[match_id].set(finished=True)
+        return True
+    except:
         return False
 
 
@@ -129,7 +138,7 @@ def get_lobby_info(match_id: int, username: str):
     im_in = False
     user_robot = []
     for robot in match.robots_joined:
-        if match.started:
+        if match.finished:
             robot_id = robot.robot_id
             robots_id.append(robot_id)
             game_results[robot_id] = get_results_by_robot_and_match(
@@ -143,14 +152,14 @@ def get_lobby_info(match_id: int, username: str):
         user_robot.append(
             UserAndRobotInfo(
                 username=robot.owner.username,
-                user_avatar="" if (robot.owner.avatar == "default")
+                user_avatar= "" if (robot.owner.avatar == "default")
                     else robot.owner.avatar,
                 robot_name=robot.name,
                 robot_avatar=robot.avatar
             )
         )
 
-    if match.started:
+    if match.finished:
         results = match_winner(robots_id, game_results)[0]
 
     if match.hashed_password != "":
@@ -195,23 +204,23 @@ def get_matches_with_filter(
 ):
     q = Match.select()
 
-    if is_owner == True:
+    if is_owner == "True":
         q = q.filter(lambda m: m.creator_user.username == user)
-    elif is_owner == False:
+    elif is_owner == "False":
         q = q.filter(lambda m: m.creator_user.username != user)
 
-    if is_joined == True:
+    if is_joined == "True":
         q = q.filter(
             lambda m: user in (rj.owner.username for rj in m.robots_joined)
         )
-    elif is_joined == False:
+    elif is_joined == "False":
         q = q.filter(
             lambda m: not (user in (rj.owner.username for rj in m.robots_joined))
         )
 
-    if started == True:
+    if started == "True":
         q = q.filter(lambda m: m.started)
-    elif started == False:
+    elif started == "False":
         q = q.filter(lambda m: not m.started)
 
     return q

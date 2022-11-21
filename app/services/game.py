@@ -98,14 +98,14 @@ class Game():
                 try:
                     func_timeout(timeout=RESPOND_TIMEOUT, func=r.respond)
                 except:
-                    print('Robot timed out during respond!')
+                    # print('Robot timed out during respond!')
                     r._increase_damage(100)
 
         for r in self.robots:
             others_positions = []
 
             for other_r in self.robots:
-                if not other_r == r and other_r.get_damage() < 100:
+                if other_r != r and other_r.get_damage() < 100:
                     if other_r.get_position() != OUT_OF_BOUNDS:
                         others_positions.append(other_r.get_position())
 

@@ -13,7 +13,7 @@ robot_controller = APIRouter()
 
 
 # Create new robot
-@robot_controller.post("/create-robot", status_code=status.HTTP_201_CREATED)
+@robot_controller.post("/create-bot", status_code=status.HTTP_201_CREATED)
 async def create_robot(
     robot_data: RobotCreate,
     authorization: Union[str, None] = Header(None)
