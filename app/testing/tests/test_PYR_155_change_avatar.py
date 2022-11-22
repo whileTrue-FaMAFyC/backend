@@ -11,7 +11,7 @@ client = TestClient(app)
 def test_avatar_format_not_valid():
     response = client.put(
         "/change-avatar",
-        headers = {'Authorization': MOCK_TOKEN_BENJA},
+        headers={'Authorization': MOCK_TOKEN_BENJA},
         json={"avatar": "data:python-x/fake_default"}
     )
 
@@ -23,7 +23,7 @@ def test_avatar_format_not_valid():
 def test_avatar_not_inserted():
     response = client.put(
         "/change-avatar",
-        headers = {'Authorization': MOCK_TOKEN_BENJA},
+        headers={'Authorization': MOCK_TOKEN_BENJA},
         json={"avatar": ""}
     )
 
@@ -35,10 +35,11 @@ def test_avatar_not_inserted():
 def test_successful_change_avatar():
     response = client.put(
         "/change-avatar",
-        headers = {'Authorization': MOCK_TOKEN_BENJA},
+        headers={'Authorization': MOCK_TOKEN_BENJA},
         json={"avatar": "data:image/png;fakeavatar"}
     )
 
     assert response.status_code == 200
 
-    assert get_user_by_username("bas_benja").avatar == "data:image/png;fakeavatar"
+    assert get_user_by_username(
+        "bas_benja").avatar == "data:image/png;fakeavatar"

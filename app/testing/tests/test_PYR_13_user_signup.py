@@ -5,11 +5,12 @@ from main import app
 
 client = TestClient(app)
 
+
 def test_successful_sign_up():
     response = client.post(
         "/signup",
         json={
-            "username": "jakeperalta", 
+            "username": "jakeperalta",
             "email": "pyrobots.noreply@gmail.com",
             "password": "Test1234"
         }
@@ -18,13 +19,13 @@ def test_successful_sign_up():
     assert response.status_code == 201
 
     user = get_user_by_username("jakeperalta")
-    
+
     # Check if the user was correctly added to the database
-    assert user != None
-    
+    assert user is not None
+
     # Must be a hashed password
-    assert user.hashed_password != "Test1234" 
-    
+    assert user.hashed_password != "Test1234"
+
     assert user.verified == False
 
 
@@ -32,7 +33,7 @@ def test_username_already_in_use():
     response = client.post(
         "/signup",
         json={
-            "username": "jakeperalta", 
+            "username": "jakeperalta",
             "email": "pyrobots.noreply@gmail.com",
             "password": "Test1234"
         }
@@ -41,12 +42,12 @@ def test_username_already_in_use():
     # User registered correctly
     assert response.status_code == 201
     # Check if user was added to the database
-    assert get_user_by_username("jakeperalta") != None
+    assert get_user_by_username("jakeperalta") is not None
 
     response = client.post(
         "/signup",
         json={
-            "username": "jakeperalta", 
+            "username": "jakeperalta",
             "email": "pyrobots@gmail.com",
             "password": "Test1234"
         }
@@ -55,30 +56,30 @@ def test_username_already_in_use():
     # Must fail because username is already in use.
     assert response.status_code == 409
     assert response.json()["detail"] == "Username already in use."
-    
-    #Checks that the user was not added to the database
-    assert get_user_by_email("pyrobots@gmail.com") == None
+
+    # Checks that the user was not added to the database
+    assert get_user_by_email("pyrobots@gmail.com") is None
 
 
 def test_email_already_in_use():
     response = client.post(
         "/signup",
         json={
-            "username": "jakeperalta", 
+            "username": "jakeperalta",
             "email": "pyrobots.noreply@gmail.com",
             "password": "Test1234"
         }
     )
-    
+
     # User registered correctly
     assert response.status_code == 201
     # Check if user was added to the database
-    assert get_user_by_username("jakeperalta") != None
-    
+    assert get_user_by_username("jakeperalta") is not None
+
     response = client.post(
         "/signup",
         json={
-            "username": "jakeperalta1", 
+            "username": "jakeperalta1",
             "email": "pyrobots.noreply@gmail.com",
             "password": "Test1234"
         }
@@ -86,17 +87,18 @@ def test_email_already_in_use():
 
     # Must fail because email is already in use.
     assert response.status_code == 409
-    assert response.json()["detail"] == "Email already associated with another user."
+    assert response.json()[
+        "detail"] == "Email already associated with another user."
 
     # Checks that the user was not added to the database
-    assert get_user_by_username("jakeperalta1") == None
+    assert get_user_by_username("jakeperalta1") is None
 
 
 def test_email_not_valid():
     response = client.post(
         "/signup",
         json={
-            "username": "jakeperalta", 
+            "username": "jakeperalta",
             "email": "antoniomondejzxckzck",
             "password": "Test1234"
         }
@@ -111,12 +113,12 @@ def test_password_format_not_valid():
     response = client.post(
         "/signup",
         json={
-            "username": "jakeperalta", 
+            "username": "jakeperalta",
             "email": "pyrobots.noreply@gmail.com",
             "password": "test"
-        } 
+        }
     )
-    #Missing numbers and capital letters, also its length is less than 8
+    # Missing numbers and capital letters, also its length is less than 8
 
     # Must fail because password format is not valid.
     assert response.status_code == 400

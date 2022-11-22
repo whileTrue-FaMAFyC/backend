@@ -7,11 +7,12 @@ from utils.user_utils import verify_password
 
 client = TestClient(app)
 
+
 def correct_log_in(username: str, password: str):
     # Log in with the current password
     response = client.post(
         '/login',
-        json = {
+        json={
             'username_or_email': username,
             'password': password
         }
@@ -25,7 +26,7 @@ def incorrect_log_in(username: str, password: str):
     # Log in with the current password
     response = client.post(
         '/login',
-        json = {
+        json={
             'username_or_email': username,
             'password': password
         }
@@ -41,11 +42,11 @@ def incorrect_log_in(username: str, password: str):
 def test_invalid_credentials():
     response = client.patch(
         '/change-password',
-        headers = {"Authorization": MOCK_TOKEN_BENJA},
-        json = {
+        headers={"Authorization": MOCK_TOKEN_BENJA},
+        json={
             'current_password': 'thisIsNotTheRightPassword',
             'new_password': 'NewPassword25',
-            'new_password_confirmation':  'NewPassword25'
+            'new_password_confirmation': 'NewPassword25'
         }
     )
 
@@ -58,12 +59,13 @@ def test_invalid_credentials():
     correct_log_in('bas_benja', 'Compuamigos2')
 
 
-# Try changing the password with new password that doesn't have the right format
+# Try changing the password with new password that doesn't have the right
+# format
 def test_new_password_format_not_valid():
     response = client.patch(
         '/change-password',
-        headers = {"Authorization": MOCK_TOKEN_BENJA},
-        json = {
+        headers={"Authorization": MOCK_TOKEN_BENJA},
+        json={
             'current_password': 'Compuamigos2',
             'new_password': 'notcapitalletters',
             'new_password_confirmation': 'notcapitalletters'
@@ -83,8 +85,8 @@ def test_new_password_format_not_valid():
 def test_new_password_dont_match():
     response = client.patch(
         '/change-password',
-        headers = {"Authorization": MOCK_TOKEN_JULI},
-        json = {
+        headers={"Authorization": MOCK_TOKEN_JULI},
+        json={
             'current_password': '1whileTrue1',
             'new_password': 'RightFormat1',
             'new_password_confirmation': 'dontmatch'
@@ -104,8 +106,8 @@ def test_new_password_dont_match():
 def test_new_password_same_as_current():
     response = client.patch(
         '/change-password',
-        headers = {"Authorization": MOCK_TOKEN_JULI},
-        json = {
+        headers={"Authorization": MOCK_TOKEN_JULI},
+        json={
             'current_password': '1whileTrue1',
             'new_password': '1whileTrue1',
             'new_password_confirmation': '1whileTrue1'
@@ -124,8 +126,8 @@ def test_new_password_same_as_current():
 def test_successful_password_change():
     response = client.patch(
         '/change-password',
-        headers = {"Authorization": MOCK_TOKEN_JULI},
-        json = {
+        headers={"Authorization": MOCK_TOKEN_JULI},
+        json={
             'current_password': '1whileTrue1',
             'new_password': 'NewPassword1',
             'new_password_confirmation': 'NewPassword1'

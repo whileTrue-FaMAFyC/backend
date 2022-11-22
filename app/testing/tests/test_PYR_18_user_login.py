@@ -10,7 +10,7 @@ client = TestClient(app)
 def test_inexistent_user():
     response = client.post(
         '/login',
-        json = {
+        json={
             'username_or_email': 'basbenja3',
             'password': 'password'
         }
@@ -26,7 +26,7 @@ def test_inexistent_user():
 def test_invalid_credentials():
     response = client.post(
         '/login',
-        json = {
+        json={
             'username_or_email': 'sebagiraudo',
             'password': 'password'
         }
@@ -42,7 +42,7 @@ def test_invalid_credentials():
 def test_not_verified_user():
     response = client.post(
         '/login',
-        json = {
+        json={
             'username_or_email': 'israangulo4',
             'password': 'Argentiña222'
         }
@@ -59,7 +59,7 @@ def test_not_verified_user():
 def test_login_username():
     response = client.post(
         '/login',
-        json = {
+        json={
             'username_or_email': 'bas_benja',
             'password': 'Compuamigos2'
         }
@@ -75,7 +75,7 @@ def test_login_username():
 def test_login_email():
     response = client.post(
         '/login',
-        json = {
+        json={
             'username_or_email': 'valen57negrelli@yahoo.com.ar',
             'password': 'piXies18'
         }

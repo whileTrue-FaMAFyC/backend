@@ -6,56 +6,61 @@ from utils.user_utils import *
 
 client = TestClient(app)
 
+
 def test_inexistent_user():
     response = client.post(
         "/password-restore-request",
-        json = {
+        json={
             'username': 'inexistent',
             'email': 'inexistent'
         }
     )
 
     assert response.status_code == INEXISTENT_USERNAME_EMAIL_COMBINATION.status_code
-    assert response.json()["detail"] == INEXISTENT_USERNAME_EMAIL_COMBINATION.detail
+    assert response.json()[
+        "detail"] == INEXISTENT_USERNAME_EMAIL_COMBINATION.detail
 
     response = client.post(
         "/password-restore-request",
-        json = {
+        json={
             'username': 'inexistent',
             'email': 'basbenja3@gmail.com'
         }
     )
 
     assert response.status_code == INEXISTENT_USERNAME_EMAIL_COMBINATION.status_code
-    assert response.json()["detail"] == INEXISTENT_USERNAME_EMAIL_COMBINATION.detail
+    assert response.json()[
+        "detail"] == INEXISTENT_USERNAME_EMAIL_COMBINATION.detail
 
     response = client.post(
         "/password-restore-request",
-        json = {
+        json={
             'username': 'bas_benja',
             'email': 'inexistent'
         }
     )
 
     assert response.status_code == INEXISTENT_USERNAME_EMAIL_COMBINATION.status_code
-    assert response.json()["detail"] == INEXISTENT_USERNAME_EMAIL_COMBINATION.detail
+    assert response.json()[
+        "detail"] == INEXISTENT_USERNAME_EMAIL_COMBINATION.detail
 
     response = client.post(
         "/password-restore-request",
-        json = {
+        json={
             'username': 'juliolcese',
             'email': 'basbenja3@gmail.com'
         }
     )
 
     assert response.status_code == INEXISTENT_USERNAME_EMAIL_COMBINATION.status_code
-    assert response.json()["detail"] == INEXISTENT_USERNAME_EMAIL_COMBINATION.detail
+    assert response.json()[
+        "detail"] == INEXISTENT_USERNAME_EMAIL_COMBINATION.detail
 
 
 def test_not_verified_user():
     response = client.post(
         "/password-restore-request",
-        json = {
+        json={
             'username': 'sebagiraudo',
             'email': 'sebagir4udo@unc.edu.ar'
         }
@@ -68,7 +73,7 @@ def test_not_verified_user():
 def test_successful_request():
     response = client.post(
         "/password-restore-request",
-        json = {
+        json={
             'username': 'bas_benja',
             'email': 'basbenja3@gmail.com'
         }
@@ -80,11 +85,11 @@ def test_successful_request():
 def test_successful_request():
     response = client.post(
         "/password-restore-request",
-        json = {
+        json={
             'username': 'pyrobots',
             'email': 'pyrobots.notreply@gmail.com'
         }
     )
 
     assert response.status_code == status.HTTP_200_OK
-    assert get_user_by_username('pyrobots').restore_password_code != None
+    assert get_user_by_username('pyrobots').restore_password_code is not None

@@ -4,7 +4,7 @@ from pony.orm import db_session
 from typing import Dict, List
 
 from database.dao.match_dao import update_finished_match
-from database.models.models import Match 
+from database.models.models import Match
 from services.match import execute_match
 from view_entities.match_view_entities import *
 from view_entities.robot_view_entities import *
@@ -85,6 +85,7 @@ MATCH_DOES_NOT_HAVE_PASSWORD = HTTPException(
     detail="The match does not have password."
 )
 
+
 # To handle websockets connections.
 class LobbyManager:
     def __init__(self):
@@ -100,9 +101,6 @@ class LobbyManager:
             self.active_connections.remove(websocket)
         except:
             pass
-
-    # async def send_personal_message(self, message: str, websocket: WebSocket):
-    #     await websocket.send_text(message)
 
     async def broadcast(self, message: Dict):
         for connection in self.active_connections:
@@ -121,13 +119,13 @@ lobbys: Dict[int, LobbyManager] = {}
 # Transforms the matches selected from the database to the format that will be
 # sent to the frontend.
 @db_session
-def match_db_to_view(matches: List[Match]): 
+def match_db_to_view(matches: List[Match]):
     matches_info = [MatchInfo.from_orm(m) for m in matches]
     all_robots_joined = []
     info_and_robots = []
 
     for m in matches:
-       all_robots_joined.append(len(m.robots_joined))
+        all_robots_joined.append(len(m.robots_joined))
 
     for i in range(0, len(matches_info)):
         info_and_robots.append(
@@ -141,6 +139,7 @@ def match_db_to_view(matches: List[Match]):
         )
 
     return info_and_robots
+
 
 @db_session
 def match_validator_info(match_id: int):

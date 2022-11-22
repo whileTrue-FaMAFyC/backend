@@ -4,7 +4,12 @@ from testing.helpers.services_helpers import *
 
 
 def test_timeout_match():
-    robots = [ForeverRobotInitialize(1,0), Robot2(2,0), ForeverRobotRespond(3,0), Robot4(4,0)]
+    robots = [
+        ForeverRobotInitialize(
+            1, 0), Robot2(
+            2, 0), ForeverRobotRespond(
+                3, 0), Robot4(
+                    4, 0)]
     game = Game(1, robots)
     execute_game_match(game)
 
@@ -15,7 +20,12 @@ def test_timeout_match():
 
 
 def test_timeout_simulation():
-    robots = [ForeverRobotInitialize(1,0), Robot2(2,0), ForeverRobotRespond(3,0), Robot4(4,0)]
+    robots = [
+        ForeverRobotInitialize(
+            1, 0), Robot2(
+            2, 0), ForeverRobotRespond(
+                3, 0), Robot4(
+                    4, 0)]
     game = Game(1, robots)
     execute_game_simulation(game)
 

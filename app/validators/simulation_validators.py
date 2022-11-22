@@ -1,10 +1,10 @@
 from fastapi import HTTPException, status
 
-from database.dao import match_dao, robot_dao
+from database.dao import robot_dao
 from view_entities.simulation_view_entities import Simulation
 
+
 def simulation_validator(creator_username: str, simulation_info: Simulation):
-    
     valid_match = True
     detail = ""
 
@@ -17,13 +17,13 @@ def simulation_validator(creator_username: str, simulation_info: Simulation):
 
     for r in simulation_info.robots:
         robots += 1
-        robot = robot_dao.get_bot_by_owner_and_name(creator_username, r)
-        if not robot: 
+        robot = robot_dao.get_robot_by_owner_and_name(creator_username, r)
+        if not robot:
             code = status.HTTP_409_CONFLICT
             valid_match = False
             detail += f"Robot {r} isn't in {creator_username}'s library. "
 
-    if not robots in range(2,5):
+    if not robots in range(2, 5):
         code = status.HTTP_400_BAD_REQUEST
         valid_match = False
         detail += "The simulation needs between 2 and 4 robots. "

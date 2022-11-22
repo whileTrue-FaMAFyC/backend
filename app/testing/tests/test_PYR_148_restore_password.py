@@ -6,10 +6,11 @@ from utils.user_utils import *
 
 client = TestClient(app)
 
+
 def test_inexistent_user():
     response = client.put(
         "/password-restore",
-        json = {
+        json={
             'email': 'inexistent',
             'new_password': 'NewPass123',
             'restore_password_code': '123456'
@@ -19,10 +20,11 @@ def test_inexistent_user():
     assert response.status_code == USER_NOT_REGISTERED.status_code
     assert response.json()["detail"] == USER_NOT_REGISTERED.detail
 
+
 def test_not_verified_user():
     response = client.put(
         "/password-restore",
-        json = {
+        json={
             'email': 'sebagir4udo@unc.edu.ar',
             'new_password': 'NewPass123',
             'restore_password_code': '123456'
@@ -36,7 +38,7 @@ def test_not_verified_user():
 def test_invalid_restore_code():
     response = client.put(
         "/password-restore",
-        json = {
+        json={
             'email': 'pyrobots.notreply@gmail.com',
             'new_password': 'NewPass123',
             'restore_password_code': '123456'
@@ -48,7 +50,7 @@ def test_invalid_restore_code():
 
     response = client.post(
         "/password-restore-request",
-        json = {
+        json={
             'username': 'pyrobots',
             'email': 'pyrobots.notreply@gmail.com'
         }
@@ -58,13 +60,13 @@ def test_invalid_restore_code():
     original_code = user.restore_password_code
 
     assert response.status_code == status.HTTP_200_OK
-    assert original_code != None
+    assert original_code is not None
 
-    incorrect_code =  original_code + 1
+    incorrect_code = original_code + 1
 
     response = client.put(
         "/password-restore",
-        json = {
+        json={
             'email': 'pyrobots.notreply@gmail.com',
             'new_password': 'NewPass123',
             'restore_password_code': incorrect_code
@@ -73,14 +75,15 @@ def test_invalid_restore_code():
 
     assert response.status_code == INVALID_RESTORE_CODE.status_code
     assert response.json()["detail"] == INVALID_RESTORE_CODE.detail
-    assert get_user_by_username('pyrobots').restore_password_code == original_code
+    assert get_user_by_username(
+        'pyrobots').restore_password_code == original_code
 
 
 def test_invalid_password_format():
 
     response = client.post(
         "/password-restore-request",
-        json = {
+        json={
             'username': 'pyrobots',
             'email': 'pyrobots.notreply@gmail.com'
         }
@@ -90,11 +93,11 @@ def test_invalid_password_format():
     restore_code = user.restore_password_code
 
     assert response.status_code == status.HTTP_200_OK
-    assert restore_code != None
+    assert restore_code is not None
 
     response = client.put(
         "/password-restore",
-        json = {
+        json={
             'email': 'pyrobots.notreply@gmail.com',
             'new_password': 'invalidpass',
             'restore_password_code': restore_code
@@ -103,14 +106,15 @@ def test_invalid_password_format():
 
     assert response.status_code == PASSWORD_FORMAT_NOT_VALID.status_code
     assert response.json()["detail"] == PASSWORD_FORMAT_NOT_VALID.detail
-    assert get_user_by_username('pyrobots').restore_password_code == restore_code
+    assert get_user_by_username(
+        'pyrobots').restore_password_code == restore_code
 
 
 def test_successful_restore():
 
     response = client.post(
         "/password-restore-request",
-        json = {
+        json={
             'username': 'pyrobots',
             'email': 'pyrobots.notreply@gmail.com'
         }
@@ -120,12 +124,12 @@ def test_successful_restore():
     restore_code = user.restore_password_code
 
     assert response.status_code == status.HTTP_200_OK
-    assert restore_code != None
+    assert restore_code is not None
 
     new_password = 'NewPass123'
     response = client.put(
         "/password-restore",
-        json = {
+        json={
             'email': 'pyrobots.notreply@gmail.com',
             'new_password': new_password,
             'restore_password_code': restore_code
@@ -138,7 +142,7 @@ def test_successful_restore():
 
     response = client.post(
         '/login',
-        json = {
+        json={
             'username_or_email': 'pyrobots.notreply@gmail.com',
             'password': 'NewPass123'
         }

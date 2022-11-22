@@ -17,9 +17,9 @@ def test_no_robots():
 
     response = client.get(
         "/list-robots",
-        headers = {"Authorization": MOCK_TOKEN_VALEN}
+        headers={"Authorization": MOCK_TOKEN_VALEN}
     )
-    
+
     assert response.status_code == 200
     assert response.json() == []
     return
@@ -28,23 +28,24 @@ def test_no_robots():
 def test_with_robots():
     response = client.get(
         "/list-robots",
-        headers = {"Authorization": MOCK_TOKEN_VALEN}
+        headers={"Authorization": MOCK_TOKEN_VALEN}
     )
 
     assert response.status_code == 200
-    assert response.json() ==  [
-        {"name": "R2D2", "avatar": MOCK_AVATAR, "stats": { "matches_played": 0, "matches_won": 0, 
-        "matches_tied": 0, "matches_lost": 0, "games_win_rate": 0}}, 
-        {"name": "WALL-E", "avatar": "", "stats": { "matches_played": 0, "matches_won": 0, 
-        "matches_tied": 0, "matches_lost": 0, "games_win_rate": 0}}, 
-        {"name": "jarvis22", "avatar": MOCK_AVATAR, "stats": { "matches_played": 0, "matches_won": 0, 
-        "matches_tied": 0, "matches_lost": 0, "games_win_rate": 0}}
+    assert response.json() == [
+        {"name": "R2D2", "avatar": MOCK_AVATAR, "stats": {"matches_played": 0, "matches_won": 0,
+                                                          "matches_tied": 0, "matches_lost": 0, "games_win_rate": 0}},
+        {"name": "WALL-E", "avatar": "", "stats": {"matches_played": 0, "matches_won": 0,
+                                                   "matches_tied": 0, "matches_lost": 0, "games_win_rate": 0}},
+        {"name": "jarvis22", "avatar": MOCK_AVATAR, "stats": {"matches_played": 0, "matches_won": 0,
+                                                              "matches_tied": 0, "matches_lost": 0, "games_win_rate": 0}}
     ]
+
 
 def test_invalid_token():
     response = client.get(
         "/list-robots",
-        headers = {"Authorization": ""}
+        headers={"Authorization": ""}
     )
 
     assert response.status_code == INVALID_TOKEN_EXCEPTION.status_code
